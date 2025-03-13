@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상속개시전 처분재산 및 부담채무 명세서 (을)</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 5mm;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #000;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-container {
+            width: 297mm;
+            height: 210mm;
+            padding: 5mm;
+            box-sizing: border-box;
+            transform-origin: center;
+            background-color: white;
+        }
+
+        @media screen {
+            .page-container {
+                transform: scale(var(--scale-factor));
+            }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 16pt;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            table-layout: fixed;
+            font-size: 8pt;
+            margin-bottom: 20px;
+        }
+
+        caption {
+            caption-side: top;
+            text-align: left;
+            font-weight: bold;
+            font-size: 10pt;
+            margin-bottom: 5px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 4px 6px;
+            text-align: center;
+            vertical-align: middle;
+            word-wrap: break-word;
+            font-size: 7pt;
+            height: 18px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            font-size: 7pt;
+        }
+
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 2px;
+            border: none;
+            background: transparent;
+            font-size: 7pt;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        input[type="date"] {
+            width: calc(100% - 4px);
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: transparent;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        .code-select {
+            width: 100%;
+            padding: 2px;
+        }
+        
+        .code-select option {
+            white-space: pre-wrap;
+            min-height: 2.5em;
+            padding: 2px 4px;
+            line-height: 1.2;
+        }
+
+        .code-select.selected {
+            width: 40px !important;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%; 
+            height: 100%; 
+            padding: 2px; 
+            box-sizing: border-box; 
+            text-align: center; 
+            border: none; 
+            outline: none; 
+        }
+        input[type="text"]:focus {
+            border: none; 
+        }
+
+        textarea {
+            word-wrap: break-word;
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                overflow: hidden;
+            }
+            th {
+                background-color: #d3d3d3 !important;
+                color: #000000 !important;
+            }
+            td {
+                background-color: #ffffff;
+                color: #000000;
+            }
+            #printButton, #saveButton, #deleteButton {
+                display: none;
+            }
+            .guide-table {
+                display: none;
+            }
+            .page-container {
+                height: auto;
+                margin: 0;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+        button {
+            padding: 10px 20px; 
+            background-color: #800020; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14pt; 
+        }
+
+        button:hover {
+            background-color: #6a001e; }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <h1>상속개시전 1(2)년 이내 처분재산 및 채무부담내역 및 사용처소명명세서 (을)</h1>
+        <table style="width: 100%; margin: 0px;">
+            <caption>가. 처분재산 및 인출내역 사용명세내역</caption>
+            <colgroup>
+                <col style="width: 75px;">
+                <col style="width: 140px;">
+                <col style="width: 85px;">
+                <col style="width: 90px;">
+                <col style="width: 85px;">
+                <col style="width: 85px;">
+                <col style="width: 85px;">
+                <col style="width: 85px;">
+                <col style="width: 90px;">
+                <col style="width: 60px;">
+                <col style="width: 75px;">
+                <col style="width: 80px;">
+            </colgroup>
+            <thead> 
+                <tr>
+                    <th rowspan="3">① 재산종류<br>코드</th>
+                    <th rowspan="3">② 재산 소재지<br>(계좌번호, 사업자번호 등)</th>
+                    <th rowspan="3">③ 처분일<br>(인출일)</th>
+                    <th rowspan="3">④ 처분금액<br>(인출금액)</th>
+                    <th colspan="7">사용처</th>
+                    <th rowspan="3">⑩ 미소명<br>금액<br>(④ - ⑦)</th>
+                </tr>
+                <tr>
+                    <th rowspan="2">⑤ 사용용도</th>
+                    <th rowspan="2">⑥ 사용일자</th>
+                    <th rowspan="2">⑦ 사용처<br>소명금액</th>
+                    <th rowspan="2">⑧ 소명증빙</th>
+                    <th colspan="3">⑨ 거래상대방</th>
+                </tr>
+                <tr>
+                    <th>주민등록번호<br>(사업자번호)</th>
+                    <th>성명<br>(상호)
+                    <th>관계</th>
+                </tr>    
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="취소"></option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            
+                        </select>
+                    </td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            
+                        </select>
+                    </td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            
+                        </select>
+                    </td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                    <select class="code-select">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                    </select>
+                </td>
+                <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <table style="width: 100%; margin-bottom: 10px; border-collapse: collapse;">
+            <caption>나. 부담채무 상세내역</caption>
+            <colgroup>
+                <col style="width: 75px;"> 
+                <col style="width: 90px;">
+                <col style="width: 50px;">
+                <col style="width: 75px;">
+                <col style="width: 50px;">
+                <col style="width: 45px;">
+                <col style="width: 60px;">
+                <col style="width: 60px;"> 
+                <col style="width: 60px;">
+                <col style="width: 60px;">
+                <col style="width: 60px;">
+                <col style="width: 90px;">
+                <col style="width: 60px;">
+                <col style="width: 70px;">
+                <col style="width: 80px;">
+            <thead>
+                <tr>
+                    <th rowspan="3">⑪ 금융기관등<br>차입여부</th>
+                    <th colspan="2">⑫ 채권자</th> 
+                    <th rowspan="3">⑬ 차입일</th> 
+                    <th rowspan="3">⑭ 상환<br>(예정)일</th> 
+                    <th rowspan="3">⑮ 약정<br>이자율</th> 
+                    <th rowspan="3">⑯ 차입<br>금액</th> 
+                    <th colspan="7">사용처</th>
+                    <th rowspan="3">⑩ 미소명<br>금액<br>(⑯ - ⑲)</th>
+                </tr>
+                <tr>
+                    <th rowspan="2">주민등록번호<br>(사업자번호)</th>
+                    <th rowspan="2">성명<br>(상호)</th>
+                    <th rowspan="2">⑰ 사용<br>용도</th>
+                    <th rowspan="22">⑱ 사용<br>일자</th>
+                    <th rowspan="2">⑲ 사용처<br>소명금액</th>
+                    <th rowspan="2">⑳ 소명<br>증빙</th>
+                    <th colspan="3">㉑ 거래상대방</th>
+                </tr>
+                <tr>
+                    <th>주민등록번호<br>(사업자번호)</th>
+                    <th>성명<br>(상호)</th>
+                    <th>관계</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="부">부</option>
+                            <option value="여">여</option>
+                        </select>
+                    </td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="부">부</option>
+                            <option value="여">여</option>
+                        </select>
+                    </td>  
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="부">부</option>
+                            <option value="여">여</option>
+                        </select>
+                    </td>  
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="부">부</option>
+                            <option value="여">여</option>
+                        </select>
+                    </td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td> 
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="부">부</option>
+                            <option value="여">여</option>
+                        </select>
+                    </td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="code-select">
+                            <option value="부">부</option>
+                            <option value="여">여</option>
+                        </select>
+                    </td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="date-input" placeholder="YYYY-MM-DD"></td>
+                    <td><input type="text" class="input-large"></td> 
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large number-format"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                    <td><input type="text" class="input-large"></td>
+                </tr>
+            </tbody>
+        </table>  
+        <div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+            <div>
+                <button id="saveButton" onclick="saveData()">저장하기</button>
+                <button id="deleteButton" onclick="deleteData()">삭제하기</button>
+            </div>
+            <button id="printButton" onclick="printPage()">인쇄하기</button>
+        </div>
+        <table class="guide-table" style="width: 100%; margin-top: 20px;">
+            <colgroup>
+                <col style="width: auto;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>작성방법</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left; font-size: 9pt; line-height: 1.5;">1. "① 재산종류코드"란 : 아래의 재산구분에 해당하는 코드를 적습니다.<br>
+                    01 : 현금ㆍ예금 및 유가증권<br> 02 : 부동산 및 부동산을 취득할 수 있는 권리 <br> 03 : 기타재산 (01, 02 제외)<br>2. "② 재산소재지"란은 처분
+                    재산(인출내역)이 부동산인 경우 해당 부동산 소재지, 금융재산인 경우 계좌번호, 유가증권인 경우에는 사업자번호를 각각 적고, 그 외 기타재산의 경우
+                    에는<br>처분재산 상세내역을 적습니다.<br>3. "⑧ 소명증빙" 또는 "⑳ 소명증빙"란은 사용처를 실제 입증할 수 있는 계약서, 확인서, 금융증빙 등을 적습니다.<br>
+                    4. "⑨ 거래상대방" 또는 "㉑ 거래상대방"란 중 "관계"는 피상속인과 거래상대방의 관계를 적습니다. (예시 : 형제자매, 특수관계법인, 무관계 등)<br>5. "⑪ 금융기관등
+                     차입여부"란은 피상속인이 국가, 지방자치단체, 금융기관으로부터 채무를 차입하였는지에 여부에 따라 ✔ 표시하고, "여"에 해당하는 경우 부담채무 합계금액이 
+                     상속개시일 전 <br>1년 이내에2억원 이상(2년 이내 5억 이상)에 해당할 때 사용처란을 작성합니다. "부"에 해당하는 경우 채무기간 및 채무금액에 관계없이 채권자
+                      등 관련 내용을 작성합니다. </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function printPage() {
+            window.print();
+        }
+        function adjustScale() {
+            const container = document.querySelector('.page-container');
+            const scaleX = (window.innerWidth - 40) / container.offsetWidth;
+            const scaleY = (window.innerHeight - 40) / container.offsetHeight;
+            const scale = Math.min(scaleX, scaleY, 1); 
+            document.documentElement.style.setProperty('--scale-factor', scale);
+        }
+        window.addEventListener('load', adjustScale);
+        window.addEventListener('resize', adjustScale);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input.number-format').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^\d]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    
+                    const row = this.closest('tr');
+                    const isFirstTable = this.closest('table') === document.querySelector('table:first-of-type');
+                    const [a,b,c] = isFirstTable ? [3,6,11] : [6,9,14];
+                    const val1 = parseInt(row.cells[a].querySelector('input').value.replace(/,/g, '')) || 0;
+                    const val2 = parseInt(row.cells[b].querySelector('input').value.replace(/,/g, '')) || 0;
+                    row.cells[c].querySelector('input').value = (val1 - val2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                });
+            });
+            restoreData();
+        });
+        function saveData() {
+            const tables = document.querySelectorAll('table');
+            const data = {
+                table1: [],
+                table2: []
+            };
+            tables[0].querySelectorAll('tbody tr').forEach(row => {
+                const rowData = {
+                    select: row.querySelector('select').value,
+                    inputs: Array.from(row.querySelectorAll('input')).map(input => input.value)
+                };
+                data.table1.push(rowData);
+            });
+            tables[1].querySelectorAll('tbody tr').forEach(row => {
+                const rowData = {
+                    select: row.querySelector('select').value,
+                    inputs: Array.from(row.querySelectorAll('input')).map(input => input.value)
+                };
+                data.table2.push(rowData);
+            });
+            localStorage.setItem('formData', JSON.stringify(data));
+            alert('데이터가 저장되었습니다.');
+        }
+        function restoreData() {
+            const savedData = localStorage.getItem('formData');
+            if (!savedData) return;
+
+            const data = JSON.parse(savedData);
+            const tables = document.querySelectorAll('table');
+            data.table1.forEach((rowData, index) => {
+                const row = tables[0].querySelectorAll('tbody tr')[index];
+                if (row) {
+                    row.querySelector('select').value = rowData.select;
+                    const inputs = row.querySelectorAll('input');
+                    rowData.inputs.forEach((value, i) => {
+                        inputs[i].value = value;
+                    });
+                }
+            });
+            data.table2.forEach((rowData, index) => {
+                const row = tables[1].querySelectorAll('tbody tr')[index];
+                if (row) {
+                    row.querySelector('select').value = rowData.select;
+                    const inputs = row.querySelectorAll('input');
+                    rowData.inputs.forEach((value, i) => {
+                        inputs[i].value = value;
+                    });
+                }
+            });
+        }
+        function deleteData() {
+            localStorage.removeItem('formData');
+            alert('저장된 데이터가 삭제되었습니다.');
+        }
+    </script>
+</body>
+</html>
+

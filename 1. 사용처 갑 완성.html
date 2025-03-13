@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=297mm, initial-scale=1.0">
+    <title>상속개시전 1(2)년 이내 처분재산 채무부담내역 및 사용처소명명세서 (갑)</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            font-size: 14px;
+            line-height: 1.2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        #container {
+            width: 297mm;
+            height: 210mm;
+            padding: 8mm;
+            box-sizing: border-box;
+            transform-origin: center center;
+            background-color: white;
+            margin: auto;
+        }
+        @media screen {
+            #container {
+                transform: scale(var(--scale-factor));
+                margin: 20px auto;
+            }
+        }
+        @media print {
+            @page {
+                size: A4 landscape; /* A4 가로 방향 설정 */
+                margin: 0; /* 여백 설정 */
+            }
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                overflow: hidden;
+                width: 297mm; /* A4 가로 크기 */
+                height: 210mm; /* A4 세로 크기 */
+            }
+            #container {
+                width: 100%; /* 컨테이너가 페이지 전체 너비를 차지하도록 설정 */
+                height: auto; /* 높이를 자동으로 조정 */
+                padding: 8mm; /* 패딩 설정 */
+                box-sizing: border-box;
+            }
+            th {
+                background-color: #d3d3d3 !important; /* 회색 배경 */
+                color: #000000 !important;
+            }
+            td {
+                background-color: #ffffff;
+                color: #000000;
+            }
+            .gray-background {
+                background-color: #d3d3d3 !important; /* 회색 배경 */
+            }
+            #printButton, #saveButton, #clearButton {
+                display: none; /* 인쇄 시 버튼 숨김 */
+            }
+            .guide-table {
+                display: none; /* 인쇄 시 가이드 테이블 숨김 */
+            }
+            table {
+                page-break-inside: avoid; /* 테이블 내부에서 페이지 나누기 방지 */
+                width: 100%; /* 테이블이 페이지 너비를 차지하도록 설정 */
+            }
+          
+            }
+    
+        button {
+            padding: 10px 20px; 
+            background-color: #800020; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14pt; 
+        }
+
+        button:hover {
+            background-color: #6a001e; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: -10px;
+            border-top: 3px double #000; 
+            border-bottom: 3px double #000; 
+        }
+        table th, table td {
+            width: auto;
+            border: 0.5px solid;
+            height: auto;
+            min-height: 30px;
+            vertical-align: middle;
+            padding: 1px;
+            font-size: 10px;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+        .highlight-number {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .highlight-text {
+            font-size: 10px;
+        }
+
+        table th:nth-child(1) { width: 12%; }
+        table th:nth-child(2) { width: 9%; }
+        table th:nth-child(3) { width: 10%; }
+        table th:nth-child(4) { width: 10%; }
+        table th:nth-child(5) { width: 10%; }
+        table th:nth-child(6) { width: 13%; }
+        table th:nth-child(7) { width: 10%; }
+        table th:nth-child(8) { width: 12%; }
+
+        td, th {
+            padding: 1px;
+            font-size: 10px;
+        }
+
+        td {
+            border: 0.5px solid;
+            text-align: left;
+        }        
+        input[type="text"] {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+            border: none;
+            background: transparent;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow: hidden;
+            min-height: 30px;
+        }  
+
+        input[type="text"].amount {
+            font-size: 14px;
+            text-align: right;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .result {
+            font-weight: bold;
+            text-align: right;
+            font-size: 10px;
+        }
+
+        .amount, 
+        .total-row td, 
+        #netAsset, 
+        #inheritanceLimit, 
+        #inheritanceDeduction {
+            text-align: right;
+        }
+
+        .center-text { text-align: center; }
+        .multiline { white-space: pre-line; }
+        .white-background { background-color: #fff; }
+        .instruction-header {
+            text-align: center;
+            font-weight: bold;
+            background-color: #d3d3d3;
+            font-size: 10px;
+            height: 20px; 
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .main-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .final-total {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .instruction-text {
+            font-size: 10px;
+            line-height: 1.4;
+        }
+        #printButton {
+            padding: 6px 12px;
+            background-color: #800020; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14pt; 
+            margin-top: 10px;
+        }
+        #printButton:hover {
+            background-color: #6a001e; 
+        }
+        #saveButton {
+            padding: 6px 12px; 
+            background-color: #800020; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14pt;
+            margin-top: 10px; 
+        }
+        #clearButton {
+            padding: 6px 12px; 
+            background-color: #800020; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 14pt;
+            margin-top: 10px; 
+        }
+        button.print-save-delete {
+            color: transparent; /* 텍스트 색상을 투명하게 설정합니다 */
+            text-indent: 0px; /* 텍스트를 화면에서 숨깁니다 */
+            overflow: hidden; /* 넘치는 텍스트를 숨깁니다 */
+        }
+        button.print-save-delete span {
+            display: none !important; /* 버튼의 텍스트를 숨깁니다 */
+        }
+        div.print-save-delete {
+            display: none !important; /* 버튼과 텍스트를 모두 숨깁니다 */
+        }
+        .gray-background {
+            background-color: #d3d3d3; /* 회색 배경 */
+        }
+    </style>
+    <script>
+        function formatNumberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function calculateMismatch(totalId, proofId, mismatchId) {
+            const totalValue = parseFloat(document.getElementById(totalId).value.replace(/,/g, '')) || 0;
+            const proofValue = parseFloat(document.getElementById(proofId).value.replace(/,/g, '')) || 0;
+            const mismatchValue = Math.max(totalValue - proofValue, 0); 
+            document.getElementById(mismatchId).value = formatNumberWithCommas(mismatchValue);
+        }
+
+        function onInputAmount(input, deductionFieldId, checkboxYesId, checkboxNoId, totalId, proofId, mismatchId, inheritanceYesId, inheritanceNoId, estimationFieldId) {
+            const rawValue = input.value.replace(/,/g, '');
+            const value = parseFloat(rawValue) || 0;
+
+            input.value = formatNumberWithCommas(value);
+
+            calculateMismatch(totalId, proofId, mismatchId);
+
+            const twentyPercent = Math.round(value * 0.2); 
+            const deduction = Math.min(twentyPercent, 200000000); 
+
+            document.getElementById(deductionFieldId).value = formatNumberWithCommas(deduction);
+
+            const checkboxYes = document.getElementById(checkboxYesId);
+            const checkboxNo = document.getElementById(checkboxNoId);
+            checkboxYes.checked = value >= 500000000;
+            checkboxNo.checked = value < 200000000;
+
+            updateInheritanceEstimation(mismatchId, deductionFieldId, inheritanceYesId, inheritanceNoId, estimationFieldId);
+
+            updateTotalEstimation();
+        }
+
+        function updateInheritanceEstimation(mismatchFieldId, deductionFieldId, inheritanceYesId, inheritanceNoId, estimationFieldId) {
+            const mismatchValue = parseFloat(document.getElementById(mismatchFieldId).value.replace(/,/g, '')) || 0;
+            const deductionValue = parseFloat(document.getElementById(deductionFieldId).value.replace(/,/g, '')) || 0;
+
+            const inheritanceYes = document.getElementById(inheritanceYesId);
+            const inheritanceNo = document.getElementById(inheritanceNoId);
+            inheritanceYes.checked = mismatchValue > deductionValue;
+            inheritanceNo.checked = mismatchValue <= deductionValue;
+
+            const estimationValue = Math.max(mismatchValue - deductionValue, 0);
+            document.getElementById(estimationFieldId).value = formatNumberWithCommas(estimationValue);
+            updateTotalEstimation();
+        }
+
+        function addCommas(inputId) {
+            const input = document.getElementById(inputId);
+            const rawValue = input.value.replace(/,/g, '');
+            const value = parseFloat(rawValue) || 0;
+            input.value = formatNumberWithCommas(value);
+            if (inputId.startsWith('proof')) {
+                const rowIndex = inputId.slice(-1);
+                calculateMismatch(`total${rowIndex}`, inputId, `mismatch${rowIndex}`);
+                updateInheritanceEstimation(`mismatch${rowIndex}`, `deduction${rowIndex}`, `inheritanceYes${rowIndex}`, `inheritanceNo${rowIndex}`, `estimation${rowIndex}`);
+                updateTotalEstimation();
+            }
+        }
+
+        function updateTotalEstimation() {
+            const estimation1 = parseFloat(document.getElementById("estimation1").value.replace(/,/g, '')) || 0;
+            const estimation2 = parseFloat(document.getElementById("estimation2").value.replace(/,/g, '')) || 0;
+            const estimation3 = parseFloat(document.getElementById("estimation3").value.replace(/,/g, '')) || 0;
+            const totalEstimation = estimation1 + estimation2 + estimation3;
+            document.getElementById("totalEstimation").value = formatNumberWithCommas(totalEstimation);
+
+            updateFinalTotal();
+        }
+
+        function updateDirectEstimation(mismatchFieldId, estimationFieldId, inheritanceYesId, inheritanceNoId) {
+            const mismatchValue = parseFloat(document.getElementById(mismatchFieldId).value.replace(/,/g, '')) || 0;
+
+            document.getElementById(estimationFieldId).value = formatNumberWithCommas(mismatchValue);
+            document.getElementById(inheritanceYesId).checked = true;
+            document.getElementById(inheritanceNoId).checked = false;
+        }
+
+        function updateDebtEstimation() {
+            const estimation4 = parseFloat(document.getElementById("estimation4").value.replace(/,/g, '')) || 0;
+            const estimation5 = parseFloat(document.getElementById("estimation5").value.replace(/,/g, '')) || 0;
+            const totalDebtEstimation = estimation4 + estimation5;
+            document.getElementById("totalDebtEstimation").value = formatNumberWithCommas(totalDebtEstimation);
+
+            updateFinalTotal();
+        }
+
+        function updateFinalTotal() {
+            const totalEstimation = parseFloat(document.getElementById("totalEstimation").value.replace(/,/g, '')) || 0;
+            const totalDebtEstimation = parseFloat(document.getElementById("totalDebtEstimation").value.replace(/,/g, '')) || 0;
+            const finalTotal = totalEstimation + totalDebtEstimation;
+            document.getElementById("finalTotal").value = formatNumberWithCommas(finalTotal) + " 원";
+        }
+
+        function printPage() {
+            window.print();
+        }
+        function handleKeyNavigation(event, currentInput) {
+            const key = event.key;
+            const currentRow = parseInt(currentInput.dataset.row);
+            const currentCol = parseInt(currentInput.dataset.col);
+            let targetInput;
+
+            if (key === "Enter") {
+                event.preventDefault();
+                targetInput = document.querySelector(`input[data-row="${currentRow}"][data-col="${currentCol + 1}"]`);
+
+                if (!targetInput) {
+                    targetInput = document.querySelector(`input[data-row="${currentRow + 1}"][data-col="1"]`);
+                    if (!targetInput) {
+                        targetInput = document.querySelector('input[type="text"][data-row][data-col]');
+                    }
+                }
+            } else if (key === "ArrowRight") {
+                event.preventDefault();
+                targetInput = document.querySelector(`input[data-row="${currentRow}"][data-col="${currentCol + 1}"]`);
+                if (!targetInput) {
+                    targetInput = document.querySelector(`input[data-row="${currentRow + 1}"][data-col="1"]`);
+                    if (!targetInput) {
+                        targetInput = document.querySelector('input[type="text"][data-row][data-col]');
+                    }
+                }
+            } else if (key === "ArrowLeft") {
+                event.preventDefault();
+                targetInput = document.querySelector(`input[data-row="${currentRow}"][data-col="${currentCol - 1}"]`);
+                if (!targetInput) {
+                    const maxCol = Math.max(...Array.from(document.querySelectorAll(`input[data-row="${currentRow - 1}"][data-col]`)).map(input => parseInt(input.dataset.col)));
+                    targetInput = document.querySelector(`input[data-row="${currentRow - 1}"][data-col="${maxCol}"]`);
+                    if (!targetInput) {
+                        const inputs = document.querySelectorAll('input[type="text"][data-row][data-col]');
+                        targetInput = inputs[inputs.length - 1];
+                    }
+                }
+            } else if (key === "ArrowDown") {
+                event.preventDefault();
+                targetInput = document.querySelector(`input[data-row="${currentRow + 1}"][data-col="${currentCol}"]`);
+                if (!targetInput) {
+                    targetInput = document.querySelector(`input[data-row="1"][data-col="${currentCol}"]`);
+                }
+            } else if (key === "ArrowUp") {
+                event.preventDefault();
+                targetInput = document.querySelector(`input[data-row="${currentRow - 1}"][data-col="${currentCol}"]`);
+                if (!targetInput) {
+                    const maxRow = Math.max(...Array.from(document.querySelectorAll('input[data-row]')).map(input => parseInt(input.dataset.row)));
+                    targetInput = document.querySelector(`input[data-row="${maxRow}"][data-col="${currentCol}"]`);
+                }
+            }
+
+            if (targetInput) {
+                targetInput.focus();
+            }
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = document.querySelectorAll('input[type="text"][data-row][data-col]');
+            inputs.forEach(input => {
+                input.addEventListener("keydown", event => handleKeyNavigation(event, input));
+            });
+        });
+        function adjustScale() {
+            const container = document.getElementById('container');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const containerWidth = 297; 
+            const containerHeight = 210; 
+            const mmToPx = 3.779527559;
+            const containerWidthPx = containerWidth * mmToPx;
+            const containerHeightPx = containerHeight * mmToPx;
+            const scaleX = (windowWidth - 40) / containerWidthPx;
+            const scaleY = (windowHeight - 40) / containerHeightPx;
+            const scale = Math.min(scaleX, scaleY, 1); 
+            document.documentElement.style.setProperty('--scale-factor', scale);
+        }
+        window.addEventListener('load', adjustScale);
+        window.addEventListener('resize', adjustScale);
+        function saveData() {
+            const dataToSave = {
+                inputs: {},
+                radios: {}
+            };
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                dataToSave.inputs[input.id] = input.value;
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                if (radio.checked) {
+                    dataToSave.radios[radio.name] = radio.id;
+                }
+            });
+            localStorage.setItem('formData', JSON.stringify(dataToSave));
+            alert('저장되었습니다.');
+        }
+        function loadSavedData() {
+            const savedData = localStorage.getItem('formData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                for (const [id, value] of Object.entries(data.inputs)) {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.value = value;
+                    }
+                }
+                for (const [name, id] of Object.entries(data.radios)) {
+                    const radio = document.getElementById(id);
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                }
+            }
+        }
+        window.addEventListener('load', loadSavedData);
+        function clearData() {
+            if (confirm('저장된 모든 데이터가 삭제됩니다. 계속하시겠습니까?')) {
+                localStorage.removeItem('formData');
+                document.querySelectorAll('input[type="text"]').forEach(input => {
+                    input.value = '';
+                });
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                alert('모든 데이터가 삭제되었습니다.');
+            }
+        }
+        function handlePrint() {
+            window.print(); 
+        }
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1 style="text-align: left; font-weight: bold; font-size: 8px;">[별지 제9호서식 부표 4(갑)] (2020.03.13 개정)</h1>
+        <h1 class="main-title">상속개시전 1(2)년 이내 처분재산 채무부담내역 및 사용처소명명세서 (갑)</h1>
+        
+        <h4 class="section-title" style="text-align: left;">가. 처분재산(인출금액) 명세</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th><span class="highlight-number">①</span> 재산 구분</th>
+                    <th><span class="highlight-number">②</span> 처분(인출)<br>금액 합계</th>
+                    <th><span class="highlight-number">③</span> ②금액 1년 이내<br>2억 이상 여부<br><span style="font-size: 9px;">(2년 이내 5억 이상)</span></th>
+                    <th style="white-space: nowrap;"><span class="highlight-number">④</span> 소명금액 합계</th>
+                    <th style="white-space: nowrap;"><span class="highlight-number">⑤</span> 미소명금액<br>합계</th>
+                    <th><span class="highlight-number">⑥</span> 차감가액<br><span style="font-size: 9px;">[(②)×20%, 2억원) 중<br>작은 금액]</span></th>
+                    <th><span class="highlight-number">⑦</span> 상속추정여부<br>(⑤ > ⑥)</th>
+                    <th class="white-background" style="white-space: nowrap;"><span class="highlight-number">⑧</span> 추정상속재산가액<br>(<span style="font-size: 9px;">⑤ - ⑥</span>)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="center-text multiline">01. 현금ㆍ예금 및<br>유가증권</td>
+                    <td><input type="text" class="amount" id="total1" data-row="1" data-col="1" oninput="onInputAmount(this, 'deduction1', 'checkboxYes1', 'checkboxNo1', 'total1', 'proof1', 'mismatch1', 'inheritanceYes1', 'inheritanceNo1', 'estimation1');"></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="checkboxYes1" name="choice1"> 여 
+                        <input type="radio" id="checkboxNo1" name="choice1" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount" id="proof1" data-row="1" data-col="2" oninput="addCommas('proof1')"></td>
+                    <td><input type="text" class="amount" id="mismatch1" data-row="1" data-col="3" readonly></td>
+                    <td><input type="text" class="amount" id="deduction1" data-row="1" data-col="4" readonly></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="inheritanceYes1" name="choice7-1"> 여 
+                        <input type="radio" id="inheritanceNo1" name="choice7-1" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount white-background" id="estimation1" data-row="1" data-col="5" readonly></td>
+                </tr>
+                
+                <tr>
+                    <td class="center-text multiline">02. 부동산 및<br>부동산에 관한 권리</td>
+                    <td><input type="text" class="amount" id="total2" data-row="2" data-col="1" oninput="onInputAmount(this, 'deduction2', 'checkboxYes2', 'checkboxNo2', 'total2', 'proof2', 'mismatch2', 'inheritanceYes2', 'inheritanceNo2', 'estimation2');"></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="checkboxYes2" name="choice2"> 여 
+                        <input type="radio" id="checkboxNo2" name="choice2" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount" id="proof2" data-row="2" data-col="2" oninput="addCommas('proof2')"></td>
+                    <td><input type="text" class="amount" id="mismatch2" data-row="2" data-col="3" readonly></td>
+                    <td><input type="text" class="amount" id="deduction2" data-row="2" data-col="4" readonly></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="inheritanceYes2" name="choice7-2"> 여 
+                        <input type="radio" id="inheritanceNo2" name="choice7-2" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount white-background" id="estimation2" data-row="2" data-col="5" readonly></td> 
+                </tr>
+                
+                <tr>
+                    <td class="center-text multiline">03. 기타재산<br>(위 재산 제외)</td>
+                    <td><input type="text" class="amount" id="total3" data-row="3" data-col="1" oninput="onInputAmount(this, 'deduction3', 'checkboxYes3', 'checkboxNo3', 'total3', 'proof3', 'mismatch3', 'inheritanceYes3', 'inheritanceNo3', 'estimation3');"></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="checkboxYes3" name="choice3"> 여 
+                        <input type="radio" id="checkboxNo3" name="choice3" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount" id="proof3" data-row="3" data-col="2" oninput="addCommas('proof3')"></td>
+                    <td><input type="text" class="amount" id="mismatch3" data-row="3" data-col="3" readonly></td>
+                    <td><input type="text" class="amount" id="deduction3" data-row="3" data-col="4" readonly></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="inheritanceYes3" name="choice7-3"> 여 
+                        <input type="radio" id="inheritanceNo3" name="choice7-3" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount white-background" id="estimation3" data-row="3" data-col="5" readonly></td>
+                </tr>
+                <tr class="gray-background">
+                    <td class="center-text gray-background">⑨ 계</td>
+                    <td colspan="6" class="gray-background"></td>
+                    <td><input type="text" class="amount white-background" id="totalEstimation" readonly></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 class="section-title" style="text-align: left;">나. 부담채무 명세</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th><span class="highlight-number">⑩</span> 재산 구분</th>
+                    <th><span class="highlight-number">⑪</span> 차입금액<br>합계</th>
+                    <th><span class="highlight-number">⑫</span> ⑪금액 1년 이내<br>2억 이상 여부<br><span style="font-size: 9px;">(2년 이내 5억 이상)</span></th>
+                    <th style="white-space: nowrap;"><span class="highlight-number">⑬</span> 소명금액 합계</th>
+                    <th style="white-space: nowrap;"><span class="highlight-number">⑭</span> 미소명금액<br>합계</th>
+                    <th><span class="highlight-number">⑮</span> 차감가액<br><span style="font-size: 9px;">[(⑪)×20%, 2억원) 중<br>작은 금액]</span></th>
+                    <th><span class="highlight-number">⑯</span> 상속추정여부<br>(⑭ > ⑮)</th>
+                    <th style="white-space: nowrap;"><span class="highlight-number">⑰</span> 상속추정재산가액<br>(<span style="font-size: 9px;">⑭ - ⑮</span>)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="center-text multiline">부담채무Ⅰ<br><span style="font-size: 9px;">(국가, 지자체,<br>금융기관으로부터 차입)</span></td>
+                    <td><input type="text" class="amount" id="total4" data-row="4" data-col="1" oninput="onInputAmount(this, 'deduction4', 'checkboxYes4', 'checkboxNo4', 'total4', 'proof4', 'mismatch4', 'inheritanceYes4', 'inheritanceNo4', 'estimation4'); updateDebtEstimation();"></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="checkboxYes4" name="choice4"> 여 
+                        <input type="radio" id="checkboxNo4" name="choice4" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount" id="proof4" data-row="4" data-col="2" oninput="addCommas('proof4')"></td>
+                    <td><input type="text" class="amount" id="mismatch4" data-row="4" data-col="3" readonly></td>
+                    <td><input type="text" class="amount" id="deduction4" data-row="4" data-col="4" readonly></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="inheritanceYes4" name="choice7-4"> 여 
+                        <input type="radio" id="inheritanceNo4" name="choice7-4" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount white-background" id="estimation4" data-row="4" data-col="5" readonly></td> 
+                </tr>
+                
+                <tr>
+                    <td class="center-text multiline">부담채무Ⅱ<br><span style="font-size: 9px;">(국가, 지자체, 금융기관이<br>아닌 자로부터 차입)</span></td>
+                    <td><input type="text" class="amount" id="total5" data-row="5" data-col="1" oninput="onInputAmount(this, 'deduction5', 'checkboxYes5', 'checkboxNo5', 'total5', 'proof5', 'mismatch5', 'inheritanceYes5', 'inheritanceNo5', 'estimation5'); updateDebtEstimation();"></td>
+                    <td class="gray-background" style="text-align: center;"></td>
+                    <td><input type="text" class="amount" id="proof5" data-row="5" data-col="2" oninput="addCommas('proof5')"></td>
+                    <td><input type="text" class="amount" id="mismatch5" data-row="5" data-col="3" readonly></td>
+                    <td class="gray-background" style="text-align: right;"></td>
+                    <td style="text-align: center;">
+                        <input type="radio" id="inheritanceYes5" name="choice7-5"> 여 
+                        <input type="radio" id="inheritanceNo5" name="choice7-5" style="margin-left: 10px;"> 부
+                    </td>
+                    <td><input type="text" class="amount white-background" id="estimation5" data-row="5" data-col="5" readonly></td>
+                </tr>
+
+                <tr class="gray-background">
+                    <td class="center-text gray-background">⑱ 계</td>
+                    <td colspan="6" class="gray-background"></td>
+                    <td><input type="text" class="amount white-background" id="totalDebtEstimation" readonly></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 class="final-total" style="text-align: left;">
+            다. 추정상속재산가액 합계액 (⑨ + ⑱) :
+            <input type="text" class="amount white-background" id="finalTotal" readonly style="margin-left: 10px; width: 150px;">
+        </h4>
+
+        <table style="width: 100%; font-size: 9px; margin-top: 10px;">
+            <thead>
+                <tr>
+                    <th class="instruction-header">작성방법</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="instruction-text" style="height: 60px;">
+                        1. "② 처분(인출) 금액 합계", "④ 소명금액 합계", "⑤ 미소명금액 합계" 란은 상속개시전 1(2)년 이내 처분재산･채무부담내역 및 사용처소명명세서(을)[별지 제9호서식 부표 4(을)]의 "가.처분재산 및 인출내역 사용명세내역" 합계금액을 각각 옮겨 적습니다.<br>
+                        2. "⑪ 차입 금액 합계", "⑬ 소명금액 합계", "⑭ 미소명금액 합계" 란은 상속개시전 1(2)년 이내 처분재산･채무부담내역 및 사용처소명명세서(을)[별지 제9호서식 부표 4(을)]의 "부담채무 상세내역" 합계금액을 각각 옮겨 적습니다.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <div style="display: flex; gap: 10px;">
+                <button id="saveButton" onclick="saveData()" style="background-color: #800020; color: white; border: none; padding: 6px 12px; font-size: 14pt; cursor: pointer;">저장하기</button>
+                <button id="clearButton" onclick="clearData()" style="background-color: #800020; color: white; border: none; padding: 6px 12px; font-size: 14pt; cursor: pointer;">삭제하기</button>
+            </div>
+            <div style="margin-left: auto;">
+                <button id="printButton" onclick="printPage()" style="background-color: #800020; color: white; border: none; padding: 6px 12px; font-size: 14pt; cursor: pointer;">인쇄하기</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
