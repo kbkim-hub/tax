@@ -1174,8 +1174,11 @@
                 let additionalFees = 0;
                 let additionalDescription = "";
                 
+                // 협의 필요 여부 체크
+                const isNegotiationRequired = feeDescription === "협의 필요";
+                
                 // 4대보험 신고 대행
-                if (document.getElementById('bookkeeping-option1').checked) {
+                if (document.getElementById('bookkeeping-option1').checked && !isNegotiationRequired) {
                     const personCount = parseInt(document.getElementById('bookkeeping-option1-count').value);
                     if (!isNaN(personCount) && personCount > 0) {
                         const insuranceFee = Math.max(20000, personCount * 5000);
@@ -1188,21 +1191,21 @@
                 }
                 
                 // 수시 내방 방문 지도업체
-                if (document.getElementById('bookkeeping-option2').checked) {
+                if (document.getElementById('bookkeeping-option2').checked && !isNegotiationRequired) {
                     const visitFee = parseInt(document.getElementById('bookkeeping-option2-amount').value);
                     additionalFees += visitFee;
                     additionalDescription += `<br>+ 수시 내방 방문 지도: ${formatNumber(visitFee)}원`;
                 }
                 
                 // PC방 업체 인건비 신고
-                if (document.getElementById('bookkeeping-option3').checked) {
+                if (document.getElementById('bookkeeping-option3').checked && !isNegotiationRequired) {
                     fee = 110000;
                     feeDescription = "PC방 업체 인건비 신고: 110,000원";
                     bracket = "PC방 업체";
                 }
                 
                 // 일자리 안정자금 신청 업체
-                if (document.getElementById('bookkeeping-option4').checked) {
+                if (document.getElementById('bookkeeping-option4').checked && !isNegotiationRequired) {
                     additionalFees += 20000;
                     additionalDescription += "<br>+ 일자리 안정자금 신청: 20,000원";
                 }
@@ -1212,14 +1215,18 @@
                 <div style="font-size: 1rem; color: #444; margin-bottom: 5px;">기준액(자산,매출금액): ${formatNumber(amount)}원 (${bracket})</div>
                 <div style="font-size: 1rem; color: #444; margin-bottom: 10px;">기본 보수기준: ${feeDescription}</div>`;
                 
-                // 추가 사항이 있는 경우만 추가
-                if (additionalDescription) {
+                // 추가 사항이 있는 경우만 추가 (협의 필요가 아닐 때만)
+                if (additionalDescription && !isNegotiationRequired) {
                     resultHTML += `<div style="font-size: 1rem; color: #444; margin-bottom: 10px;">추가 사항: ${additionalDescription}</div>`;
                 }
                 
                 // 최종 금액 표시
-                const totalFee = fee + additionalFees;
-                resultHTML += `<div style="font-size: 1.3rem; font-weight: bold; color: #000; padding: 10px; background-color: #ffffcc; border-radius: 5px; text-align: center;">최종 보수기준: ${formatNumber(Math.round(totalFee))}원</div>`;
+                if (isNegotiationRequired) {
+                    resultHTML += `<div style="font-size: 1.3rem; font-weight: bold; color: #000; padding: 10px; background-color: #ffffcc; border-radius: 5px; text-align: center;">최종 보수기준: 협의 필요</div>`;
+                } else {
+                    const totalFee = fee + additionalFees;
+                    resultHTML += `<div style="font-size: 1.3rem; font-weight: bold; color: #000; padding: 10px; background-color: #ffffcc; border-radius: 5px; text-align: center;">최종 보수기준: ${formatNumber(Math.round(totalFee))}원</div>`;
+                }
                 
                 document.getElementById('bookkeeping-result').innerHTML = resultHTML;
             }
