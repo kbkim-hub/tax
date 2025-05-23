@@ -113,57 +113,140 @@
             /* 반응형 스타일 */
             @media (max-width: 768px) {
                 body {
-                    padding: 8px;
+                    padding: 5px;
+                    font-size: 14px;
                 }
                 h1 {
-                    font-size: 1.5rem;
-                    margin-bottom: 20px;
+                    font-size: 1.4rem;
+                    margin-bottom: 15px;
                 }
                 h2 {
-                    font-size: 1.3rem;
+                    font-size: 1.2rem;
                 }
                 .tab-button {
                     font-size: 0.8rem;
                     padding: 8px 5px;
                     width: 100%;
-                    flex: 1 0 45%;
+                    margin-bottom: 2px;
                 }
                 table {
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                 }
                 th, td {
-                    padding: 6px 4px;
+                    padding: 6px 3px;
                 }
                 .notes {
                     font-size: 0.8rem;
+                    padding: 10px;
                 }
                 .notes h3 {
-                    font-size: 1rem;
+                    font-size: 0.95rem;
+                }
+                .option-button {
+                    font-size: 0.85rem;
+                    padding: 6px 8px;
+                    width: 100%;
+                    display: block;
+                    margin: 3px 0;
+                }
+                input[type="text"], input[type="number"], select {
+                    font-size: 0.9rem;
+                    padding: 6px;
+                }
+                button {
+                    font-size: 0.95rem;
+                    padding: 8px 12px;
+                }
+                .pdf-button {
+                    position: static;
+                    margin: 10px auto;
+                    display: block;
+                    width: 100%;
+                    max-width: 200px;
+                }
+                /* 계산기 컨테이너 개선 */
+                #adjustment > div, #accounting > div {
+                    flex-direction: column !important;
+                }
+                /* 모바일에서 가로 스크롤 허용 */
+                .options-container {
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                    padding-bottom: 5px;
+                }
+                /* 모바일에서 계산기 선택기 표시 및 계산기 하나만 표시 */
+                .calculator-selector {
+                    display: block !important;
+                }
+                /* 모바일에서 계산기 레이아웃 조정 */
+                #personal-calculator, #personalB-calculator, #personal-tables, #personalB-tables {
+                    width: 100% !important;
+                    min-width: 100% !important;
+                    max-width: 100% !important;
+                    flex: none !important;
+                }
+                /* 모바일에서 개인B 계산기와 테이블 초기 숨김 */
+                #personalB-calculator, #personalB-tables {
+                    display: none !important;
                 }
             }
             
             @media (max-width: 480px) {
+                body {
+                    padding: 3px;
+                    font-size: 13px;
+                }
                 h1 {
-                    font-size: 1.3rem;
+                    font-size: 1.2rem;
                 }
                 h2 {
                     font-size: 1.1rem;
                 }
                 table {
-                    font-size: 0.75rem;
+                    font-size: 0.7rem;
                 }
                 th, td {
-                    padding: 5px 3px;
+                    padding: 4px 2px;
                 }
                 .tab-button {
                     font-size: 0.75rem;
-                    padding: 8px 3px;
-                    margin-right: 2px;
-                    flex: 1 0 100%;
+                    padding: 6px 3px;
+                    margin-right: 1px;
                 }
                 .table-container {
                     overflow-x: auto;
                     -webkit-overflow-scrolling: touch;
+                }
+                .option-button {
+                    font-size: 0.8rem;
+                    padding: 5px 6px;
+                }
+                input[type="text"], input[type="number"], select {
+                    font-size: 0.85rem;
+                    padding: 5px;
+                    min-height: 30px;
+                }
+                #personal-bookkeeping-amount, #personalB-bookkeeping-amount, #personal-refund-amount {
+                    width: 100px !important;
+                }
+                #bookkeeping-option1-count {
+                    min-width: 40px;
+                }
+                /* PDF 버튼 모바일 최적화 */
+                .pdf-button {
+                    font-size: 0.95rem;
+                    padding: 8px;
+                    bottom: 10px;
+                    right: 10px;
+                }
+                /* 계산기 선택 버튼 모바일 최적화 */
+                .calculator-selector {
+                    margin-bottom: 10px;
+                }
+                .calc-selector-btn {
+                    padding: 8px;
+                    font-size: 0.9rem;
                 }
             }
             
@@ -271,6 +354,22 @@
             .page-break {
                 page-break-before: always;
             }
+            
+            /* 모바일 계산기 선택 버튼 스타일 */
+            .calc-selector-btn {
+                padding: 10px 15px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                font-weight: bold;
+                transition: all 0.3s;
+                cursor: pointer;
+            }
+            
+            .calc-selector-btn.active {
+                background-color: #005a9e !important;
+                color: white !important;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     </head>
@@ -279,22 +378,32 @@
             <h1>대한세무법인 개인 세무대리 보수기준표</h1>
             
             <div class="tab-container">
-                <button class="tab-button active" onclick="openTab(event, 'adjustment')">세무조정계산서 작성 보수표</button>
+                <button class="tab-button active" onclick="openTab(event, 'adjustment')">세무조정계산서 보수액 계산기 (VAT 별도)</button>
                 <button class="tab-button" onclick="openTab(event, 'accounting')">기장대행보수표</button>
             </div>
             
             <!-- 세무조정계산서 작성 보수표 -->
             <div id="adjustment" class="tab-content active">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <h2 style="margin-bottom: 0;">세무조정계산서 작성 보수표 (VAT 별도)</h2>
+                    <h2 style="margin-bottom: 0;">세무조정계산서 보수액 계산기 (VAT 별도)</h2>
                     <!-- PDF 저장 버튼을 제목 오른쪽에 고정 -->
                     <button class="pdf-button" style="position: static; margin-left: 20px; margin-bottom: 0;" onclick="generatePDF()">PDF 저장</button>
                 </div>
                 
                 <!-- 계산기 컨테이너 부분 -->
                 <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+                    
+                    <!-- 모바일에서 계산기 선택 버튼 -->
+                    <div class="calculator-selector" style="display: none; width: 100%; margin-bottom: 15px; text-align: center;">
+                        <div style="font-weight: bold; margin-bottom: 10px; color: #005a9e; font-size: 1.1rem;">계산기 유형 선택</div>
+                        <div style="display: flex; justify-content: center; gap: 10px;">
+                            <button id="personal-calc-btn" class="calc-selector-btn active" style="flex: 1; max-width: 150px; background-color: #005a9e; color: white;" onclick="switchCalculator('personal')">개인</button>
+                            <button id="personalB-calc-btn" class="calc-selector-btn" style="flex: 1; max-width: 150px; background-color: #f1f1f1; color: #333;" onclick="switchCalculator('personalB')">개인B (특별개인)</button>
+                        </div>
+                    </div>
+                    
                     <!-- 개인 계산기 -->
-                    <div style="flex: 1; min-width: 45%;">
+                    <div id="personal-calculator" style="flex: 1; min-width: 45%;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                             <h3 style="margin: 0; color: #005a9e;">개인</h3>
                             <div style="text-align: right; font-size: 1.2rem;"><small>[단위: 원]</small></div>
@@ -351,7 +460,7 @@
                     </div>
                     
                     <!-- 개인B 계산기 -->
-                    <div style="flex: 1; min-width: 45%;">
+                    <div id="personalB-calculator" style="flex: 1; min-width: 45%;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                             <h3 style="margin: 0; color: #005a9e;">개인B (특별개인)</h3>
                             <div style="text-align: right; font-size: 1.2rem;"><small>[단위: 원]</small></div>
@@ -415,8 +524,12 @@
                 <!-- 테이블 컨테이너 부분 -->
                 <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
                     <!-- 개인 보수표 -->
-                    <div style="flex: 1; min-width: 45%;">
-                        <div class="table-container">
+                    <div id="personal-tables" style="flex: 1; min-width: 45%;">
+                        <div class="toggle-header" onclick="toggleTable('personal-table-container')" style="cursor: pointer; background-color: #e6f3ff; padding: 10px; border-radius: 5px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: #005a9e;">개인 보수기준표 </h3>
+                            <span id="personal-table-toggle" style="font-weight: bold;">▼</span>
+                        </div>
+                        <div id="personal-table-container" class="table-container" style="display: none;">
                             <table>
                                 <thead>
                                     <tr>
@@ -481,21 +594,27 @@
                             </table>
                         </div>
                         
-                        <div class="notes" style="margin-top: 15px; margin-bottom: 5px;">
-                            <h4 style="color: #005a9e; margin-top: 0; font-size: 1rem;">개인 참고 사항</h4>
+                        <div class="toggle-header" onclick="toggleTable('personal-notes')" style="cursor: pointer; background-color: #f9f9f9; padding: 10px; border-radius: 5px; margin-top: 15px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="margin: 0; color: #005a9e; font-size: 1rem;">개인 참고 사항 </h4>
+                            <span id="personal-notes-toggle" style="font-weight: bold;">▼</span>
+                        </div>
+                        <div id="personal-notes" class="notes" style="display: none; margin-top: 0; margin-bottom: 5px;">
                             <ul style="font-size: 0.9rem; list-style-type: none; padding-left: 0px;">
                                 <li>&#9312; 결산업무,세무조정 및 원가계산을 함께 수행하는경우, 상기 보수표에 30%가산</li>
                                 <li>&#9313; 구분은 자산총액과 수입금액 중 큰 금액으로 함.</li>
                                 <li>&#9314; 이월결손금 공제는 환급액의 10% 추가청구. (다른 공제감면은 청구하지않음)</li>
                                 <li>&#9315; 창업중소기업,청년창업중소기업 감면에 대해 검토시, 15% 추가가산한다.</li>
                             </ul>
-                            </ul>
                         </div>
                     </div>
                     
                     <!-- 개인B 보수표 -->
-                    <div style="flex: 1; min-width: 45%;">
-                        <div class="table-container">
+                    <div id="personalB-tables" style="flex: 1; min-width: 45%;">
+                        <div class="toggle-header" onclick="toggleTable('personalB-table-container')" style="cursor: pointer; background-color: #e6f3ff; padding: 10px; border-radius: 5px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: #005a9e;">개인B (특별개인) 보수기준표 </h3>
+                            <span id="personalB-table-toggle" style="font-weight: bold;">▼</span>
+                        </div>
+                        <div id="personalB-table-container" class="table-container" style="display: none;">
                             <table>
                                 <thead>
                                     <tr>
@@ -548,8 +667,11 @@
                             </table>
                         </div>
                         
-                        <div class="notes" style="margin-top: 15px; margin-bottom: 15px;">
-                            <h4 style="color: #005a9e; margin-top: 0; font-size: 1rem;">개인B (특별개인) 참고 사항</h4>
+                        <div class="toggle-header" onclick="toggleTable('personalB-notes')" style="cursor: pointer; background-color: #f9f9f9; padding: 10px; border-radius: 5px; margin-top: 15px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="margin: 0; color: #005a9e; font-size: 1rem;">개인B (특별개인) 참고 사항 </h4>
+                            <span id="personalB-notes-toggle" style="font-weight: bold;">▼</span>
+                        </div>
+                        <div id="personalB-notes" class="notes" style="display: none; margin-top: 0; margin-bottom: 15px;">
                             <ul style="font-size: 0.9rem; list-style-type: none; padding-left: 0px;">
                                 <li>&#9312; 특별업종 중 중점관리업종 및 외형 5억 이상은 40% 가산</li>
                                 <li>&#9313; 기타 특별관리업종은 20% 가산</li>
@@ -566,7 +688,7 @@
             <div id="accounting" class="tab-content">
                 <p style= "text-align:center; font-weight: bold; font-size: 1.2rem; margin-bottom: 5px;">본 기준은 세무사법 개정으로 한국세무사회 보수표가 폐지됨에 따라<br>당 사무소의 운용을 위해 보수기준을 정한 것이며, 부가세 10%는 별도임</p>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <h2 style="margin-bottom: 0;">기장대행보수표 (VAT 별도)</h2>
+                    <h2 style="margin-bottom: 0;">기장대행보수액 계산기 (VAT 별도)</h2>
                     <button class="pdf-button" style="position: static; margin-left: 20px; margin-bottom: 0;" onclick="generateAccountingPDF()">PDF 저장</button>
                 </div>
                 
@@ -617,79 +739,88 @@
                     <div id="bookkeeping-result" style="margin-top: 10px; font-weight: bold;"></div>
                 </div>
                 
-                <div class="table-container">
-                    <div style="text-align: right; margin-bottom: 0px; font-size: 1rem;"><small>[단위: 원]</small></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th rowspan="2">기준액 (자산,매출금액)</th>
-                                <th colspan="2">월보수액</th>
-                            </tr>
-                            <tr class="sub-header">
-                                <th>개인 A</th>
-                                <th>개인 B</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1억원 미만</td>
-                                <td>120,000</td>
-                                <td>120,000</td>
-                            </tr>
-                            <tr>
-                                <td>1억원 이상 ~ 2억원 미만</td>
-                                <td>130,000</td>
-                                <td>150,000</td>
-                            </tr>
-                            <tr>
-                                <td>2억원 이상 ~ 3억원 미만</td>
-                                <td>140,000</td>
-                                <td>170,000</td>
-                            </tr>
-                            <tr>
-                                <td>3억원 이상 ~ 5억원 미만</td>
-                                <td>160,000</td>
-                                <td>200,000</td>
-                            </tr>
-                            <tr>
-                                <td>5억원 이상 ~ 10억원 미만</td>
-                                <td>200,000</td>
-                                <td>250,000</td>
-                            </tr>
-                            <tr>
-                                <td>10억원 이상 ~ 20억원 미만</td>
-                                <td>250,000</td>
-                                <td>350,000</td>
-                            </tr>
-                            <tr>
-                                <td>20억원 이상 ~ 30억원 미만</td>
-                                <td>300,000</td>
-                                <td>450,000</td>
-                            </tr>
-                            <tr>
-                                <td>30억원 이상 ~ 40억원 미만</td>
-                                <td>400,000</td>
-                                <td>500,000</td>
-                            </tr>
-                            <tr>
-                                <td>50억원 이상</td>
-                                <td colspan="2">협 의</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="notes">
-                    <h3>기장대행 참고 사항</h3>
-                    <ul style="list-style-type: none; padding-left: 0px;">
-                        <li>&#9312; 기준금액은 자산/수입금액 중 큰것 기준</li>
-                        <li>&#9313; 개인 B : 의료,부임,음숙,서비스업 등, 상반기 가결산업체 등 특별관리업체</li>
-                        <li>&#9314; 4대보험 신고 대행시 인원수에 따라 20,000원 이상 추가</li>
-                        <li>&#9315; 수시 내방 방문 지도업체는 30,000 ~ 200,000원 추가</li>
-                        <li>&#9316; 매년 12월중 1월분의 기장료를 소모품대로 별도 부과</li>
-                        <li>&#9317; PC방 업체 중 인건비 신고를 하는 경우 기장료 110,000원으로 함</li>
-                        <li>&#9318; 일자리 안정자금 신청 업체는 위 기장료에서 20,000원 추가함</li>
-                    </ul>
+                <div id="bookkeeping-tables">
+                    <div class="toggle-header" onclick="toggleTable('bookkeeping-table-container')" style="cursor: pointer; background-color: #e6f3ff; padding: 10px; border-radius: 5px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin: 0; color: #005a9e;">기장대행 보수기준표 </h3>
+                        <span id="bookkeeping-table-toggle" style="font-weight: bold;">▼</span>
+                    </div>
+                    <div id="bookkeeping-table-container" class="table-container" style="display: none;">
+                        <div style="text-align: right; margin-bottom: 0px; font-size: 1rem;"><small>[단위: 원]</small></div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">기준액 (자산,매출금액)</th>
+                                    <th colspan="2">월보수액</th>
+                                </tr>
+                                <tr class="sub-header">
+                                    <th>개인 A</th>
+                                    <th>개인 B</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1억원 미만</td>
+                                    <td>120,000</td>
+                                    <td>120,000</td>
+                                </tr>
+                                <tr>
+                                    <td>1억원 이상 ~ 2억원 미만</td>
+                                    <td>130,000</td>
+                                    <td>150,000</td>
+                                </tr>
+                                <tr>
+                                    <td>2억원 이상 ~ 3억원 미만</td>
+                                    <td>140,000</td>
+                                    <td>170,000</td>
+                                </tr>
+                                <tr>
+                                    <td>3억원 이상 ~ 5억원 미만</td>
+                                    <td>160,000</td>
+                                    <td>200,000</td>
+                                </tr>
+                                <tr>
+                                    <td>5억원 이상 ~ 10억원 미만</td>
+                                    <td>200,000</td>
+                                    <td>250,000</td>
+                                </tr>
+                                <tr>
+                                    <td>10억원 이상 ~ 20억원 미만</td>
+                                    <td>250,000</td>
+                                    <td>350,000</td>
+                                </tr>
+                                <tr>
+                                    <td>20억원 이상 ~ 30억원 미만</td>
+                                    <td>300,000</td>
+                                    <td>450,000</td>
+                                </tr>
+                                <tr>
+                                    <td>30억원 이상 ~ 40억원 미만</td>
+                                    <td>400,000</td>
+                                    <td>500,000</td>
+                                </tr>
+                                <tr>
+                                    <td>50억원 이상</td>
+                                    <td colspan="2">협 의</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="toggle-header" onclick="toggleTable('bookkeeping-notes')" style="cursor: pointer; background-color: #f9f9f9; padding: 10px; border-radius: 5px; margin-top: 15px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="margin: 0; color: #005a9e; font-size: 1rem;">기장대행 참고 사항 </h4>
+                        <span id="bookkeeping-notes-toggle" style="font-weight: bold;">▼</span>
+                    </div>
+                    <div id="bookkeeping-notes" class="notes" style="display: none; margin-top: 0;">
+                        <ul style="list-style-type: none; padding-left: 0px;">
+                            <li>&#9312; 기준금액은 자산/수입금액 중 큰것 기준</li>
+                            <li>&#9313; 개인 B : 의료,부임,음숙,서비스업 등, 상반기 가결산업체 등 특별관리업체</li>
+                            <li>&#9314; 4대보험 신고 대행시 인원수에 따라 20,000원 이상 추가</li>
+                            <li>&#9315; 수시 내방 방문 지도업체는 30,000 ~ 200,000원 추가</li>
+                            <li>&#9316; 매년 12월중 1월분의 기장료를 소모품대로 별도 부과</li>
+                            <li>&#9317; PC방 업체 중 인건비 신고를 하는 경우 기장료 110,000원으로 함</li>
+                            <li>&#9318; 일자리 안정자금 신청 업체는 위 기장료에서 20,000원 추가함</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -715,12 +846,75 @@
                 evt.currentTarget.classList.add("active");
             }
             
-            // 페이지 로드시 기본 탭 설정
+            // 페이지 로드시 기본 탭 설정 및 모바일 디바이스 체크
             window.onload = function() {
                 // 세무조정계산서 작성 보수표가 기본 탭이 되도록 설정
                 document.getElementById("adjustment").classList.add("active");
                 document.getElementsByClassName("tab-button")[0].classList.add("active");
+                
+                // 모바일 디바이스 체크 (화면 크기로 판단)
+                checkMobileDevice();
+                
+                // 화면 크기 변경 시 모바일 체크 다시 실행
+                window.addEventListener('resize', checkMobileDevice);
             };
+            
+            // 모바일 디바이스 체크 함수
+            function checkMobileDevice() {
+                if (window.innerWidth <= 768) {
+                    // 모바일 화면에서는 개인 계산기만 보이도록 설정
+                    switchCalculator('personal');
+                } else {
+                    // 데스크톱에서는 모두 표시
+                    document.getElementById('personal-calculator').style.display = 'block';
+                    document.getElementById('personalB-calculator').style.display = 'block';
+                    document.getElementById('personal-tables').style.display = 'block';
+                    document.getElementById('personalB-tables').style.display = 'block';
+                    
+                    // 선택 버튼 초기화
+                    var calcButtons = document.getElementsByClassName('calc-selector-btn');
+                    for (var i = 0; i < calcButtons.length; i++) {
+                        calcButtons[i].classList.remove('active');
+                    }
+                    document.getElementById('personal-calc-btn').classList.add('active');
+                }
+            }
+            
+            // 계산기 전환 함수
+            function switchCalculator(type) {
+                // 모든 계산기 숨기기
+                document.getElementById('personal-calculator').style.display = 'none';
+                document.getElementById('personalB-calculator').style.display = 'none';
+                document.getElementById('personal-tables').style.display = 'none';
+                document.getElementById('personalB-tables').style.display = 'none';
+                
+                // 선택한 계산기만 표시
+                if (type === 'personal') {
+                    document.getElementById('personal-calculator').style.display = 'block';
+                    document.getElementById('personal-tables').style.display = 'block';
+                    document.getElementById('personal-calc-btn').style.backgroundColor = '#005a9e';
+                    document.getElementById('personal-calc-btn').style.color = 'white';
+                    document.getElementById('personalB-calc-btn').style.backgroundColor = '#f1f1f1';
+                    document.getElementById('personalB-calc-btn').style.color = '#333';
+                } else {
+                    document.getElementById('personalB-calculator').style.display = 'block';
+                    document.getElementById('personalB-tables').style.display = 'block';
+                    document.getElementById('personalB-calc-btn').style.backgroundColor = '#005a9e';
+                    document.getElementById('personalB-calc-btn').style.color = 'white';
+                    document.getElementById('personal-calc-btn').style.backgroundColor = '#f1f1f1';
+                    document.getElementById('personal-calc-btn').style.color = '#333';
+                }
+                
+                // 선택 버튼 상태 업데이트
+                var calcButtons = document.getElementsByClassName('calc-selector-btn');
+                for (var i = 0; i < calcButtons.length; i++) {
+                    calcButtons[i].classList.remove('active');
+                }
+                document.getElementById(type + '-calc-btn').classList.add('active');
+                
+                // 선택한 계산기가 보이도록 스크롤
+                document.getElementById(type + '-calculator').scrollIntoView({ behavior: 'smooth' });
+            }
             
             // 체크박스 토글 함수
             function toggleOption(id, element) {
@@ -1273,6 +1467,20 @@
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
                 html2pdf().set(opt).from(accountingSection).save();
+            }
+            
+            // 테이블 표시/숨김 토글 함수 추가
+            function toggleTable(containerId) {
+                const container = document.getElementById(containerId);
+                const toggleIcon = document.getElementById(containerId + '-toggle');
+                
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    toggleIcon.innerText = '▲';
+                } else {
+                    container.style.display = 'none';
+                    toggleIcon.innerText = '▼';
+                }
             }
         </script>
     </body>
