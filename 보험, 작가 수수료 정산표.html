@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보험, 작가 수수료 정산표</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #005a9e;
+            padding-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background-color: #005a9e;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+        
+        td {
+            padding: 8px 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .number {
+            text-align: right;
+        }
+        
+        .total-row {
+            background-color: #e6f0f7;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>보험, 작가 수수료 정산표</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40%;">수입금액</th>
+                    <th style="width: 30%;">수수료</th>
+                    <th style="width: 30%;">환급율 / 소득율</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2,000만원 이하</td>
+                    <td class="number">150,000원</td>
+                    <td>환급 100%</td>
+                </tr>
+                <tr>
+                    <td>2,000만원 ~ 3,000만원</td>
+                    <td class="number">200,000원</td>
+                    <td>환급 90%</td>
+                </tr>
+                <tr>
+                    <td>3,000만원 ~ 4,000만원</td>
+                    <td class="number">250,000원</td>
+                    <td>환급 80%</td>
+                </tr>
+                <tr>
+                    <td>4,000만원 ~ 5,000만원</td>
+                    <td class="number">300,000원</td>
+                    <td>환급 70%</td>
+                </tr>
+                <tr>
+                    <td>5,000만원 ~ 6,000만원</td>
+                    <td class="number">400,000원</td>
+                    <td>환급 60%</td>
+                </tr>
+                <tr>
+                    <td>6,000만원 ~ 7,500만원</td>
+                    <td class="number">600,000원</td>
+                    <td>환급 40%</td>
+                </tr>
+                <tr>
+                    <td>7,500만원 ~ 8,000만원</td>
+                    <td class="number">700,000원</td>
+                    <td>환급 30%</td>
+                </tr>
+                <tr>
+                    <td>8,000만원 ~ 9,000만원</td>
+                    <td class="number">800,000원</td>
+                    <td>환급 20%</td>
+                </tr>
+                <tr>
+                    <td>9,000만원 ~ 10,000만원</td>
+                    <td class="number">900,000원</td>
+                    <td>환급 10%</td>
+                </tr>
+                <tr>
+                    <td>10,000만원 ~ 12,000만원</td>
+                    <td class="number">1,200,000원</td>
+                    <td>표준소득율 * 70%</td>
+                </tr>
+                <tr>
+                    <td>12,000만원 ~ 14,000만원</td>
+                    <td class="number">1,500,000원</td>
+                    <td>표준소득율 * 75%</td>
+                </tr>
+                <tr>
+                    <td>14,000만원 ~ 16,000만원</td>
+                    <td class="number">1,800,000원</td>
+                    <td>표준소득율 * 80%</td>
+                </tr>
+                <tr>
+                    <td>16,000만원 ~ 18,000만원</td>
+                    <td class="number">2,100,000원</td>
+                    <td>표준소득율 * 80%</td>
+                </tr>
+                <tr>
+                    <td>18,000만원 ~ 20,000만원</td>
+                    <td class="number">2,400,000원</td>
+                    <td>표준소득율 * 80%</td>
+                </tr>
+                <tr>
+                    <td>20,000만원 ~</td>
+                    <td >상담후협의</td>
+                    <td>표준소득율 * 80%</td>
+                </tr>
+                <tr>
+                    <td rowspan="3">PC방 타소득 (추가건당)</td>
+                    <td class="number">300,000원</td>
+                    <td>(장부시)</td>
+                </tr>
+                <tr>
+                    <td class="number">100,000원</td>
+                    <td>(합산만)</td>
+                </tr>
+                <tr>
+                    <td class="number">100,000원</td>
+                    <td>(근로소득만)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
