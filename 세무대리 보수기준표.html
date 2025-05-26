@@ -204,11 +204,18 @@
                 justify-content: space-between !important;
                 align-items: center !important;
                 flex-wrap: nowrap !important;
+                margin-bottom: 15px !important;
             }
             .title-pdf-container h2 {
                 margin: 0 !important;
                 flex: 1 !important;
                 font-size: 1.1rem !important;
+                margin-right: 10px !important;
+            }
+            /* 계산기 선택 버튼과의 간격 조정 */
+            .calculator-selector {
+                margin-top: 0 !important;
+                margin-bottom: 15px !important;
             }
         }
         
@@ -258,10 +265,10 @@
             }
             /* PDF 버튼 모바일 최적화 */
             .pdf-button {
-                font-size: 0.95rem;
-                padding: 8px;
-                bottom: 10px;
-                right: 10px;
+                font-size: 0.8rem !important;
+                padding: 6px 8px !important;
+                margin-left: 8px !important;
+                white-space: nowrap !important;
             }
             /* 계산기 선택 버튼 모바일 최적화 */
             .calculator-selector {
@@ -270,6 +277,21 @@
             .calc-selector-btn {
                 padding: 8px;
                 font-size: 0.9rem;
+            }
+            /* 모바일에서 제목과 PDF 버튼 컨테이너 스타일 강화 */
+            .title-pdf-container {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                flex-wrap: nowrap !important;
+                margin-bottom: 15px !important;
+            }
+            .title-pdf-container h2 {
+                margin: 0 !important;
+                flex: 1 !important;
+                font-size: 1rem !important;
+                margin-right: 8px !important;
+                line-height: 1.2 !important;
             }
         }
         
