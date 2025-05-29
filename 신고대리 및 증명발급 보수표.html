@@ -143,6 +143,18 @@
             font-weight: 500;
         }
         
+        /* 사업자 등록 신청 보수 테이블의 구분 열 폰트 크기 증가 */
+        .special-table td:first-child {
+            font-size: 1.15em;
+            font-weight: 500;
+        }
+        
+        /* 특정 텍스트 항목 폰트 크기 증가 */
+        .highlight-text {
+            font-size: 1.25em;
+            font-weight: 500;
+        }
+        
         @media (max-width: 768px) {
             body {
                 margin: 10px;
@@ -274,11 +286,11 @@
                             <td class="price">건당 100,000원</td>
                         </tr>
                         <tr>
-                            <td>사업장 현황신고서(면세)</td>
+                            <td>사업장 현황신고서 (면세)</td>
                             <td class="price">150,000원</td>
                         </tr>
                         <tr>
-                            <td>기타실적확인(경영진단 등)</td>
+                            <td>기타실적확인 (경영진단 등)</td>
                             <td class="price">협의</td>
                         </tr>
                     </tbody>
@@ -290,7 +302,7 @@
         <div class="table-section">
             <h2 class="table-header" data-target="table2">사업자 등록 신청 보수</h2>
             <div class="table-content" id="table2">
-                <table>
+                <table class="special-table">
                     <thead>
                         <tr>
                             <th colspan="2">구분</th>
@@ -300,21 +312,21 @@
                     <tbody>
                         <tr>
                             <td>개인</td>
-                            <td>사업자등록신청</td>
+                            <td class="highlight-text">사업자등록신청</td>
                             <td class="price">150,000원</td>
                         </tr>
                         <tr>
                             <td rowspan="2">법인</td>
-                            <td>사업자등록신청</td>
+                            <td class="highlight-text">사업자등록신청</td>
                             <td class="price">150,000원</td>
                         </tr>
                         <tr>
-                            <td>설립신고</td>
+                            <td class="highlight-text">설립신고</td>
                             <td class="price">200,000원</td>
                         </tr>
                         <tr>
                             <td>공통</td>
-                            <td>사업양수도</td>
+                            <td class="highlight-text">사업양수도</td>
                             <td class="price">150,000원</td>
                         </tr>
                     </tbody>
