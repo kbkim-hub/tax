@@ -315,6 +315,7 @@
                 <h4>📝 유의사항</h4>
                 <ul>
                     <li><strong>급여 구분:</strong> 연봉 선택 시 12개월로 나누어 월급여로 계산</li>
+                    <li><strong>2024년 기준:</strong> 근로소득 간이세액표 + 4대보험료율 적용</li>
                     <li><strong>4대보험 요율:</strong> 국민연금 4.5%, 건강보험 3.545%, 장기요양보험 12.95%(건강보험료의), 고용보험 0.9%</li>
                     <li><strong>상한액:</strong> 국민연금 553만원, 고용보험 879만원 기준</li>
                     <li><strong>고소득 구간:</strong> 1,000만원 초과 시 누진세율 적용</li>
@@ -335,16 +336,49 @@
             return str.replace(/,/g, '');
         }
 
-        // 급여 입력 필드 콤마 포맷팅
+        // 급여 입력 필드 실시간 포맷팅 (커서 위치 보존)
         function formatSalaryInput(event) {
             const input = event.target;
-            let value = removeCommas(input.value);
             
-            // 숫자가 아닌 문자 제거
-            value = value.replace(/[^\d]/g, '');
+            // 현재 커서 위치 저장
+            const cursorStart = input.selectionStart;
+            const cursorEnd = input.selectionEnd;
             
-            if (value) {
-                input.value = formatNumber(value);
+            // 이전 값과 비교를 위해 저장
+            const oldValue = input.value;
+            const oldValueClean = removeCommas(oldValue);
+            
+            // 숫자만 추출
+            let newValue = oldValue.replace(/[^\d]/g, '');
+            
+            // 포맷팅 적용
+            if (newValue) {
+                const formattedValue = formatNumber(newValue);
+                input.value = formattedValue;
+                
+                // 커서 위치 계산
+                let newCursorPos = cursorStart;
+                
+                // 콤마 개수 변화 계산
+                const oldCommas = (oldValue.match(/,/g) || []).length;
+                const newCommas = (formattedValue.match(/,/g) || []).length;
+                const commaDiff = newCommas - oldCommas;
+                
+                // 커서 위치 조정
+                newCursorPos = cursorStart + commaDiff;
+                
+                // 커서가 범위를 벗어나지 않도록 조정
+                newCursorPos = Math.max(0, Math.min(newCursorPos, formattedValue.length));
+                
+                // 커서가 콤마 위에 있으면 뒤로 이동
+                if (newCursorPos > 0 && formattedValue[newCursorPos - 1] === ',') {
+                    newCursorPos--;
+                }
+                
+                // 커서 위치 설정
+                requestAnimationFrame(() => {
+                    input.setSelectionRange(newCursorPos, newCursorPos);
+                });
             } else {
                 input.value = '';
             }
@@ -483,7 +517,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, 0, 0, 0, 0, 0, 0, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
                     }
                 }
             }
@@ -498,7 +532,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, 0, 0, 0, 0, 0, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, 0, 0, 0, 0, 0, 0), isHighIncome: false };
                     }
                 }
             }
@@ -516,7 +550,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, 0, 0, 0, 0, 0, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, 0, 0, 0, 0, 0, 0), isHighIncome: false };
                     }
                 }
             }
@@ -537,7 +571,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, 0, 0, 0, 0, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, 0, 0, 0, 0, 0), isHighIncome: false };
                     }
                 }
             }
@@ -558,7 +592,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, 0, 0, 0, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, 0, 0, 0, 0), isHighIncome: false };
                     }
                 }
             }
@@ -586,7 +620,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9 || 0, 0, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9 || 0, 0, 0), isHighIncome: false };
                     }
                 }
             }
@@ -609,7 +643,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, 0), isHighIncome: false };
                     }
                 }
             }
@@ -632,7 +666,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11), isHighIncome: false };
                     }
                 }
             }
@@ -733,7 +767,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11 || 0);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11 || 0), isHighIncome: false };
                     }
                 }
             }
@@ -1006,7 +1040,7 @@
                 
                 for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
                     if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11);
+                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11), isHighIncome: false };
                     }
                 }
             }
@@ -1217,7 +1251,7 @@
 
             // 간이세액표 적용
             const taxResult = getTaxFromTable(monthlySalary, dependents);
-            const incomeTax = taxResult.tax || taxResult; // 호환성 위해 둘 다 지원
+            const incomeTax = (typeof taxResult === 'object' && taxResult.tax !== undefined) ? taxResult.tax : taxResult;
             const localTax = Math.floor(incomeTax * 0.1);
             const insurance = calculateInsurance(monthlySalary);
             
