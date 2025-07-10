@@ -317,7 +317,7 @@
                     <li><strong>급여 구분:</strong> 연봉 선택 시 12개월로 나누어 월급여로 계산</li>
                     <li><strong>2024년 기준:</strong> 근로소득 간이세액표 + 4대보험료율 적용</li>
                     <li><strong>4대보험 요율:</strong> 국민연금 4.5%, 건강보험 3.545%, 장기요양보험 12.95%(건강보험료의), 고용보험 0.9%</li>
-                    <li><strong>상한액:</strong> 국민연금 553만원, 고용보험 879만원 기준</li>
+                                          <li><strong>상한액:</strong> 국민연금 637만원, 건강보험 9,008,340원 기준</li>
                     <li><strong>고소득 구간:</strong> 1,000만원 초과 시 누진세율 적용</li>
                     <li><strong>지방소득세:</strong> 소득세의 10%로 계산</li>
                 </ul>
@@ -1203,19 +1203,19 @@
 
         // 4대보험 계산 함수 (2024년 기준)
         function calculateInsurance(salary) {
-            // 국민연금: 4.5% (상한액: 5,530,000원)
-            const pensionBase = Math.min(salary, 5530000);
+            // 국민연금: 4.5% (상한액: 6,370,000원)
+            const pensionBase = Math.min(salary, 6370000);
             const nationalPension = Math.floor(pensionBase * 0.045);
             
-            // 건강보험: 3.545%
-            const healthInsurance = Math.floor(salary * 0.03545);
+            // 건강보험: 3.545% (상한액: 9,008,340원)
+            const healthBase = Math.min(salary, 9008340);
+            const healthInsurance = Math.floor(healthBase * 0.03545);
             
             // 장기요양보험: 건강보험료의 12.95%
             const longTermCare = Math.floor(healthInsurance * 0.1295);
             
-            // 고용보험: 0.9% (상한액: 8,790,000원)
-            const unemploymentBase = Math.min(salary, 8790000);
-            const unemploymentInsurance = Math.floor(unemploymentBase * 0.009);
+            // 고용보험: 0.9%
+            const unemploymentInsurance = Math.floor(salary * 0.009);
             
             return {
                 nationalPension,
