@@ -610,11 +610,11 @@
                 <div style="display: flex; align-items: center; margin-bottom: 5px; border-bottom: 2px solid #e74c3c; padding-bottom: 5px;">
                     <label style="font-size: 1.2em; font-weight: bold; color: #333; margin-right: 10px;">2. 상호:</label>
                     <input type="text" id="shopName" style="width: 200px; font-size: 1.2em; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #ffffc0;" placeholder="">
-                    <select id="periodSelect" style="margin-left: 10px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1.2em;">
+                    <select id="periodSelect" style="margin-left: 10px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1.2em;" tabindex="-1" onfocus="this.blur()">
                         <option value="1기">1기</option>
                         <option value="2기">2기</option>
                     </select>
-                    <select id="savedShopSelect" style="margin-left: 10px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1.2em;">
+                    <select id="savedShopSelect" style="margin-left: 10px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 1.2em;" tabindex="-1" onfocus="this.blur()">
                         <option value="">저장된 상호 선택</option>
                     </select>
                 </div>
@@ -821,8 +821,8 @@
                 
                 <!-- 저장/삭제 버튼 -->
                 <div class="button-area" style="text-align: right; margin: 20px;">
-                    <button onclick="saveDataSelected()" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">저장하기</button>
-                    <button onclick="clearData()" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">삭제하기</button>
+                    <button onclick="saveDataSelected()" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;" tabindex="-1" onfocus="this.blur()">저장하기</button>
+                    <button onclick="clearData()" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" tabindex="-1" onfocus="this.blur()">삭제하기</button>
                 </div>
 
             </div>
@@ -2352,19 +2352,319 @@
                 return;
             }
 
-            // Enter → Tab 동작
-            if (event.key === 'Enter') {
-                event.preventDefault();
+            // 상호 입력칸: 아래키 외에는 기본 동작 유지(커서 이동 허용, 네비게이션 비개입)
+            if (target instanceof HTMLElement && target.id === 'shopName' && event.key !== 'ArrowDown') {
+                return;
+            }
+
+            // 공통 포커스 가능한 요소 목록
                 const focusables = Array.from(document.querySelectorAll('input, select, textarea, button'))
                     // @ts-ignore - 공통 속성 접근
                     .filter(el => !el.disabled && el.getAttribute('tabindex') !== '-1' && !(el.readOnly));
-                const index = focusables.indexOf(target);
+            const currentTable = target.closest('table');
+            const focusablesInTable = focusables.filter(el => el.closest('table') === currentTable);
+
+            // Enter → Tab 동작
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const index = focusablesInTable.indexOf(target);
                 if (index === -1) return;
-                const next = event.shiftKey ? focusables[index - 1] : focusables[index + 1];
+                let next = event.shiftKey ? focusablesInTable[index - 1] : focusablesInTable[index + 1];
+                // 같은 섹션(테이블)에서 우선 이동, 없으면 전역 이동
+                if (!next) {
+                    const globalIndex = focusables.indexOf(target);
+                    if (globalIndex !== -1) {
+                        next = event.shiftKey
+                            ? (focusables[globalIndex - 1] || focusables[focusables.length - 1])
+                            : (focusables[globalIndex + 1] || focusables[0]);
+                    }
+                }
                 if (next) {
                     // @ts-ignore - HTMLElement focus
                     next.focus();
                 }
+            } else if (event.key === 'ArrowRight') {
+                // 오른쪽: 화면상 오른쪽에 있는 가장 가까운 요소로 이동 (가로 우선)
+                event.preventDefault();
+                // 특수 규칙: 서비스 매출 표의 공급가액 입력칸(3번째 열)에서 → 누르면 게임료(#gameFee)로 이동
+                if (target instanceof HTMLElement) {
+                    const tableEl = currentTable;
+                    const tdEl = target.closest('td');
+                    const colIndex = tdEl && typeof tdEl.cellIndex === 'number' ? tdEl.cellIndex : -1;
+                    const isServiceCostTable = tableEl && tableEl.classList.contains('game-cost-table') && !!target.closest('.service-sales-container');
+                    if (isServiceCostTable && colIndex === 2) {
+                        const gameFeeInput = document.getElementById('gameFee');
+                        if (gameFeeInput) {
+                            gameFeeInput.focus();
+                            return;
+                        }
+                    }
+                }
+                // 특수 규칙: 상품매출액 산출 식 섹션에서 → 누르면 서비스 매출의 공급가액 입력칸으로 점프
+                if (target instanceof HTMLElement && (target.id === 'cardSales' || target.id === 'ratio' || target.id === 'cashReceiptSales')) {
+                    const serviceSupplyInput = document.querySelector('.service-sales-container .game-cost-table tbody tr:first-child td:nth-child(3) input');
+                    if (serviceSupplyInput) {
+                        // @ts-ignore
+                        serviceSupplyInput.focus();
+                        return;
+                    }
+                }
+                const currentRect = target.getBoundingClientRect();
+                const currentCenterX = currentRect.left + currentRect.width / 2;
+                const currentCenterY = currentRect.top + currentRect.height / 2;
+                const horizontalGapEpsilon = 2;
+                let best = null;
+                let bestScore = Infinity;
+                function consider(list) {
+                    list.forEach(el => {
+                        if (el === target) return;
+                        const r = el.getBoundingClientRect();
+                        const centerX = r.left + r.width / 2;
+                        const centerY = r.top + r.height / 2;
+                        const dx = centerX - currentCenterX;
+                        if (dx <= horizontalGapEpsilon) return; // 오른쪽만 고려
+                        const dy = Math.abs(centerY - currentCenterY);
+                        const score = dx * 1000 + dy; // 가로 이동 우선
+                        if (score < bestScore) {
+                            bestScore = score;
+                            best = el;
+                        }
+                    });
+                }
+                // 1차: 같은 섹션(테이블) 내에서만 탐색
+                consider(focusablesInTable);
+                // 2차: 같은 섹션에 후보 없으면 페이지 전역에서 탐색
+                if (!best) consider(focusables);
+                // 후보 없으면 움직이지 않음 (오른쪽이 없는데 아래로 내려가지 않도록)
+                if (best) best.focus();
+            } else if (event.key === 'ArrowLeft') {
+                // 왼쪽: 이전 요소
+                event.preventDefault();
+                // 특수 규칙: 게임료(#gameFee)에서 ← 누르면 서비스 매출 표의 공급가액 입력칸으로 이동
+                if (target instanceof HTMLElement && target.id === 'gameFee') {
+                    const serviceSupplyInput = document.querySelector('.service-sales-container .game-cost-table tbody tr:first-child td:nth-child(3) input');
+                    if (serviceSupplyInput) {
+                        // @ts-ignore
+                        serviceSupplyInput.focus();
+                        return;
+                    }
+                }
+                // 특수 규칙: 게임사별 매입금액 섹션의 '게임사' 입력칸(첫 번째 열)에서 ← 누르면 상품매출액 산출 식 섹션으로 이동
+                const tableEl = currentTable;
+                const tdEl = target.closest('td');
+                const colIndex = tdEl && typeof tdEl.cellIndex === 'number' ? tdEl.cellIndex : -1;
+                if (
+                    tableEl &&
+                    (tableEl.classList.contains('game-cost-table') ||
+                     tableEl.classList.contains('game-purchase-table') ||
+                     tableEl.classList.contains('other-game-companies-table')) &&
+                    colIndex === 0
+                ) {
+                    const productJumpTarget = document.getElementById('cardSales') ||
+                                              document.getElementById('ratio') ||
+                                              document.getElementById('cashReceiptSales');
+                    if (productJumpTarget) {
+                        productJumpTarget.focus();
+                        return;
+                    }
+                }
+                // 화면상 왼쪽에 있는 가장 가까운 요소로 이동 (가로 우선)
+                const currentRect = target.getBoundingClientRect();
+                const currentCenterX = currentRect.left + currentRect.width / 2;
+                const currentCenterY = currentRect.top + currentRect.height / 2;
+                const horizontalGapEpsilon = 2;
+                let bestLeft = null;
+                let bestLeftScore = Infinity;
+                function considerLeft(list) {
+                    list.forEach(el => {
+                        if (el === target) return;
+                        const r = el.getBoundingClientRect();
+                        const centerX = r.left + r.width / 2;
+                        const centerY = r.top + r.height / 2;
+                        const dx = centerX - currentCenterX;
+                        if (dx >= -horizontalGapEpsilon) return; // 왼쪽만 고려
+                        const dy = Math.abs(centerY - currentCenterY);
+                        const score = Math.abs(dx) * 1000 + dy; // 가로 이동 우선
+                        if (score < bestLeftScore) {
+                            bestLeftScore = score;
+                            bestLeft = el;
+                        }
+                    });
+                }
+                // 1차: 같은 섹션(테이블) 내에서만 탐색
+                considerLeft(focusablesInTable);
+                // 2차: 같은 섹션에 후보 없으면 페이지 전역에서 탐색
+                if (!bestLeft) considerLeft(focusables);
+                if (bestLeft) {
+                    bestLeft.focus();
+                }
+            } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                // 위/아래: 같은 열에 가까운 요소로 이동 (시각적 위치 기준)
+                event.preventDefault();
+                // 특수 규칙: 상호 입력칸(#shopName)에서 ↑는 이동 금지
+                if (event.key === 'ArrowUp' && target instanceof HTMLElement && target.id === 'shopName') {
+                    return;
+                }
+                // 특수 규칙: 카드매출(#cardSales)에서 ↑를 누르면 같은 섹션의 맨 아래 입력칸(#cashReceiptSales)으로 이동
+                if (event.key === 'ArrowUp' && target instanceof HTMLElement && target.id === 'cardSales') {
+                    const jump = document.getElementById('cashReceiptSales');
+                    if (jump) {
+                        jump.focus();
+                        return;
+                    }
+                }
+                // 특수 규칙: 현금영수증매출(#cashReceiptSales)에서 ↓를 누르면 같은 섹션의 맨 위 입력칸(#cardSales)으로 이동
+                if (event.key === 'ArrowDown' && target instanceof HTMLElement && target.id === 'cashReceiptSales') {
+                    const jumpTop = document.getElementById('cardSales');
+                    if (jumpTop) {
+                        jumpTop.focus();
+                        return;
+                    }
+                }
+                // 특수 규칙: 서비스 매출 표의 첫 번째 공급가액 입력칸에서 ↑를 누르면 상호 입력칸(#shopName)으로 이동
+                if (event.key === 'ArrowUp' && target instanceof HTMLElement) {
+                    const firstServiceSupply = document.querySelector('.service-sales-container .game-cost-table tbody tr:first-child td:nth-child(3) input');
+                    if (firstServiceSupply && target === firstServiceSupply) {
+                        const shopInput = document.getElementById('shopName');
+                        if (shopInput) {
+                            shopInput.focus();
+                            return;
+                        }
+                    }
+                }
+                // 특수 규칙: 상품매출(공급가액) 첫 칸에서 ↑를 누르면 그 외 게임사별 매입금액의 마지막 데이터행 공급가액으로 이동
+                if (event.key === 'ArrowUp' && target instanceof HTMLElement) {
+                    const productFirstSupply = document.querySelector('.product-sales-container .product-sales-table tbody tr:first-child td:nth-child(2) input');
+                    if (productFirstSupply && target === productFirstSupply) {
+                        // 버튼이 있는 마지막 행을 우선 대상으로 함
+                        const otherLastDataSupply = document.querySelector('.game-purchase-table tbody tr:last-child td:nth-child(2) input')
+                            || document.querySelector('.game-purchase-table tbody tr:nth-last-child(2) td:nth-child(2) input');
+                        if (otherLastDataSupply) {
+                            // @ts-ignore
+                            otherLastDataSupply.focus();
+                            return;
+                        }
+                    }
+                }
+                // 특수 규칙: 상품매출(유통사) 첫 칸에서 ↑를 누르면 그 외 게임사별 매입금액의 마지막 행 게임사 입력칸으로 이동
+                if (event.key === 'ArrowUp' && target instanceof HTMLElement) {
+                    const productFirstDist = document.querySelector('.product-sales-container .product-sales-table tbody tr:first-child td:nth-child(1) input');
+                    if (productFirstDist && target === productFirstDist) {
+                        const otherLastCompany = document.querySelector('.game-purchase-table tbody tr:last-child td:nth-child(1) input')
+                            || document.querySelector('.game-purchase-table tbody tr:nth-last-child(2) td:nth-child(1) input');
+                        if (otherLastCompany) {
+                            // @ts-ignore
+                            otherLastCompany.focus();
+                            return;
+                        }
+                    }
+                }
+                // 특수 규칙: 상호 입력칸(#shopName)에서 ↓를 누르면 서비스 매출 표의 첫 공급가액 입력칸으로 이동
+                if (event.key === 'ArrowDown' && target instanceof HTMLElement && target.id === 'shopName') {
+                    const firstServiceSupply = document.querySelector('.service-sales-container .game-cost-table tbody tr:first-child td:nth-child(3) input');
+                    if (firstServiceSupply) {
+                        // @ts-ignore
+                        firstServiceSupply.focus();
+                        return;
+                    }
+                }
+                // 특수 규칙: 게임료(#gameFee)에서 ↑를 누르면 매입 4배 기준(#supplyMultiplier)으로 이동
+                if (event.key === 'ArrowUp' && target instanceof HTMLElement && target.id === 'gameFee') {
+                    const jumpSupplyMultiplier = document.getElementById('supplyMultiplier');
+                    if (jumpSupplyMultiplier) {
+                        jumpSupplyMultiplier.focus();
+                        return;
+                    }
+                }
+                // 특수 규칙: 매입 4배 기준(#supplyMultiplier)에서 ↓를 누르면 게임료(#gameFee)로 이동
+                if (event.key === 'ArrowDown' && target instanceof HTMLElement && target.id === 'supplyMultiplier') {
+                    const jumpGameFee = document.getElementById('gameFee');
+                    if (jumpGameFee) {
+                        jumpGameFee.focus();
+                        return;
+                    }
+                }
+                // 특수 규칙: 게임사별 매입금액 섹션의 마지막 입력칸에서 ↓ 누르면 상품매출 섹션 첫 입력칸으로 이동
+                if (event.key === 'ArrowDown') {
+                    const targetTable = target.closest('table');
+                    if (targetTable) {
+                        const isServiceCostTable = targetTable.classList.contains('game-cost-table') && !!target.closest('.service-sales-container');
+                        const isOtherGamePurchaseTable = targetTable.classList.contains('game-purchase-table');
+                        if (isServiceCostTable || isOtherGamePurchaseTable) {
+                            const tbody = targetTable.querySelector('tbody');
+                            const lastRow = tbody ? tbody.querySelector('tr:last-child') : null;
+                            const targetRow = target.closest('tr');
+                            if (lastRow && targetRow === lastRow) {
+                                const tdDown = target.closest('td');
+                                const colIdxDown = tdDown && typeof tdDown.cellIndex === 'number' ? tdDown.cellIndex : -1;
+                                const productDistInput = document.querySelector('.product-sales-container .product-sales-table tbody tr:first-child td:nth-child(1) input');
+                                const productSupplyInput = document.querySelector('.product-sales-container .product-sales-table tbody tr:first-child td:nth-child(2) input');
+                                const otherGameFirstCompanyInput = document.querySelector('.game-purchase-table tbody tr:first-child td:nth-child(1) input');
+                                const otherGameFirstSupplyInput = document.querySelector('.game-purchase-table tbody tr:first-child td:nth-child(2) input');
+                                let jumpTarget = null;
+                                // 서비스 매출 표: 마지막 행에서 ↓ 누르면 그 외 게임사별 매입금액의 공급가액 입력칸으로 이동
+                                if (isServiceCostTable) {
+                                    jumpTarget = otherGameFirstSupplyInput || productSupplyInput;
+                                } else if (isOtherGamePurchaseTable) {
+                                    // 그 외 게임사별 매입금액 표: 0=게임사, 1=공급가액
+                                    if (colIdxDown === 0) jumpTarget = productDistInput;
+                                    else if (colIdxDown === 1) jumpTarget = productSupplyInput;
+                                }
+                                if (!jumpTarget) jumpTarget = productDistInput || productSupplyInput;
+                                if (jumpTarget) {
+                                    // @ts-ignore
+                                    jumpTarget.focus();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                const currentRect = target.getBoundingClientRect();
+                const currentCenterX = currentRect.left + currentRect.width / 2;
+                const isDown = event.key === 'ArrowDown';
+                let best = null;
+                let bestScore = Infinity;
+                const verticalGapEpsilon = 2; // 같은 줄로 인식되는 미세 오차 보정
+                const candidatesPrimary = focusablesInTable;
+                const candidatesFallback = focusables;
+                function consider(list) {
+                    list.forEach(el => {
+                        if (el === target) return;
+                        const r = el.getBoundingClientRect();
+                        const rCenterX = r.left + r.width / 2;
+                        const verticalDelta = (r.top + r.height / 2) - (currentRect.top + currentRect.height / 2);
+                        // 진행 방향의 요소만 고려
+                        if (isDown ? verticalDelta <= verticalGapEpsilon : verticalDelta >= -verticalGapEpsilon) return;
+                        // 수평 정렬 정도(작을수록 좋음)와 세로 거리(작을수록 좋음)를 함께 고려
+                        const horizontalDistance = Math.abs(rCenterX - currentCenterX);
+                        const verticalDistance = Math.abs(verticalDelta);
+                        const score = verticalDistance * 1000 + horizontalDistance; // 세로 우선
+                        if (score < bestScore) {
+                            bestScore = score;
+                            best = el;
+                        }
+                    });
+                }
+                // 1차: 같은 섹션(테이블)에서만 탐색
+                consider(candidatesPrimary);
+                // 2차: 같은 섹션에 없으면 전역으로 탐색
+                if (!best) consider(candidatesFallback);
+                // 후보가 없으면 순차 이동으로 대체
+                if (!best) {
+                    const indexInTable = focusablesInTable.indexOf(target);
+                    if (indexInTable !== -1) {
+                        best = isDown ? focusablesInTable[indexInTable + 1] : focusablesInTable[indexInTable - 1];
+                    }
+                    if (!best) {
+                const index = focusables.indexOf(target);
+                        if (index !== -1) {
+                            best = isDown ? (focusables[index + 1] || focusables[0])
+                                           : (focusables[index - 1] || focusables[focusables.length - 1]);
+                        }
+                    }
+                }
+                if (best) best.focus();
             }
         });
     </script>
