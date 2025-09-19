@@ -804,7 +804,7 @@
                                         
                                         <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 8px;">
                                             <label style="font-size: 1.1em; white-space: nowrap; width: 160px; text-align: right;">5억/7.5억:</label>
-                                            <input type="text" id="revenueDivision" style="width: 120px; text-align: right; border: 1px solid #777; background-color: #f9f9f9; font-size: 1.1em; padding: 4px 6px;" value="0.667" readonly tabindex="-1" onfocus="this.blur()">
+                                            <input type="text" id="revenueDivision" style="width: 120px; text-align: right; border: none; background-color: #f9f9f9; font-size: 1.1em; padding: 4px 6px;" value="0.667" readonly tabindex="-1" onfocus="this.blur()">
                                         </div>
                                         
                                         <div style="display: flex; align-items: center; gap: 20px;">
@@ -844,7 +844,7 @@
                 
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label style="font-size: 1.1em; white-space: nowrap; width: 160px; text-align: right;">5억/7.5억:</label>
-                    <input type="text" id="revenueDivisionMobile" style="flex: 1; text-align: right; border: 1px solid #777; background-color: #f9f9f9; font-size: 1.1em; padding: 4px 6px;" value="0.667" readonly>
+                    <input type="text" id="revenueDivisionMobile" style="flex: 1; text-align: right; border: none; background-color: #f9f9f9; font-size: 1.1em; padding: 4px 6px;" value="0.667" readonly>
                 </div>
                 
                 <div style="display: flex; align-items: center; gap: 10px;">
@@ -858,22 +858,42 @@
 
     <script>
         function formatNumber(input) {
-            // 숫자가 아닌 문자 제거
-            let value = input.value.replace(/[^\d.]/g, '');
-            
-            // 소수점이 여러 개인 경우 첫 번째만 유지
+            // 캐럿 위치 보존을 위해 현재 커서 기준 왼쪽의 숫자 개수를 기록
+            const currentValue = input.value || '';
+            const selectionStart = typeof input.selectionStart === 'number' ? input.selectionStart : currentValue.length;
+            const digitsLeftOfCaret = currentValue.slice(0, selectionStart).replace(/[^\d]/g, '').length;
+
+            // 숫자와 소수점만 유지
+            let value = currentValue.replace(/[^\d.]/g, '');
+
+            // 소수점이 여러 개인 경우 첫 번째만 유지하고 나머지는 제거
             if ((value.match(/\./g) || []).length > 1) {
-                value = value.replace(/\.+$/, '');
+                const firstDotIndex = value.indexOf('.');
+                value = value.slice(0, firstDotIndex + 1) + value.slice(firstDotIndex + 1).replace(/\./g, '');
             }
-            
-            // 천 단위 구분자 추가
+
+            // 천 단위 구분자 적용
             if (value) {
                 const parts = value.split('.');
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                 value = parts.join('.');
             }
-            
+
+            // 값 반영
             input.value = value;
+
+            // 동일한 "숫자 개수 기준"으로 커서 위치 복원
+            if (typeof input.setSelectionRange === 'function') {
+                let newCursor = 0;
+                let seenDigits = 0;
+                while (newCursor < value.length && seenDigits < digitsLeftOfCaret) {
+                    if (/\d/.test(value.charAt(newCursor))) {
+                        seenDigits++;
+                    }
+                    newCursor++;
+                }
+                input.setSelectionRange(newCursor, newCursor);
+            }
         }
 
         // 게임사별 시간당 원가를 반환하는 함수
@@ -2332,8 +2352,21 @@
             // @ts-ignore - 공통 속성 접근
             if (target.readOnly || target.disabled || target.getAttribute('tabindex') === '-1') return;
 
-            // '+' 또는 NumpadAdd: '000' 삽입
+            // '+' 또는 NumpadAdd: '000' 삽입 (단, 게임사/유통사 입력칸에서는 제외)
             if (event.key === '+' || event.code === 'NumpadAdd') {
+                // 상호 입력칸(#shopName)은 기본 '+' 입력 허용
+                if (target instanceof HTMLElement && target.id === 'shopName') {
+                    return;
+                }
+                // 첫 번째 열(게임사/유통사) 입력칸은 예외로 처리하여 기본 '+' 입력 허용
+                const tdElPlus = target.closest('td');
+                const colIndexPlus = tdElPlus && typeof tdElPlus.cellIndex === 'number' ? tdElPlus.cellIndex : -1;
+                const tableElPlus = target.closest('table');
+                const isGameCompanyCell = tableElPlus && tableElPlus.classList.contains('game-purchase-table') && colIndexPlus === 0;
+                const isDistributorCell = tableElPlus && tableElPlus.classList.contains('product-sales-table') && colIndexPlus === 0;
+                if (isGameCompanyCell || isDistributorCell) {
+                    return; // 기본 동작 유지
+                }
                 event.preventDefault();
                 // @ts-ignore - 캐럿 제어를 위해 input으로 취급
                 const inputEl = target;
