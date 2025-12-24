@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조특법 혜택 매칭 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        
+        /* 키워드 버튼 스타일 */
+        .tag-btn { transition: all 0.2s ease; border: 1px solid #e2e8f0; }
+        .tag-btn.active { background-color: #4f46e5; color: white; border-color: #4f46e5; transform: scale(1.03); }
+        
+        /* 결과 카드 애니메이션 */
+        .benefit-card { transition: all 0.3s ease; }
+        .benefit-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+
+        /* 로딩 스피너 */
+        .loader { border-top-color: #4f46e5; animation: spinner 1s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 데스크톱 사이드바 고정 */
+        @media (min-width: 768px) {
+            .sticky-side { position: sticky; top: 2rem; max-height: calc(100vh - 4rem); overflow-y: auto; }
+        }
+    </style>
+</head>
+<body class="py-6 md:py-12">
+
+<div class="max-w-7xl mx-auto px-4">
+    <!-- 헤더 -->
+    <header class="mb-10 text-center md:text-left">
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2 justify-center md:justify-start">
+            <span class="text-indigo-600">🔎</span> 조세특례 상황별 혜택 탐색기
+        </h1>
+        <p class="text-slate-500 mt-2 font-medium">기업의 상황 키워드를 선택하면 최적의 절세 혜택을 매칭해 드립니다.</p>
+    </header>
+
+    <!-- 로딩 상태 -->
+    <div id="loading" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 shadow-sm">
+        <div class="loader w-10 h-10 border-4 border-slate-200 rounded-full mb-4"></div>
+        <p class="text-slate-500 font-bold">구글 데이터베이스 연동 중...</p>
+    </div>
+
+    <!-- 메인 레이아웃 (데이터 로드 후 표시) -->
+    <div id="main-content" class="hidden flex flex-col md:flex-row gap-8">
+        
+        <!-- 왼쪽: 상황 키워드 (사이드바) -->
+        <aside class="w-full md:w-80 flex-shrink-0">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 sticky-side">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-sm font-black text-slate-400 uppercase tracking-widest">상황 키워드</h2>
+                    <button onclick="resetTags()" class="text-xs text-indigo-600 font-bold hover:underline">초기화</button>
+                </div>
+                
+                <div id="tag-container" class="flex flex-wrap md:flex-col gap-2">
+                    <!-- 자바스크립트에서 버튼 생성 -->
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-slate-100 hidden md:block">
+                    <p class="text-[11px] text-slate-400 leading-relaxed font-medium">
+                        여러 상황에 해당될 경우 다중 선택이 가능합니다. 많이 선택할수록 정확한 조항이 상단에 노출됩니다.
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 오른쪽: 매칭 결과 리스트 -->
+        <main class="flex-1">
+            <div class="flex items-center justify-between mb-6 px-1">
+                <h2 class="text-xl font-bold text-slate-800">매칭된 혜택 <span id="match-count" class="text-indigo-600">0</span>건</h2>
+                <div id="overlap-info" class="hidden text-[10px] bg-amber-50 text-amber-600 px-3 py-1.5 rounded-full border border-amber-100 font-bold">
+                    ⚠️ 중복 배제 확인 필요
+                </div>
+            </div>
+
+            <div id="result-list" class="space-y-4">
+                <!-- 결과 카드가 여기에 삽입됨 -->
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxosuJSvfkc-RwP1V8gYTTwTDrugOINAsJ-P43auIP2d8yFnkhdEC7yxx_Xh5YHFpevqg/exec";
+    
+    let taxDB = [];
+    let selectedTags = new Set();
+
+    // 1. 데이터 가져오기
+    async function loadData() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            
+            // 데이터 정제 (tags 컬럼이 쉼표로 되어있을 경우 대비)
+            taxDB = data.map(item => ({
+                ...item,
+                tags: Array.isArray(item.tags) ? item.tags : (item.tags ? item.tags.toString().split(',').map(t => t.trim()) : [])
+            }));
+
+            initUI();
+        } catch (error) {
+            console.error("Data Load Error:", error);
+            document.getElementById('loading').innerHTML = `<p class="text-red-500 font-bold p-10 text-center">데이터를 불러오는 데 실패했습니다. 앱 스크립트 배포 설정을 확인하세요.</p>`;
+        }
+    }
+
+    // 2. UI 초기화 (태그 버튼 생성)
+    function initUI() {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+
+        // 중복 제거된 모든 태그 추출
+        const allTags = [...new Set(taxDB.flatMap(d => d.tags))].filter(t => t).sort();
+        const container = document.getElementById('tag-container');
+        
+        allTags.forEach(tag => {
+            const btn = document.createElement('button');
+            btn.innerText = tag;
+            btn.className = "tag-btn px-4 py-2 bg-white rounded-xl text-sm font-semibold text-slate-600 text-left hover:border-indigo-300 shadow-sm";
+            btn.onclick = () => toggleTag(tag, btn);
+            container.appendChild(btn);
+        });
+
+        updateResults();
+    }
+
+    // 3. 태그 토글 로직
+    function toggleTag(tag, btn) {
+        if (selectedTags.has(tag)) {
+            selectedTags.delete(tag);
+            btn.classList.remove('active');
+        } else {
+            selectedTags.add(tag);
+            btn.classList.add('active');
+        }
+        updateResults();
+    }
+
+    // 4. 결과 필터링 및 렌더링
+    function updateResults() {
+        const listArea = document.getElementById('result-list');
+        const countEl = document.getElementById('match-count');
+        const overlapInfo = document.getElementById('overlap-info');
+
+        if (selectedTags.size === 0) {
+            countEl.innerText = "0";
+            listArea.innerHTML = `
+                <div class="bg-white p-20 rounded-3xl text-center border-2 border-dashed border-slate-200">
+                    <p class="text-slate-400 font-bold">왼쪽 키워드를 선택하여 나에게 맞는 혜택을 찾아보세요.</p>
+                </div>`;
+            overlapInfo.classList.add('hidden');
+            return;
+        }
+
+        // 선택된 태그 개수에 따른 매칭 점수 계산
+        let matched = taxDB.map(item => {
+            const score = item.tags.filter(t => selectedTags.has(t)).length;
+            return { ...item, score };
+        })
+        .filter(item => item.score > 0) // 하나라도 일치하면 표시
+        .sort((a, b) => b.score - a.score); // 많이 일치하는 순서대로 정렬
+
+        countEl.innerText = matched.length;
+
+        // 중복 배제 간단 알림 (예시: 제6조와 7조가 같이 있을 때)
+        const hasArt6 = matched.some(i => String(i.article).includes('6'));
+        const hasArt7 = matched.some(i => String(i.article).includes('7'));
+        if(hasArt6 && hasArt7) overlapInfo.classList.remove('hidden');
+        else overlapInfo.classList.add('hidden');
+
+        listArea.innerHTML = "";
+        matched.forEach(item => {
+            const matchPercent = Math.round((item.score / selectedTags.size) * 100);
+            const card = `
+                <div class="benefit-card bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-sm flex flex-col gap-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-black bg-indigo-100 text-indigo-700 px-2 py-1 rounded uppercase tracking-wider">${item.article || '조문확인'}</span>
+                            <h3 class="text-xl font-extrabold text-slate-800 mt-2">${item.title}</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-full">매칭도 ${matchPercent}%</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-y border-slate-50 py-5">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase mb-2">적용요건</p>
+                            <p class="text-sm text-slate-600 leading-relaxed font-medium">${item.reqs || '요건 정보를 확인 중입니다.'}</p>
+                        </div>
+                        <div class="md:border-l md:pl-6 border-slate-100">
+                            <p class="text-[10px] font-black text-rose-400 uppercase mb-1">공제 및 감면 혜택</p>
+                            <p class="text-xl font-black text-rose-500">${item.benefit || '시트 확인'}</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold italic">지원기간: ${item.period || '별도규정'}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between gap-4">
+                        <div class="flex flex-wrap gap-2">
+                             <div class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-[10px] font-bold border border-slate-200">⚖️ 최저한세: ${item.min_tax || '적용'}</div>
+                             <div class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-[10px] font-bold border border-slate-200">🚫 중복배제: ${item.exclusion || '해당없음'}</div>
+                        </div>
+                        <div class="flex gap-1">
+                            ${item.tags.map(t => `<span class="text-[10px] text-slate-300 font-medium">#${t}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            listArea.insertAdjacentHTML('beforeend', card);
+        });
+    }
+
+    function resetTags() {
+        selectedTags.clear();
+        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+        updateResults();
+    }
+
+    // 데이터 로드 시작
+    loadData();
+</script>
+</body>
+</html>
