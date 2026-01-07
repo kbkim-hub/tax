@@ -3,300 +3,186 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>양도소득세 요약</title>
+  <title>양도소득세 스마트 계산기</title>
   <style>
     :root {
-      --bg: #f6f8fb;
-      --panel: #ffffff;
-      --panel-2: #f9fbff;
-      --text: #0b1220;
-      --muted: #5c657a;
-      --accent: #2b59c3;
-      --accent-2: #375bd2;
-      --ok: #1e8e3e;
-      --warn: #b06000;
-      --danger: #c62828;
-      --border: #dbe2ef;
-      --chip: #f0f4ff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #f1f5f9;
+      --success: #059669;
     }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: radial-gradient(1200px 800px at 80% -10%, #eaf0ff 0%, var(--bg) 60%);
-      color: var(--text);
-      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      line-height: 1.5;
-    }
-    .wrap {
-      max-width: 1100px;
-      margin: 24px auto 64px;
-      padding: 0 16px;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    h1 {
-      font-size: 22px;
-      margin: 0;
-      letter-spacing: 0.3px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-    .card {
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 10px 30px rgba(31, 56, 104, 0.06);
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: var(--accent-2);
-      letter-spacing: 0.2px;
-    }
-    .note { font-size: 12px; color: #274684; background: #f9fbff; border: 1px dashed #dbe2ef; padding: 8px 10px; border-radius: 8px; }
-    .muted { color: var(--muted); }
-    .right { text-align: right; }
-    .field {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      color: var(--text);
-      width: 100%;
-      outline: none;
-    }
-    .field:focus { border-color: #9bb3ff; box-shadow: 0 0 0 3px rgba(43, 89, 195, 0.15); }
-    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-    .chip {
-      background: var(--chip);
-      border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 14px;
-      cursor: pointer;
-      color: var(--text);
-      font-size: 14px;
-      user-select: none;
-    }
-    .chip.active { background: #e6eeff; border-color: #9bb3ff; }
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 13px;
-      max-width: 860px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .table th, .table td {
-      border-bottom: 1px solid var(--border);
-      padding: 8px 6px;
-      text-align: right;
-    }
-    .table th:first-child, .table td:first-child { text-align: left; }
-    .table tr:first-child th {
-      background: #eef4ff;
-      color: #274684;
-    }
-    .table tr:nth-child(2n+2) td {
-      background: var(--panel-2);
-    }
-    ul { margin: 8px 0 0 18px; padding: 0; }
-    li { margin: 6px 0; }
+
+    * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); margin: 0; padding: 20px; line-height: 1.6; }
+    .container { max-width: 1000px; margin: 0 auto; }
+
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 28px; color: var(--primary); margin: 0; }
+    header p { color: var(--text-muted); margin-top: 5px; }
+
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .card h2 { font-size: 18px; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary); }
+    
+    /* 입력 섹션 */
+    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    @media (max-width: 768px) { .input-group { grid-template-columns: 1fr; } }
+
+    label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-main); }
+    .field { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 16px; outline: none; transition: all 0.2s; }
+    .field:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+    /* 칩 스타일 */
+    .chips-label { font-weight: 600; font-size: 14px; margin-bottom: 10px; display: block; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .chip { padding: 10px 18px; background: var(--accent); border: 1px solid var(--border); border-radius: 50px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+    .chip:hover { background: #e2e8f0; }
+    .chip.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: 600; }
+
+    /* 결과 테이블 */
+    .result-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .result-table th, .result-table td { padding: 14px; border-bottom: 1px solid var(--border); text-align: right; }
+    .result-table th { text-align: left; color: var(--text-muted); font-weight: 500; font-size: 14px; }
+    .result-table .highlight { color: var(--primary); font-weight: 700; font-size: 18px; }
+    .result-table tr:last-child td, .result-table tr:last-child th { border-bottom: none; }
+
+    /* 계산 근거 스타일 */
+    .basis-box { background: #f0f7ff; border-radius: 12px; padding: 16px; margin-top: 15px; border-left: 4px solid var(--primary); }
+    .basis-box h3 { font-size: 14px; margin: 0 0 8px 0; color: var(--primary-dark); }
+    .basis-text { font-family: 'Courier New', monospace; font-size: 13px; color: #334155; white-space: pre-wrap; margin: 0; }
+
+    /* 하단 가이드 테이블 */
+    .info-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+    .info-table th { background: var(--accent); color: var(--text-main); padding: 10px; border: 1px solid var(--border); }
+    .info-table td { padding: 10px; border: 1px solid var(--border); text-align: center; }
+    .note { font-size: 12px; color: #ef4444; margin-top: 10px; background: #fef2f2; padding: 10px; border-radius: 8px; }
+
+    .hidden { display: none; }
+    .flex-center { display: flex; align-items: center; gap: 8px; }
   </style>
-  <meta name="description" content="양도소득세 요약표 (주택·입주권·분양권·토지·건물·주식 등)">
 </head>
 <body>
-  <div class="wrap">
-    <header>
+
+<div class="container">
+  <header>
+    <h1>양도소득세 요약 및 계산</h1>
+    <p>자산별 세율 정책 및 실시간 세액 계산기</p>
+  </header>
+
+  <div class="card">
+    <h2>📊 실시간 세액 계산</h2>
+    
+    <div class="input-group">
       <div>
-        <h1>양도소득세 요약</h1>
-        <div class="muted">주요 자산 유형별 세율 및 기본세율 표 정리</div>
+        <label for="taxableBase">과세표준 (양도차익- 장특공 - 기본공제)</label>
+        <input id="taxableBase" class="field" inputmode="numeric" placeholder="금액을 입력하세요 (예: 120,000,000)">
       </div>
-    </header>
-
-    <div class="grid">
-      <div class="card" style="grid-column: 1 / -1;">
-        <h2>과세표준으로 자동 계산</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div>
-            <label for="taxableBase" class="muted">과세표준 (이익 - 공제액)</label>
-            <input id="taxableBase" class="field" inputmode="numeric" placeholder="예: 120,000,000">
-          </div>
-          <div style="display:flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
-            <label class="muted" style="display:flex; align-items:center; gap:8px;">
-              <input id="includeLocal" type="checkbox" checked>
-              지방소득세 10% 포함
-            </label>
-            <div class="muted">실시간 계산</div>
-          </div>
-        </div>
-        <div>
-          <div class="muted">자산 유형</div>
-          <div id="assetChips" class="chips" role="group" aria-label="자산 유형 선택">
-            <span class="chip" data-asset="house">주택</span>
-            <span class="chip" data-asset="member">조합원 입주권</span>
-            <span class="chip" data-asset="subscription">주택 분양권</span>
-            <span class="chip" data-asset="land">일반 토지(사업용)</span>
-            <span class="chip" data-asset="land_btl">비사업용 토지</span>
-            <span class="chip" data-asset="building">일반건물</span>
-          </div>
-        </div>
-        <div id="periodBlock" style="display:none;">
-          <div class="muted">보유 기간</div>
-          <div id="periodChips" class="chips" role="group" aria-label="보유 기간 선택">
-            <span class="chip" data-period="lt1">1년 미만</span>
-            <span class="chip" data-period="btw1_2">1년 ~ 2년</span>
-            <span class="chip" data-period="ge2">2년 이상</span>
-          </div>
-        </div>
-        <div id="compareWrap" style="display:none; margin-top: 6px;">
-          <label class="muted" style="display:flex; align-items:center; gap:8px;">
-            <input id="applyCompare" type="checkbox">
-            비교과세 자동적용 (단기 2년 미만: 단기율 vs 중과세 중 큰 세액)
-          </label>
-        </div>
-        <div style="margin-top: 12px;">
-          <table class="table" aria-label="선택 모드 계산 결과">
-            <tr><th>적용 세율</th><th id="resDeductionLabel">누진공제액</th><th class="right">소득세</th></tr>
-            <tr><td id="resRate">-</td><td id="resDeduction">-</td><td id="resIncomeTax" class="right">-</td></tr>
-            <tr><th class="right" colspan="2">지방소득세</th><td id="resLocalTax" class="right muted">-</td></tr>
-            <tr><th class="right" colspan="2">합계</th><td id="resTotal" class="right"><strong>-</strong></td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div id="cardRatesHousing" class="card" style="grid-column: 1 / -1;">
-        <h2>1. 주택·조합원입주권·주택분양권 양도세율</h2>
-        <table class="table" aria-label="주택·입주권·분양권 보유기간별 세율">
-          <tr>
-            <th>보유 기간</th>
-            <th>주택 (House)</th>
-            <th>조합원 입주권 (Member Right)</th>
-            <th>주택 분양권 (Subscription Right)</th>
-          </tr>
-          <tr>
-            <td>1년 미만</td>
-            <td>70%</td>
-            <td>70%</td>
-            <td>70%</td>
-          </tr>
-          <tr>
-            <td>1년 ~ 2년</td>
-            <td>60%</td>
-            <td>60%</td>
-            <td>60%</td>
-          </tr>
-          <tr>
-            <td>2년 이상</td>
-            <td>기본세율 (6~45%)</td>
-            <td>기본세율 (6~45%)</td>
-            <td>60% (고정)</td>
-          </tr>
-        </table>
-      </div>
-
-      <div id="cardRatesBase" class="card" style="grid-column: 1 / -1;">
-        <h2>2. 기본세율</h2>
-        <table class="table" aria-label="기본세율 과세표준 구간">
-          <tr>
-            <th>과세표준 (이익 - 공제액)</th>
-            <th>세율</th>
-            <th>누진공제액</th>
-          </tr>
-          <tr><td>1,400만 원 이하</td><td>6%</td><td>-</td></tr>
-          <tr><td>1,400만 원 ~ 5,000만 원</td><td>15%</td><td>126만 원</td></tr>
-          <tr><td>5,000만 원 ~ 8,800만 원</td><td>24%</td><td>576만 원</td></tr>
-          <tr><td>8,800만 원 ~ 1.5억 원</td><td>35%</td><td>1,544만 원</td></tr>
-          <tr><td>1.5억 원 ~ 3억 원</td><td>38%</td><td>1,994만 원</td></tr>
-          <tr><td>3억 원 ~ 5억 원</td><td>40%</td><td>2,594만 원</td></tr>
-          <tr><td>5억 원 ~ 10억 원</td><td>42%</td><td>3,594만 원</td></tr>
-          <tr><td>10억 원 초과</td><td>45%</td><td>6,594만 원</td></tr>
-        </table>
-      </div>
-
-      <div id="cardRatesLand" class="card" style="grid-column: 1 / -1;">
-        <h2>3. 토지</h2>
-        <table class="table" aria-label="토지 보유기간별 세율">
-          <tr>
-            <th>보유 기간</th>
-            <th>일반 토지 (사업용)</th>
-            <th>비사업용 토지 (나대지, 부재지주 등)</th>
-          </tr>
-          <tr><td>1년 미만</td><td>50%</td><td>50%</td></tr>
-          <tr><td>1년 ~ 2년</td><td>40%</td><td>40%</td></tr>
-          <tr><td>2년 이상</td><td>기본세율 (6~45%)</td><td>기본세율 + 10%p (16~55%)</td></tr>
-        </table>
-        <p class="note" role="note">
-          (비교 과세) 비사업용 토지를 2년 미만 보유 후 양도 시, '단기 세율(50% 또는 40%)'과
-          '중과 세율(기본세율 + 10%p)' 중 세액이 더 큰 쪽을 적용합니다.
-        </p>
-
-        <table class="table" aria-label="토지 과세표준별 일반/비사업용 세율">
-          <tr>
-            <th>과세표준 (이익 - 공제)</th>
-            <th>일반 토지 (사업용)</th>
-            <th>비사업용 토지 (중과)</th>
-          </tr>
-          <tr><td>1,400만 원 이하</td><td>6%</td><td>16%</td></tr>
-          <tr><td>1,400만 ~ 5,000만 원</td><td>15%</td><td>25%</td></tr>
-          <tr><td>5,000만 ~ 8,800만 원</td><td>24%</td><td>34%</td></tr>
-          <tr><td>8,800만 ~ 1.5억 원</td><td>35%</td><td>45%</td></tr>
-          <tr><td>1.5억 ~ 3억 원</td><td>38%</td><td>48%</td></tr>
-          <tr><td>3억 ~ 5억 원</td><td>40%</td><td>50%</td></tr>
-          <tr><td>5억 ~ 10억 원</td><td>42%</td><td>52%</td></tr>
-          <tr><td>10억 원 초과</td><td>45%</td><td>55%</td></tr>
-        </table>
-      </div>
-
-      <div id="cardRatesBuilding" class="card">
-        <h2>4. 일반건물</h2>
-        <table class="table" aria-label="일반건물 보유기간별 세율">
-          <tr>
-            <th>보유 기간</th>
-            <th>세율</th>
-          </tr>
-          <tr><td>1년 미만</td><td>50%</td></tr>
-          <tr><td>1년 ~ 2년</td><td>40%</td></tr>
-          <tr><td>2년 이상</td><td>기본세율 (6% ~ 45%)</td></tr>
-        </table>
-      </div>
-
-      <div class="card">
-        <h2>5~9. 기타자산 및 주식</h2>
-        <ul>
-          <li>영업권, 이축권, 특정시설물이용권, 특정주식 A·B: <strong>기본세율</strong></li>
-          <li>비사업용 토지 과다소유법인 주식: <strong>기본세율 + 10%p</strong></li>
-          <li>중소기업의 대주주 주식: <strong>20%</strong> (3억 원 초과분 <strong>25%</strong>)</li>
-          <li>중소기업의 대주주가 아닌 경우 주식: <strong>10%</strong></li>
-          <li>중소기업 외 법인의 주식
-            <ul>
-              <li>대주주 보유, 1년 미만 보유: <strong>30%</strong></li>
-              <li>대주주 보유, 1년 이상 보유: <strong>20%</strong> (3억 원 초과분 <strong>25%</strong>)</li>
-              <li>대주주가 아닌 자: <strong>20%</strong></li>
-            </ul>
-          </li>
-          <li>국외주식: 중소기업 주식 <strong>10%</strong>, 중소기업 외 주식 <strong>20%</strong></li>
-        </ul>
+      <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+        <label class="flex-center" style="cursor: pointer;">
+          <input id="includeLocal" type="checkbox" checked style="width:18px; height:18px;">
+          지방소득세(10%) 자동 포함
+        </label>
       </div>
     </div>
+
+    <span class="chips-label">자산 유형 선택</span>
+    <div id="assetChips" class="chips">
+      <span class="chip" data-asset="house">주택</span>
+      <span class="chip" data-asset="member">조합원 입주권</span>
+      <span class="chip" data-asset="subscription">주택 분양권</span>
+      <span class="chip" data-asset="land">사업용 토지</span>
+      <span class="chip" data-asset="land_btl">비사업용 토지</span>
+      <span class="chip" data-asset="building">일반 건물</span>
+    </div>
+
+    <div id="periodBlock" class="hidden">
+      <span class="chips-label">보유 기간 선택</span>
+      <div id="periodChips" class="chips">
+        <span class="chip" data-period="lt1">1년 미만</span>
+        <span class="chip" data-period="btw1_2">1년 ~ 2년</span>
+        <span class="chip" data-period="ge2">2년 이상</span>
+      </div>
+    </div>
+
+    <div id="compareWrap" class="hidden note" style="margin-bottom: 15px; border: 1px solid #fee2e2;">
+      <label class="flex-center" style="color:#b91c1c; font-weight:600;">
+        <input id="applyCompare" type="checkbox">
+        비교과세 적용 (단기세율 vs 중과세율 중 큰 금액 적용)
+      </label>
+    </div>
+
+    <table class="result-table">
+      <tr>
+        <th>적용 세율</th>
+        <td id="resRate">-</td>
+      </tr>
+      <tr>
+        <th id="resDeductionLabel">누진공제액</th>
+        <td id="resDeduction">-</td>
+      </tr>
+      <tr>
+        <th>양도소득세</th>
+        <td id="resIncomeTax">-</td>
+      </tr>
+      <tr>
+        <th>지방소득세</th>
+        <td id="resLocalTax" style="color: var(--text-muted);">-</td>
+      </tr>
+      <tr style="border-top: 2px solid var(--primary);">
+        <th>최종 합계액</th>
+        <td id="resTotal" class="highlight">-</td>
+      </tr>
+    </table>
+
+    <div id="basisContainer" class="basis-box hidden">
+      <h3>📝 세금 계산 근거</h3>
+      <p id="basisText" class="basis-text"></p>
+    </div>
   </div>
-  <script>
+
+  <!-- 가이드 테이블 섹션 -->
+  <div class="card">
+    <h2>1. 주택 및 부동산 권리 세율</h2>
+    <table class="info-table">
+      <thead>
+        <tr><th>구분</th><th>주택/입주권</th><th>주택 분양권</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1년 미만</td><td>70%</td><td>70%</td></tr>
+        <tr><td>1년 ~ 2년</td><td>60%</td><td>60%</td></tr>
+        <tr><td>2년 이상</td><td>기본세율</td><td>60%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>2. 기본세율 (누진세율)</h2>
+    <table class="info-table">
+      <thead>
+        <tr><th>과세표준 구간</th><th>세율</th><th>누진공제액</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1.4천 이하</td><td>6%</td><td>-</td></tr>
+        <tr><td>1.4천 ~ 5천</td><td>15%</td><td>126만</td></tr>
+        <tr><td>5천 ~ 8.8천</td><td>24%</td><td>576만</td></tr>
+        <tr><td>8.8천 ~ 1.5억</td><td>35%</td><td>1,544만</td></tr>
+        <tr><td>1.5억 ~ 3억</td><td>38%</td><td>1,994만</td></tr>
+        <tr><td>3억 ~ 5억</td><td>40%</td><td>2,594만</td></tr>
+        <tr><td>5억 ~ 10억</td><td>42%</td><td>3,594만</td></tr>
+        <tr><td>10억 초과</td><td>45%</td><td>6,594만</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
     const KRW = (v) => {
-      if (Number.isNaN(v) || !Number.isFinite(v)) return '-';
-      return v.toLocaleString('ko-KR');
+      if (typeof v !== 'number' || isNaN(v)) return '-';
+      return v.toLocaleString('ko-KR') + ' 원';
     };
 
     const baseBrackets = [
@@ -313,7 +199,7 @@
     const btlBrackets = baseBrackets.map((b) => ({
       min: b.min,
       max: b.max,
-      rate: Math.min(b.rate + 0.10, 0.55),
+      rate: b.rate + 0.10,
       deduction: b.deduction + Math.round(0.10 * b.min),
     }));
 
@@ -324,223 +210,116 @@
       return brackets[brackets.length - 1];
     }
 
-    function computeProgressive(brackets, taxable, includeLocal) {
-      if (!Number.isFinite(taxable) || taxable <= 0) {
-        return { rate: '-', deduction: '-', incomeTax: '-', localTax: '-', total: '-', incomeTaxRaw: 0, localTaxRaw: 0, totalRaw: 0, rateRaw: 0, deductionRaw: 0 };
+    function compute(brackets, taxable, includeLocal, isFlat = false, flatRate = 0) {
+      if (!taxable || taxable <= 0) return null;
+      
+      let rate, deduction, type;
+      if (isFlat) {
+        rate = flatRate;
+        deduction = 0;
+        type = "단일세율";
+      } else {
+        const b = findBracket(brackets, taxable);
+        rate = b.rate;
+        deduction = b.deduction;
+        type = "누진세율";
       }
-      const b = findBracket(brackets, taxable);
-      const incomeTax = Math.max(0, Math.round(taxable * b.rate - b.deduction));
-      const localTax = includeLocal ? Math.round(incomeTax * 0.10) : 0;
-      const total = incomeTax + localTax;
-      return { rate: `${Math.round(b.rate * 100)}%`, deduction: KRW(b.deduction), incomeTax: KRW(incomeTax), localTax: KRW(localTax), total: KRW(total), incomeTaxRaw: incomeTax, localTaxRaw: localTax, totalRaw: total, rateRaw: b.rate, deductionRaw: b.deduction };
-    }
 
-    function computeFlat(rate, taxable, includeLocal) {
-      if (!Number.isFinite(taxable) || taxable <= 0) {
-        return { rate: '-', deduction: '-', incomeTax: '-', localTax: '-', total: '-', incomeTaxRaw: 0, localTaxRaw: 0, totalRaw: 0, rateRaw: rate, deductionRaw: 0 };
-      }
-      const incomeTax = Math.round(taxable * rate);
+      const incomeTax = Math.max(0, Math.round(taxable * rate - deduction));
       const localTax = includeLocal ? Math.round(incomeTax * 0.10) : 0;
-      const total = incomeTax + localTax;
-      return { rate: `${Math.round(rate * 100)}%`, deduction: '-', incomeTax: KRW(incomeTax), localTax: KRW(localTax), total: KRW(total), incomeTaxRaw: incomeTax, localTaxRaw: localTax, totalRaw: total, rateRaw: rate, deductionRaw: 0 };
-    }
-
-    function parseNumberLike(s) {
-      if (typeof s !== 'string') return 0;
-      const cleaned = s.replace(/[^\d.-]/g, '');
-      const n = Number(cleaned);
-      return Number.isFinite(n) ? n : 0;
+      
+      return {
+        rate: (rate * 100).toFixed(0) + '%',
+        deduction: deduction,
+        incomeTax: incomeTax,
+        localTax: localTax,
+        total: incomeTax + localTax,
+        formula: `1. 양도소득세: (${taxable.toLocaleString()} × ${rate}) - ${deduction.toLocaleString()} = ${incomeTax.toLocaleString()}원\n2. 지방소득세: ${incomeTax.toLocaleString()} × 0.1 = ${localTax.toLocaleString()}원`
+      };
     }
 
     const $ = (id) => document.getElementById(id);
-    const input = $('taxableBase');
-    const includeLocalEl = $('includeLocal');
-    const assetChips = $('assetChips');
-    const periodChips = $('periodChips');
-    const periodBlock = $('periodBlock');
-    const compareWrap = $('compareWrap');
-    const applyCompare = $('applyCompare');
-    const cardRatesHousing = $('cardRatesHousing');
-    const cardRatesBase = $('cardRatesBase');
-    const cardRatesLand = $('cardRatesLand');
-    const cardRatesBuilding = $('cardRatesBuilding');
-    let selectedAsset = null;   // 'house' | 'member' | 'subscription' | 'land' | 'land_btl' | 'building'
-    let selectedPeriod = null;  // 'lt1' | 'btw1_2' | 'ge2'
-
-    function updateRateTablesVisibility() {
-      const hasSelection = !!selectedAsset;
-      function setVisible(el, on) { if (!el) return; el.style.display = on ? '' : 'none'; }
-      if (!hasSelection) {
-        // 선택 전에는 모든 세율 테이블 숨김
-        setVisible(cardRatesHousing, false);
-        setVisible(cardRatesBase, false);
-        setVisible(cardRatesLand, false);
-        setVisible(cardRatesBuilding, false);
-        return;
-      }
-      // 선택 후 해당되는 테이블만 노출
-      setVisible(cardRatesHousing, selectedAsset === 'house' || selectedAsset === 'member' || selectedAsset === 'subscription');
-      setVisible(cardRatesLand, selectedAsset === 'land' || selectedAsset === 'land_btl');
-      setVisible(cardRatesBuilding, selectedAsset === 'building');
-      setVisible(cardRatesBase, false);
-    }
+    let selectedAsset = null;
+    let selectedPeriod = null;
 
     function recalc() {
-      const taxable = parseNumberLike(input.value);
-      const includeLocal = !!includeLocalEl.checked;
+      const taxable = Number($('taxableBase').value.replace(/[^0-9]/g, ''));
+      const includeLocal = $('includeLocal').checked;
+      let result = null;
 
-      let result = { rate: '-', deduction: '-', incomeTax: '-', localTax: '-', total: '-' };
-
-      // Show/hide compare option for non-business land short-term
-      if (selectedAsset === 'land_btl' && (selectedPeriod === 'lt1' || selectedPeriod === 'btw1_2')) {
-        compareWrap.style.display = '';
+      // 비사업용 토지 비교과세 옵션 노출
+      if (selectedAsset === 'land_btl' && selectedPeriod && selectedPeriod !== 'ge2') {
+        $('compareWrap').classList.remove('hidden');
       } else {
-        compareWrap.style.display = 'none';
-        if (applyCompare) applyCompare.checked = false;
+        $('compareWrap').classList.add('hidden');
       }
 
-      if (selectedAsset && selectedPeriod) {
+      if (selectedAsset && selectedPeriod && taxable > 0) {
         if (selectedAsset === 'subscription') {
-          // 주택 분양권: <1년 70%, 1~2년 60%, 2년 이상 60% (고정)
-          if (selectedPeriod === 'lt1') {
-            result = computeFlat(0.70, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else if (selectedPeriod === 'btw1_2') {
-            result = computeFlat(0.60, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else { // ge2
-            result = computeFlat(0.60, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          }
+            result = compute(null, taxable, includeLocal, true, 0.70 - (selectedPeriod === 'lt1' ? 0 : 0.10));
         } else if (selectedAsset === 'house' || selectedAsset === 'member') {
-          // 주택, 조합원입주권: <1년 70%, 1~2년 60%, 2년 이상 기본세율
-          if (selectedPeriod === 'lt1') {
-            result = computeFlat(0.70, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else if (selectedPeriod === 'btw1_2') {
-            result = computeFlat(0.60, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else { // ge2
-            result = computeProgressive(baseBrackets, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '누진공제액';
-          }
-        } else if (selectedAsset === 'land') {
-          // 일반 토지(사업용): <1년 50%, 1~2년 40%, 2년 이상 기본세율
-          if (selectedPeriod === 'lt1') {
-            result = computeFlat(0.50, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else if (selectedPeriod === 'btw1_2') {
-            result = computeFlat(0.40, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else { // ge2
-            result = computeProgressive(baseBrackets, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '누진공제액';
-          }
+            if (selectedPeriod === 'lt1') result = compute(null, taxable, includeLocal, true, 0.70);
+            else if (selectedPeriod === 'btw1_2') result = compute(null, taxable, includeLocal, true, 0.60);
+            else result = compute(baseBrackets, taxable, includeLocal);
+        } else if (selectedAsset === 'land' || selectedAsset === 'building') {
+            if (selectedPeriod === 'lt1') result = compute(null, taxable, includeLocal, true, 0.50);
+            else if (selectedPeriod === 'btw1_2') result = compute(null, taxable, includeLocal, true, 0.40);
+            else result = compute(baseBrackets, taxable, includeLocal);
         } else if (selectedAsset === 'land_btl') {
-          // 비사업용 토지: <1년 50%, 1~2년 40%, 2년 이상 기본세율+10%p
-          if (selectedPeriod === 'lt1') {
-            const flat50 = computeFlat(0.50, taxable, includeLocal);
-            if (applyCompare && applyCompare.checked) {
-              const prog = computeProgressive(btlBrackets, taxable, includeLocal);
-              result = (prog.incomeTaxRaw > flat50.incomeTaxRaw) ? prog : flat50;
-              $('resDeductionLabel').textContent = (result === prog) ? '조정공제액' : '공제액';
+            if (selectedPeriod === 'lt1') {
+                const flat = compute(null, taxable, includeLocal, true, 0.50);
+                const prog = compute(btlBrackets, taxable, includeLocal);
+                result = ($('applyCompare').checked && prog.incomeTax > flat.incomeTax) ? prog : flat;
+            } else if (selectedPeriod === 'btw1_2') {
+                const flat = compute(null, taxable, includeLocal, true, 0.40);
+                const prog = compute(btlBrackets, taxable, includeLocal);
+                result = ($('applyCompare').checked && prog.incomeTax > flat.incomeTax) ? prog : flat;
             } else {
-              result = flat50;
-              $('resDeductionLabel').textContent = '공제액';
+                result = compute(btlBrackets, taxable, includeLocal);
             }
-          } else if (selectedPeriod === 'btw1_2') {
-            const flat40 = computeFlat(0.40, taxable, includeLocal);
-            if (applyCompare && applyCompare.checked) {
-              const prog = computeProgressive(btlBrackets, taxable, includeLocal);
-              result = (prog.incomeTaxRaw > flat40.incomeTaxRaw) ? prog : flat40;
-              $('resDeductionLabel').textContent = (result === prog) ? '조정공제액' : '공제액';
-            } else {
-              result = flat40;
-              $('resDeductionLabel').textContent = '공제액';
-            }
-          } else { // ge2
-            result = computeProgressive(btlBrackets, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '조정공제액';
-          }
-        } else if (selectedAsset === 'building') {
-          // 일반건물: <1년 50%, 1~2년 40%, 2년 이상 기본세율
-          if (selectedPeriod === 'lt1') {
-            result = computeFlat(0.50, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else if (selectedPeriod === 'btw1_2') {
-            result = computeFlat(0.40, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '공제액';
-          } else { // ge2
-            result = computeProgressive(baseBrackets, taxable, includeLocal);
-            $('resDeductionLabel').textContent = '누진공제액';
-          }
         }
-      } else {
-        $('resDeductionLabel').textContent = '누진공제액';
       }
 
-      $('resRate').textContent = result.rate;
-      $('resDeduction').textContent = result.deduction;
-      $('resIncomeTax').textContent = result.incomeTax;
-      $('resLocalTax').textContent = result.localTax;
-      $('resTotal').textContent = result.total;
-
-      updateRateTablesVisibility();
+      if (result) {
+        $('resRate').textContent = result.rate;
+        $('resDeduction').textContent = KRW(result.deduction);
+        $('resIncomeTax').textContent = KRW(result.incomeTax);
+        $('resLocalTax').textContent = KRW(result.localTax);
+        $('resTotal').textContent = KRW(result.total);
+        $('basisText').textContent = result.formula;
+        $('basisContainer').classList.remove('hidden');
+      } else {
+        ['resRate','resDeduction','resIncomeTax','resLocalTax','resTotal'].forEach(id => $(id).textContent = '-');
+        $('basisContainer').classList.add('hidden');
+      }
     }
 
-    function formatOnInput(e) {
-      const pos = e.target.selectionStart;
-      const raw = e.target.value;
-      const num = parseNumberLike(raw);
-      const formatted = num ? KRW(num) : '';
-      e.target.value = formatted;
-      e.target.setSelectionRange(formatted.length, formatted.length);
+    // 이벤트 리스너
+    $('taxableBase').addEventListener('input', (e) => {
+      let val = e.target.value.replace(/[^0-9]/g, '');
+      e.target.value = val ? Number(val).toLocaleString() : '';
       recalc();
-    }
+    });
 
-    input.addEventListener('input', formatOnInput);
-    includeLocalEl.addEventListener('change', recalc);
-    if (applyCompare) applyCompare.addEventListener('change', recalc);
+    $('includeLocal').addEventListener('change', recalc);
+    $('applyCompare').addEventListener('change', recalc);
 
-    function handleChipGroupClick(container, attr, onSelect) {
-      container.addEventListener('click', (e) => {
-        const target = e.target.closest('.chip');
-        if (!target || !container.contains(target)) return;
-        const val = target.getAttribute(attr);
-        if (!val) return;
-        for (const el of container.querySelectorAll('.chip')) {
-          el.classList.toggle('active', el === target);
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        const parent = this.parentElement;
+        parent.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+
+        if (parent.id === 'assetChips') {
+          selectedAsset = this.dataset.asset;
+          $('periodBlock').classList.remove('hidden');
+        } else {
+          selectedPeriod = this.dataset.period;
         }
-        onSelect(val);
         recalc();
       });
-    }
+    });
+</script>
 
-    if (assetChips) {
-      handleChipGroupClick(assetChips, 'data-asset', (val) => {
-        selectedAsset = val;
-        // 최초 선택 시 기간 블록 노출 및 기본 기간 선택
-        periodBlock.style.display = '';
-        if (!selectedPeriod) {
-          const first = periodChips.querySelector('.chip[data-period="lt1"]');
-          if (first) {
-            selectedPeriod = 'lt1';
-            for (const el of periodChips.querySelectorAll('.chip')) el.classList.remove('active');
-            first.classList.add('active');
-          }
-        }
-      });
-    }
-
-    if (periodChips) {
-      handleChipGroupClick(periodChips, 'data-period', (val) => {
-        selectedPeriod = val;
-      });
-    }
-
-    recalc();
-  </script>
 </body>
 </html>
-
-
