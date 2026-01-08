@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>당세 상품 목록 - 세금 절약의 즐거움</title>
+    <title>대한세무법인</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
         
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --accent-color: #e53e3e; /* 강조색 */
+            --bg-color: #f7fafc;
+        }
+
         body {
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #2d3748;
             margin: 0;
             padding: 0;
-            background-color: #f7fafc;
+            background-color: var(--bg-color);
         }
+
         .container {
             width: 90%;
             max-width: 1200px;
@@ -22,141 +30,205 @@
             overflow: hidden;
             padding: 0 20px;
         }
+
         header {
-            background: linear-gradient(135deg, #1a365d, #2b6cb0);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: #ffffff;
-            padding: 20px 0;
+            padding: 30px 0;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            animation: colorChange 5s infinite alternate;
-        }
-        @keyframes colorChange {
-            0% { color: #ffffff; }
-            50% { color: #63b3ed; }
-            100% { color: #ffffff; }
-        }
+
+        header h1 { margin: 0; font-size: 2.2em; }
+
+        /* 네비게이션 */
         nav {
             background: #2d3748;
             padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        nav ul {
-            padding: 0;
-            list-style: none;
-            text-align: center;
-        }
-        nav li {
-            display: inline;
-            margin: 0 15px;
-        }
+        nav ul { padding: 0; list-style: none; text-align: center; margin: 0; }
+        nav li { display: inline-block; margin: 0 10px; }
         nav a {
             color: #ffffff;
             text-decoration: none;
-            font-size: 18px;
-            transition: color 0.3s ease;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px 10px;
+            transition: color 0.3s;
         }
-        nav a:hover {
-            color: #63b3ed;
+        nav a:hover { color: #63b3ed; }
+
+        /* 애니메이션 영역 */
+        #visitor-count {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-size: 1.2em;
         }
-        main {
-            padding: 40px 0;
+        .highlight-num {
+            color: var(--accent-color);
+            font-weight: 900;
+            font-size: 1.5em;
+            margin: 0 5px;
         }
+
+        /* 섹션 공통 */
         .product-section {
             background: #ffffff;
-            margin-bottom: 30px;
+            margin: 30px 0;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            display: none; /* 기본적으로 숨김 */
         }
-        .product-section:hover {
-            transform: translateY(-5px);
-        }
+        .product-section.active { display: block; }
         .product-section h2 {
-            color: #1a365d;
-            border-bottom: 3px solid #3182ce;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
             padding-bottom: 10px;
-            font-size: 1.8em;
         }
-        .product-list {
-            list-style: none;
-            padding: 0;
-        }
+
+        .product-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
         .product-list li {
-            margin-bottom: 15px;
-            padding: 10px;
+            padding: 12px;
             background: #f8fafc;
             border-radius: 5px;
-            transition: background 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
         }
-        .product-list li:hover {
-            background: #ebf8ff;
+        .product-list a { color: #2b6cb0; text-decoration: none; font-weight: bold; }
+
+        /* 재산도우미 서브메뉴 */
+        .sub-tab-nav { margin-bottom: 20px; }
+        .sub-tab-btn {
+            padding: 8px 20px;
+            cursor: pointer;
+            border: 1px solid var(--secondary-color);
+            background: #fff;
+            border-radius: 20px;
+            margin-right: 10px;
         }
-        .product-list a {
-            color: #2b6cb0;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-        .product-list a:hover {
-            color: #4299e1;
-        }
+        .sub-tab-btn.active { background: var(--secondary-color); color: #fff; }
+        .property-sub-content { display: none; }
+        .property-sub-content.active { display: block; }
+
+        /* 푸터 */
         footer {
             background: #2d3748;
             color: #ffffff;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
+            padding: 40px 0;
+            margin-top: 50px;
+            line-height: 1.8;
         }
+        .footer-info { font-size: 0.9em; opacity: 0.8; }
+
         .scroll-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #3182ce;
-            color: #ffffff;
-            padding: 10px 15px;
-            border-radius: 50%;
-            text-decoration: none;
-            display: none;
-            transition: background 0.3s ease;
-        }
-        .scroll-to-top:hover {
-            background: #4299e1;
-        }
-        #tax-savings {
-            font-size: 1.2em;
-            text-align: center;
-            margin-top: 20px;
-            color: #1a365d;
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--secondary-color); color: #fff;
+            padding: 10px 15px; border-radius: 50%; text-decoration: none;
         }
     </style>
 </head>
 <body>
+
     <header>
         <div class="container">
-            <h1>당세 상품 목록 - 세금 절약의 즐거움</h1>
+            <h1>대한세무법인</h1>
+            <p>당신을 지키는 가장 가까운 울타리</p>
         </div>
     </header>
 
     <nav>
         <div class="container">
             <ul>
-                <li><a href="#main-products">보수표</a></li>
-                <li><a href="#prep-products">대한세무법인 계산기</a></li>
-                <li><a href="#calc-products">계산기</a></li>
-                <li><a href="#other-products">기타 상품</a></li>
+                <li><a href="javascript:void(0)" onclick="showSection('accounting')">회계와세무</a></li>
+                <li><a href="javascript:void(0)" onclick="showSection('business')">경영</a></li>
+                <li><a href="javascript:void(0)" onclick="showSection('hr')">인사노무</a></li>
+                <li><a href="javascript:void(0)" onclick="showSection('property')">양도상속증여</a></li>
+                <li><a href="javascript:void(0)" onclick="showSection('daehan')">대한세무법인</a></li>
             </ul>
         </div>
     </nav>
 
     <main class="container">
-        <div id="tax-savings">지금까지 고객님들이 절약한 세금: <span id="savings-amount">0</span>원</div>
+        <!-- 방문자 애니메이션 -->
+        <div id="visitor-count">
+            오늘 ! 여기에 오신 분: <span id="random-num" class="highlight-num">0</span> 명
+        </div>
 
-        <section id="main-products" class="product-section">
-            <h2>보수표</h2>
+        <!-- 1. 회계와세무 -->
+        <section id="accounting" class="product-section active">
+            <h2>회계와세무</h2>
+            <ul class="product-list">
+                <li><a href="pc방 매출 환산표.html">pc방 매출 환산표</a></li>
+                <li><a href="근로소득 원천징수.html">근로소득 원천징수 계산기</a></li>
+                <li><a href="종합소득세 계산기.html">종합소득세 계산기</a></li>
+                <li><a href="조특법.html">조특법 감면</a></li>
+            </ul>
+        </section>
+
+        <!-- 2. 경영도우미 -->
+        <section id="business" class="product-section">
+            <h2>경영도우미 - 고용 및 정책지원금</h2>
+            <ul class="product-list">
+                <li><a href="고용및정책지원금.html">고용및정책지원금</a></li>
+                
+            </ul>
+        </section>
+
+        <!-- 3. 인사노무도우미 -->
+        <section id="hr" class="product-section">
+            <h2>인사노무도우미 (준비중)</h2>
+            <ul class="product-list">
+                <li><a href="#">취업규칙 표준 근로계약서 양식 </a></li>
+                <li><a href="#">최저임금 및 퇴직금 계산기</a></li>
+                <li><a href="#">4대보험 요율표</a></li>
+                <li><a href="#">주휴수당 자동 계산기</a></li>
+            </ul>
+        </section>
+
+        <!-- 4. 재산도우미 -->
+        <section id="property" class="product-section">
+            <h2>재산도우미</h2>
+            <div class="sub-tab-nav">
+                <button class="sub-tab-btn active" onclick="showProperty('tax-calc')">양도 · 증여</button>
+                <button class="sub-tab-btn" onclick="showProperty('inherit-calc')">상속</button>
+            </div>
+
+            <!-- 양도/증여 관련 -->
+            <div id="tax-calc" class="property-sub-content active">
+                <ul class="product-list">
+                    <li><a href="양도세율.html">양도세율계산기</a></li>
+                    <li><a href="transferTaxAfterInheritance.html">상속후 양도세 계산하기</a></li>
+                    <li><a href="종합소득세 수정신고.html">종합소득세 수정 신고</a></li>
+                    <li><a href="totalPropertyClaim.html">종부세경정청구</a></li>
+                </ul>
+            </div>
+
+            <!-- 상속 관련 -->
+            <div id="inherit-calc" class="property-sub-content">
+                <ul class="product-list">
+                    <li><a href="cal_Inherit_simple.html">단순한 상속세 계산기</a></li>
+                    <li><a href="inheritClass.html">상속세신고서 작성교실</a></li>
+                    <li><a href="inheritFree.html">상속세보고서 프리</a></li>
+                    <li><a href="inheritPremium.html">상속세보고서 프리미엄</a></li>
+                    <li><a href="inheritGold.html">상속세보고서 골드</a></li>
+                    <li><a href="inheritGoldAnswer.html">상속세 골드 질문 답변서</a></li>
+                    <li><a href="inheritRoyal.html">상속세보고서 로얄</a></li>
+                    <li><a href="adquisitionTaxClaim.html">상속취득세 경정청구</a></li>
+                    <li><a href="inherit-tax-report.html">상속세신고서</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 5. 대한세무법인 (비밀번호 보호) -->
+        <section id="daehan" class="product-section">
+            <h2>대한세무법인 전용 (보수표 목록)</h2>
             <ul class="product-list">
                 <li><a href="세무대리 보수기준표.html">세무대리 보수기준표</a></li>               
                 <li><a href="신고대리 및 증명발급 보수표.html">신고대리 및 증명발급 보수표</a></li>
@@ -164,88 +236,73 @@
                 <li><a href="불복청구 보수.html">불복청구 보수</a></li>
                 <li><a href="제산제세 신고 및 조사대리 보수표.html">제산제세 신고 및 조사대리 보수표</a></li>
                 <li><a href="세무상담·고문 및 조사대리 보수표.html">세무상담·고문 및 조사대리 보수표</a></li>
-                <li><a href="pc방 조정료, 사업소득자 수수료.html">pc방 조정료, 사업소득자 수수료 계산기</a></li>             
-                               
-                             
-            </ul>
-        </section>
-
-        <section id="prep-products" class="product-section">
-            <h2>대한세무법인 계산기</h2>
-                        <ul class="product-list">
-                 <li><a href="pc방 매출 환산표.html">pc방 매출 환산표</a></li>
-                 <li><a href="근로소득 원천징수.html">근로소득 원천징수 계산기</a></li>
-                 <li><a href="종합소득세 계산기.html">종합소득세 계산기</a></li>
-                 <li><a href="조특법.html">조특법 감면</a></li>
-                
-            </ul>
-        </section>
-
-        <section id="calc-products" class="product-section">
-            <h2>재산관련계산기</h2>
-            <ul class="product-list">
-                <li><a href="양도세율.html">양도세율계산기</a></li>
-                <li><a href="cal_Inherit_simple.html">단순한 상속세 계산기</a></li>
-                <li><a href="transferTaxAfterInheritance.html">상속후 양도세 계산하기 </a></li>
-                <li><a href="종합소득세 수정신고.html">종합소득세 수정 신고 </a></li>
-            </ul>
-        </section>
-
-        <section id="other-products" class="product-section">
-            <h2>상속계산기 </h2>
-            <ul class="product-list">
-                <li><a href="inheritClass.html">상속세신고서 작성교실</a></li>
-                <li><a href="inheritFree.html">상속세보고서 프리</a></li>
-                <li><a href="inheritPremium.html">상속세보고서 프리미엄</a></li>
-                <li><a href="inheritGold.html">상속세보고서 골드</a></li>
-                <li><a href="inheritGoldAnswer.html">상속세 골드 질문 답변서 </a></li>
-                <li><a href="inheritRoyal.html">상속세보고서 로얄</a></li>
-                <li><a href="totalPropertyClaim.html">종부세경정청구</a></li>
-                <li><a href="adquisitionTaxClaim.html">상속취득세 경정청구</a></li>
-                <li><a href="inherit-tax-report.html">상속세신고서</a></li>
-                <li><a href="1. 사용처 갑 완성.html">사용처 갑</a></li>
-                <li><a href="2.사용처 을 완성.html">사용처 을</a></li>
+                <li><a href="pc방 조정료, 사업소득자 수수료.html">pc방 조정료 수수료 계산기</a></li>
             </ul>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 당세. 모든 권리 보유. 세금 절약의 첫 걸음, 당세와 함께하세요!</p>
+            <strong>대한세무법인 - 당신의 세무사 - 당신을 지키는 가장 가까운 울타리</strong><br>
+            <div class="footer-info">
+                <p>주소 : 경기도 성남시 분당구 성남대로 912 501호 515호<br>
+                이메일 : tax@taxdh.net | 전화 : 031-783-8877</p>
+                <p>&copy; 2024 Daehan Tax Corp. All Rights Reserved.</p>
+            </div>
         </div>
     </footer>
 
-    <a href="#" class="scroll-to-top" id="scroll-btn">↑</a>
+    <a href="#" class="scroll-to-top">↑</a>
 
     <script>
-        // 스크롤 버튼 표시/숨김
-        window.onscroll = function() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                document.getElementById("scroll-btn").style.display = "block";
-            } else {
-                document.getElementById("scroll-btn").style.display = "none";
-            }
-        };
-
-        // 절약된 세금 금액 애니메이션
-        function animateSavings() {
-            let savings = 0;
-            const target = 1000000000; // 10억원
-            const duration = 5000; // 5초
-            const step = target / (duration / 50); // 50ms마다 업데이트
-
-            const timer = setInterval(() => {
-                savings += step;
-                if (savings >= target) {
-                    clearInterval(timer);
-                    savings = target;
+        // 1. 섹션 전환 및 비밀번호 체크
+        function showSection(sectionId) {
+            if (sectionId === 'daehan') {
+                const pw = prompt("비밀번호를 입력하세요.");
+                if (pw !== '06250625') {
+                    alert("비밀번호가 일치하지 않습니다.");
+                    return;
                 }
-                document.getElementById('savings-amount').textContent = Math.floor(savings).toLocaleString();
-            }, 50);
+            }
+
+            // 모든 섹션 숨기기
+            const sections = document.querySelectorAll('.product-section');
+            sections.forEach(s => s.classList.remove('active'));
+
+            // 선택한 섹션 보이기
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
         }
 
-        // 페이지 로드 시 애니메이션 시작
-        window.onload = animateSavings;
+        // 2. 재산도우미 내부 탭 전환
+        function showProperty(subId) {
+            const contents = document.querySelectorAll('.property-sub-content');
+            contents.forEach(c => c.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.sub-tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(subId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // 3. 방문자 숫자 랜덤 애니메이션
+        function animateVisitors() {
+            const target = Math.floor(Math.random() * (150 - 100 + 1)) + 100;
+            let current = 0;
+            const display = document.getElementById('random-num');
+            
+            const timer = setInterval(() => {
+                if (current < target) {
+                    current++;
+                    display.innerText = current;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 20);
+        }
+
+        window.onload = animateVisitors;
     </script>
 </body>
 </html>

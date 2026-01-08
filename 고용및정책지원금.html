@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고용지원 & 정책지원금 안내 센터</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #6a0572; /* Darker Purple for headings/accents */
+            --secondary-purple: #9b22e1; /* Lighter Purple for buttons/highlights */
+            --text-dark: #333333;
+            --text-light: #666666;
+            --background-body: #fdfdff;
+            --background-card: #ffffff;
+            --border-subtle: #e8e8f0;
+            --shadow-soft: rgba(0, 0, 0, 0.05);
+            --gradient-main: linear-gradient(135deg, #6a0572 0%, #9b22e1 100%);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-body);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        .container {
+            max-width: 1000px;
+            width: 90%;
+            margin: auto;
+            background: var(--background-card);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            box-sizing: border-box;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-purple);
+            font-size: 3.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Highlight/Policy Portal Section */
+        .policy-portal-section {
+            background: var(--gradient-main);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 60px;
+            box-shadow: 0 8px 20px rgba(106, 5, 114, 0.3);
+            text-align: center;
+        }
+        .policy-portal-section h2 {
+            font-family: 'Playfair Display', serif;
+            color: white;
+            font-size: 2.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .policy-portal-section .section-subtitle {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .policy-card {
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly transparent white for cards */
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            border-radius: 10px;
+            padding: 25px;
+            text-align: left;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .policy-card:hover {
+            transform: translateY(-8px);
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+        .policy-card h3 {
+            color: white;
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .policy-card p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+        .card-button {
+            display: inline-block;
+            background-color: var(--secondary-purple); /* Often use a lighter or complementary color for button */
+            color: white;
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 8px rgba(155, 34, 225, 0.3);
+        }
+        .card-button:hover {
+            background-color: #7b009e; /* Darker purple on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(155, 34, 225, 0.4);
+        }
+
+        h2.section-title {
+            color: var(--primary-purple);
+            font-size: 2em;
+            margin-top: 60px;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        h2.section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 70px;
+            height: 4px;
+            background-color: var(--secondary-purple);
+            border-radius: 2px;
+        }
+
+        .link-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .link-list li {
+            background: var(--background-card);
+            padding: 20px 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow-soft);
+            border: 1px solid var(--border-subtle);
+        }
+        .link-list li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            background-color: #fdf9ff; /* Very subtle highlight on hover */
+        }
+        .link-list li a {
+            text-decoration: none;
+            color: var(--text-dark); /* Links slightly darker for contrast */
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            font-size: 1.05em;
+        }
+        .link-list li a::before {
+            content: '✦'; /* A more elegant bullet */
+            margin-right: 12px;
+            font-size: 1.2em;
+            color: var(--secondary-purple);
+            line-height: 1;
+        }
+        .link-list li a:hover {
+            color: var(--primary-purple);
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 70px;
+            font-size: 0.9em;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 30px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+                width: 95%;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            .policy-portal-section {
+                padding: 30px;
+            }
+            .policy-portal-section h2 {
+                font-size: 2em;
+            }
+            .link-list {
+                grid-template-columns: 1fr;
+            }
+            .policy-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>고용지원 & 정책지원금 안내 센터</h1>
+            <p class="subtitle">개인, 소상공인, 기업을 위한 맞춤형 정부 지원 정보를 우아하게 찾아보세요.</p>
+        </header>
+
+        <section class="policy-portal-section">
+            <h2>✨ 당신만을 위한 정부 정책, 지금 바로 찾으세요!</h2>
+            <p class="section-subtitle">다양한 정부 지원 정책과 보조금, 기업 및 소상공인 혜택까지 한눈에 확인하세요.</p>
+            
+            <div class="policy-grid">
+                <div class="policy-card">
+                    <h3>보조금24</h3>
+                    <p>내가 받을 수 있는 정부 혜택을 맞춤형으로 확인하고 신청할 수 있는 통합 서비스.</p>
+                    <a href="https://www.gov.kr/portal/rcvfvrSvc/main/nonLogin" target="_blank" class="card-button">보조금 찾기</a>
+                </div>
+    
+                <div class="policy-card">
+                    <h3>기업마당</h3>
+                    <p>중소기업을 위한 정책자금, 교육, R&D 등 종합적인 지원 정보와 공고를 제공.</p>
+                    <a href="https://www.bizinfo.go.kr/" target="_blank" class="card-button">기업 지원</a>
+                </div>
+    
+                <div class="policy-card">
+                    <h3>소상공인마당</h3>
+                    <p>소상공인의 창업, 경영, 성장, 재기 등 생애 주기에 맞춰 특화된 지원 정보를 안내.</p>
+                    <a href="https://ols.semas.or.kr/" target="_blank" class="card-button">소상공인 지원</a>
+                </div>
+    
+                <div class="policy-card">
+                    <h3>K-Startup</h3>
+                    <p>혁신적인 아이디어를 가진 예비 창업가와 스타트업을 위한 모든 지원 프로그램.</p>
+                    <a href="https://www.k-startup.go.kr/" target="_blank" class="card-button">창업 지원</a>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="section-title">✅ 구직자 및 재직자 지원</h2>
+        <ul class="link-list">
+            <li><a href="https://www.work.go.kr/seekWantedMain.do" target="_blank">워크넷 (국내 최대 구인/구직 정보)</a></li>
+            <li><a href="https://www.hrd.go.kr/hrdp/main/index.do" target="_blank">국민내일배움카드 (직업 훈련 지원)</a></li>
+            <li><a href="https://www.ei.go.kr/ei/einfo/eiv/ep/epi/selectEihpBusiList.do" target="_blank">실업급여 (재취업 활동 기간 중 소득 지원)</a></li>
+            <li><a href="https://www.moel.go.kr/policy/policyInfo/policyInfoDetail.do?policy_no=145" target="_blank">국민취업지원제도 (취업 촉진 및 생활 안정 지원)</a></li>
+            <li><a href="https://www.work.go.kr/youngChallenge/youngChallenge.do" target="_blank">청년도전지원사업 (청년 특화 취업 지원)</a></li>
+            <li><a href="https://www.work.go.kr/jobInfoCenter/main.do" target="_blank">취업성공패키지 (단계별 맞춤형 취업 지원)</a></li>
+        </ul>
+
+        <h2 class="section-title">💰 기업 및 소상공인 정책지원금</h2>
+        <ul class="link-list">
+            <li><a href="https://www.sbc.or.kr/main.do" target="_blank">중소벤처기업진흥공단 (정책자금 및 컨설팅)</a></li>
+            <li><a href="https://www.moel.go.kr/policy/policyInfo/policyInfoDetail.do?policy_no=137" target="_blank">고용유지지원금 (고용 유지 위한 사업주 지원)</a></li>
+            <li><a href="https://www.moel.go.kr/policy/policyInfo/policyInfoDetail.do?policy_no=136" target="_blank">일자리 안정자금 (최저임금 인상에 따른 사업주 지원)</a></li>
+            <li><a href="https://www.ei.go.kr/ei/einfo/eiv/ep/epi/selectEihpBusiList.do?cmmCdMenuNo=2&menuTag=01&progrmNo=P00000000049" target="_blank">출산육아기 고용안정장려금 (일-가정 양립 지원)</a></li>
+            <li><a href="https://www.mss.go.kr/site/smba/main.do" target="_blank">중소벤처기업부 (중소기업 전반 정책)</a></li>
+        </ul>
+
+        <h2 class="section-title">💡 유용한 정보 및 상담 채널</h2>
+        <ul class="link-list">
+            <li><a href="https://www.moel.go.kr/index.do" target="_blank">고용노동부 공식 홈페이지</a></li>
+            <li><a href="https://www.korea.go.kr/main/ptl/policyinfo" target="_blank">대한민국 정책브리핑 (정부 정책 종합)</a></li>
+            <li><a href="https://www.work.go.kr/help/main.do" target="_blank">워크넷 고객지원/상담 (취업 관련 문의)</a></li>
+            <li><a href="https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index.xml" target="_blank">국세청 홈택스 (세금 및 세무 지원)</a></li>
+        </ul>
+
+        <p class="footer">
+            본 페이지는 주요 정책 정보를 안내하는 용도로 제작되었습니다. 최신 정보 및 정확한 내용은 반드시 각 기관의 공식 웹사이트에서 확인하시기 바랍니다.<br>
+            각종 지원금 신청 및 문의는 해당 기관에 직접 문의하시는 것이 가장 정확합니다.
+        </p>
+    </div>
+</body>
+</html>
