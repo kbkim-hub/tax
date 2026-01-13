@@ -9,101 +9,129 @@
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
         body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; color: #1e293b; }
         
-        .tag-btn { transition: all 0.2s; border-radius: 12px; border: 1px solid #e2e8f0; }
+        /* 웹 인터페이스 스타일 */
+        .tag-btn { transition: all 0.2s; border-radius: 10px; border: 1px solid #e2e8f0; }
         .tag-btn.active { background-color: #4f46e5; color: white; border-color: #4f46e5; transform: scale(1.05); }
         
-        .benefit-card { background: white; border: 1px solid #e2e8f0; border-radius: 24px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s ease; }
-        .benefit-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1); }
-
-        /* 법령 링크 스타일 */
-        .law-link { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: #f1f5f9; color: #4f46e5; font-size: 10px; font-weight: 800; border-radius: 6px; text-decoration: none; transition: all 0.2s; border: 1px solid #e2e8f0; }
-        .law-link:hover { background: #4f46e5; color: white; border-color: #4f46e5; }
-
-        .reqs-main-box { background: #f8fafc; border-radius: 15px; padding: 20px; margin-top: 10px; border: 1px solid #f1f5f9; }
+        .benefit-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .reqs-main-box { background: #f8fafc; border-radius: 12px; padding: 15px; margin-top: 10px; border: 1px solid #f1f5f9; }
         .info-list { font-size: 14px; color: #334155; line-height: 1.6; }
-        .info-list li { position: relative; padding-left: 18px; margin-bottom: 3px; list-style: none; }
+        .info-list li { position: relative; padding-left: 18px; margin-bottom: 2px; list-style: none; }
         .info-list li::before { content: "•"; position: absolute; left: 0; color: #6366f1; font-weight: bold; }
 
-        .spec-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 15px; border: 1px solid #e2e8f0; }
-        .spec-item { background: white; padding: 8px 4px; text-align: center; }
-        .spec-label { font-size: 9px; color: #94a3b8; font-weight: 800; margin-bottom: 1px; }
-        .spec-value { font-size: 11px; color: #1e293b; font-weight: 700; }
+        .spec-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #e2e8f0; border-radius: 8px; overflow: hidden; margin-top: 12px; border: 1px solid #e2e8f0; }
+        .spec-item { background: white; padding: 6px 2px; text-align: center; }
+        .spec-label { font-size: 8px; color: #94a3b8; font-weight: 800; margin-bottom: 1px; }
+        .spec-value { font-size: 10.5px; color: #1e293b; font-weight: 700; }
 
-        .conflict-tag { font-size: 10px; padding: 2px 8px; border-radius: 6px; background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; font-weight: 700; }
+        /* 중복배제 문구: 작고 빨간색으로 강조 */
+        .conflict-tag { font-size: 9px; padding: 1px 6px; border-radius: 4px; background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; font-weight: 800; letter-spacing: -0.5px; }
 
+        .law-link { display: inline-flex; align-items: center; gap: 3px; color: #4f46e5; font-size: 10px; font-weight: 800; text-decoration: underline; }
+        .consult-box { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-radius: 20px; padding: 20px; color: white; }
+
+        /* 인쇄 설정 */
         @media print {
             @page { size: A4; margin: 15mm; }
-            body { background-color: white !important; padding: 0 !important; }
-            header, aside, .no-print, .law-link svg { display: none !important; }
-            .law-link { background: transparent !important; color: #666 !important; border: none !important; padding: 0 !important; }
+            header, aside, .no-print { display: none !important; }
             main { width: 100% !important; margin: 0 !important; }
-            #print-cover { display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100vh; page-break-after: always; border: 1px solid #cbd5e1 !important; padding: 30px !important; margin: 0 !important; }
-            #print-cover h1 { font-size: 24pt !important; margin-bottom: 10pt !important; }
-            #print-cover h2 { font-size: 14pt !important; margin-bottom: 20pt !important; color: #4f46e5 !important; }
-            .benefit-card { padding: 15px !important; margin-bottom: 15px !important; border: 1px solid #e2e8f0 !important; page-break-inside: avoid; }
-            .info-list { font-size: 9pt !important; line-height: 1.4 !important; }
-            .spec-box { grid-template-columns: repeat(5, 1fr) !important; background: #eee !important; margin-top: 8px !important; }
-            .spec-item { background: white !important; padding: 4px 1px !important; }
-            .slogan-box { margin-top: 20pt !important; padding-top: 15pt !important; border-top: 1px solid #f1f5f9 !important; }
+            #print-cover { display: flex !important; flex-direction: column; justify-content: center; align-items: center; height: 100vh; page-break-after: always; border: 1px solid #cbd5e1 !important; padding: 20px !important; margin: 0 !important; }
+            #print-cover h1 { font-size: 22pt !important; }
+            .benefit-card { padding: 12px !important; margin-bottom: 10px !important; page-break-inside: avoid; }
+            .info-list { font-size: 9pt !important; }
+            .spec-box { background: #eee !important; margin-top: 8px !important; }
+            #expert-advice { font-size: 9pt !important; page-break-inside: avoid; }
         }
-
-        @media (max-width: 768px) { .spec-box { grid-template-columns: repeat(2, 1fr); } .spec-item:last-child { grid-column: span 2; } }
     </style>
 </head>
-<body class="py-8">
+<body class="py-6">
 
 <div class="max-w-7xl mx-auto px-4">
     
-    <!-- [인쇄전용] 첫 페이지 표지 -->
+    <!-- [인쇄전용] 표지 -->
     <div id="print-cover" class="hidden text-center">
-        <h1 class="font-black text-slate-900 leading-tight text-center">조세특례제한법<br>맞춤형 분석 결과 리포트</h1>
-        <h2 class="font-bold text-indigo-700 text-center">당신의세무사 - 대한세무법인</h2>
-        <div class="w-12 h-0.5 bg-slate-800 mx-auto my-6"></div>
-        <p id="cover-date" class="text-slate-500"></p>
-        
-        <div class="border border-slate-200 p-6 text-left w-full max-w-lg mt-8">
-            <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">선택된 분석 키워드</h3>
-            <ul id="cover-tags" class="flex flex-wrap gap-2 text-indigo-600 font-bold"></ul>
+        <h1 class="font-black text-slate-900 leading-tight">조세특례제한법<br>맞춤형 분석 결과 리포트</h1>
+        <h2 class="font-bold text-indigo-700 text-xl mt-4">당신의세무사 - 대한세무법인</h2>
+        <div class="w-10 h-0.5 bg-slate-800 mx-auto my-6"></div>
+        <p id="cover-date" class="text-sm text-slate-500"></p>
+        <div class="border border-slate-200 p-5 text-left w-full max-w-md mt-6 bg-slate-50 rounded-xl">
+            <h3 class="text-[9px] font-black text-slate-400 mb-2 uppercase">선택된 분석 키워드</h3>
+            <ul id="cover-tags" class="flex flex-wrap gap-1.5 text-indigo-600 font-bold text-xs"></ul>
         </div>
-        <p class="mt-10 text-[9px] text-slate-400 italic font-medium text-center">※ 본 분석 결과는 실제 신고 시 사실관계에 따라 달라질 수 있습니다.</p>
     </div>
 
-    <!-- 웹 헤더 -->
-    <header class="mb-10 flex flex-col md:flex-row justify-between items-center gap-6 border-b pb-8 no-print text-center md:text-left">
+    <!-- 상단 웹 헤더 -->
+    <header class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b pb-6 no-print">
         <div>
-            <div class="flex items-center gap-2 mb-1 justify-center md:justify-start">
-                <span class="bg-indigo-600 text-white px-2 py-0.5 rounded text-[10px] font-black uppercase">Solution</span>
-                <span class="text-indigo-600 font-extrabold text-xs tracking-widest uppercase">Daehan Tax Corp.</span>
-            </div>
-            <h1 class="text-3xl font-black text-slate-900 tracking-tighter italic">대한세무법인 조특법 분석 시스템</h1>
+            <h1 class="text-2xl font-black text-slate-900">대한세무법인 <span class="text-indigo-600">Tax Solution</span></h1>
+            <p class="text-slate-500 text-sm font-medium">최저한세 및 중복배제 정밀 시뮬레이션</p>
         </div>
         <div class="flex gap-2">
-            <button onclick="window.print()" class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg transition-all flex items-center gap-2 text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            <button onclick="window.print()" class="px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 text-sm flex items-center gap-2">
                 리포트 출력 (PDF)
             </button>
-            <button onclick="resetTags()" class="px-4 py-3 bg-white border-2 border-slate-200 text-slate-500 font-bold rounded-xl hover:bg-slate-50 transition-all text-sm">초기화</button>
+            <button onclick="resetTags()" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-500 font-bold rounded-xl hover:bg-slate-50 text-sm">초기화</button>
         </div>
     </header>
 
-    <div class="flex flex-col lg:flex-row gap-8">
-        <aside class="w-full lg:w-72 flex-shrink-0 no-print">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 sticky top-5">
-                <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">상황 키워드 필터</h2>
-                <div id="tag-container" class="flex flex-wrap md:flex-col gap-2"></div>
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- 왼쪽: 사이드바 (데이터 로딩과 상관없이 항상 유지됨) -->
+        <aside class="w-full lg:w-72 flex-shrink-0 no-print space-y-4">
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4">상황 체크리스트</h2>
+                <div id="tag-container" class="flex flex-wrap md:flex-col gap-2">
+                    <p class="text-xs text-slate-300 animate-pulse">데이터 로드 중...</p>
+                </div>
+            </div>
+
+            <!-- 상담 신청 박스 (화면상 상시 유지) -->
+            <div class="consult-box shadow-xl shadow-indigo-100">
+                <h3 class="font-black text-base mb-1">절세 장부기장 & 환급신청 </h3>
+                <p class="text-indigo-200 text-[10px] mb-4 leading-tight">선택하신 조건으로 세금 환급 가능 여부를 무료로 검토해 드립니다.</p>
+                <input type="tel" id="userPhone" placeholder="전화번호 입력" class="w-full p-2.5 rounded-lg text-slate-900 text-xs mb-2 outline-none">
+                <button onclick="sendConsultRequest()" id="sendBtn" class="w-full py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-black rounded-lg text-sm transition-all">개인정보동의 / 상담신청</button>
             </div>
         </aside>
 
+        <!-- 오른쪽: 결과 리스트 -->
         <main class="flex-1">
-            <div id="loading" class="text-center py-40 font-black text-slate-200 text-2xl animate-pulse no-print italic text-center">CONNECTING DATABASE...</div>
+            <div id="loading" class="text-center py-40 text-slate-200 font-black text-xl animate-pulse no-print">LOADING...</div>
+            
             <div id="main-content" class="hidden">
-                <div class="mb-6 flex items-center justify-between no-print px-1">
-                    <h2 class="text-xl font-bold text-slate-800 tracking-tight text-center">매칭 결과 <span id="match-count" class="text-indigo-600 border-b-2 border-indigo-200 text-center">0</span>건</h2>
+                <div class="mb-4 flex items-center justify-between no-print px-1">
+                    <h2 class="text-lg font-bold text-slate-700">매칭된 혜택 <span id="match-count" class="text-indigo-600">0</span>건</h2>
                 </div>
+                
                 <div id="result-area"></div>
-                <div class="slogan-box mt-20 mb-10 py-10 border-t border-slate-200 text-center">
-                    <p class="slogan-text text-base md:text-lg font-extrabold text-slate-600 italic">
-                        "당신을 지키는 가장 가까운 울타리 - <span class="text-indigo-600 underline decoration-indigo-200 underline-offset-4">대한세무법인</span>"
+
+                <!-- 전문가 분석 첨언 (결과물 하단 배치) -->
+                <div id="expert-advice" class="mt-10 p-6 bg-slate-100 rounded-2xl border border-slate-200 leading-relaxed text-slate-600">
+                    <h3 class="text-indigo-700 font-black mb-3 flex items-center gap-2">💡 대한세무법인 전문 분석 가이드</h3>
+                    <div class="space-y-4 text-[13px]">
+                        <p class="font-bold text-slate-800">결론부터 말씀드리면, 유효기간이 없고 최저한세 적용을 받지 않는 항목을 가장 먼저 사용하고, 이월이 가능하고 최저한세 적용을 받는 항목을 가장 나중에 사용하는 것이 유리합니다.</p>
+                        
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200">
+                                <p class="font-bold text-xs text-indigo-600 mb-1">Step 1. 최저한세 고려</p>
+                                <p class="text-[11px]">중소기업은 과표의 7%는 최소한 납부해야 합니다. 이월 가능한 '공제'보다 소멸되는 '감면'을 먼저 적용하십시오.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200">
+                                <p class="font-bold text-xs text-indigo-600 mb-1">Step 2. 이월공제 활용</p>
+                                <p class="text-[11px]">투자·R&D 공제는 10년간 이월됩니다. 당해 연도 세액이 적다면 감면을 우선 채우고 공제액은 나중을 위해 아껴두십시오.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200">
+                                <p class="font-bold text-xs text-indigo-600 mb-1">Step 3. 농특세 확인</p>
+                                <p class="text-[11px]">감면액의 20%가 농특세로 부과되므로 실질 절세 효과(법인세 감소분 - 농특세 증가분)를 따져봐야 합니다.</p>
+                            </div>
+                        </div>
+                        <p class="font-black text-indigo-600 text-center mt-4">"상기 분석 결과를 바탕으로 대한세무법인이 가장 유리한 신고 방향을 제시해 드리는 것이 좋습니다."</p>
+                    </div>
+                </div>
+
+                <!-- 하단 고정 슬로건 -->
+                <div class="slogan-box mt-12 mb-8 py-8 border-t border-slate-200 text-center">
+                    <p class="slogan-text text-sm md:text-base font-extrabold text-slate-500 italic">
+                        "당신을 지키는 가장 가까운 울타리 - <span class="text-indigo-600">대한세무법인</span>"
                     </p>
                 </div>
             </div>
@@ -116,9 +144,9 @@
     
     const groupMap = {
         'G2': '제127조 제2항 (투자세액공제 중복배제)',
-        'G3': '제127조 제3항 (세액감면 vs 외투기업 감면 중복배제 그룹)',
-        'G4': '제127조 제4항 (감면과 공제의 중복배제 그룹)',
-        'G5': '제127조 제5항 (세액감면 간 중복배제 그룹)',
+        'G3': '제127조 제3항 (세액감면 vs 세액공제)',
+        'G4': '제127조 제4항 (수도권외 이전 등 중복배제)',
+        'G5': '제127조 제5항 (세액감면 간 중복배제)',
         'COMMON': '중복 적용 가능 항목'
     };
 
@@ -132,11 +160,10 @@
             taxDB = data.map(item => ({
                 ...item,
                 tags: item.tags ? item.tags.toString().split(',').map(t => t.trim()) : [],
-                exclusion_codes: item.exclusion_codes ? item.exclusion_codes.toString().split(',').map(c => c.trim()) : ['NONE'],
-                law_url: item.law_url || "" // 링크 데이터 수집
+                exclusion_codes: item.exclusion_codes ? item.exclusion_codes.toString().split(',').map(c => c.trim()) : ['NONE']
             }));
             renderTags();
-        } catch (e) { document.getElementById('loading').innerText = "데이터 연결 실패"; }
+        } catch (e) { document.getElementById('loading').innerText = "데이터 로딩 실패"; }
     }
 
     function renderTags() {
@@ -144,10 +171,11 @@
         document.getElementById('main-content').classList.remove('hidden');
         const allTags = [...new Set(taxDB.flatMap(d => d.tags))].filter(t => t).sort();
         const container = document.getElementById('tag-container');
+        container.innerHTML = "";
         allTags.forEach(tag => {
             const btn = document.createElement('button');
             btn.innerText = tag;
-            btn.className = "tag-btn px-4 py-2 bg-white rounded-xl text-xs font-bold text-slate-600 text-left hover:border-indigo-300 shadow-sm transition-all";
+            btn.className = "tag-btn px-3 py-1.5 bg-white rounded-lg text-xs font-bold text-slate-600 text-left hover:border-indigo-400 transition-all";
             btn.onclick = () => {
                 btn.classList.toggle('active');
                 selectedTags.has(tag) ? selectedTags.delete(tag) : selectedTags.add(tag);
@@ -168,60 +196,93 @@
         const coverTags = document.getElementById('cover-tags');
         
         coverDate.innerText = `분석 일시: ${new Date().toLocaleString()}`;
-        coverTags.innerHTML = Array.from(selectedTags).map(t => `<li class="bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 text-[10px]"># ${t}</li>`).join('');
+        coverTags.innerHTML = Array.from(selectedTags).map(t => `<li class="bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100"># ${t}</li>`).join('');
 
         if (selectedTags.size === 0) {
-            resultArea.innerHTML = `<div class="bg-white p-24 rounded-[40px] text-center border-2 border-dashed border-slate-200 text-slate-300 font-black text-xl italic no-print text-center">상황 키워드를 선택해 주세요.</div>`;
+            resultArea.innerHTML = `<div class="bg-white p-20 rounded-3xl text-center border-2 border-dashed border-slate-200 text-slate-300 font-bold italic text-sm no-print">좌측 필터를 선택해 주세요.</div>`;
             document.getElementById('match-count').innerText = "0";
             return;
         }
 
+        // 지능형 랭킹 배열 로직 (Rank: 0=최우선, 1=우선, 2=일반)
         let matched = taxDB.map(item => {
             const score = item.tags.filter(t => selectedTags.has(t)).length;
-            return { ...item, score };
-        }).filter(item => item.score > 0).sort((a, b) => b.score - a.score);
+            let rank = 2;
+            const minTaxStr = String(item.min_tax || "");
+            const carryStr = String(item.carry_over || "");
+
+            if (minTaxStr.includes("배제") || minTaxStr.includes("면제")) rank = 0;
+            else if (carryStr.includes("해당없음") || carryStr.includes("NONE")) rank = 1;
+            
+            return { ...item, score, rank };
+        })
+        .filter(item => item.score > 0)
+        .sort((a, b) => a.rank - b.rank || b.score - a.score);
 
         document.getElementById('match-count').innerText = matched.length;
 
         resultArea.innerHTML = "";
         matched.forEach(item => {
             const isMinTaxFree = item.min_tax && (item.min_tax.includes("배제") || item.min_tax.includes("면제"));
-            const conflictBadges = item.exclusion_codes.filter(c => c !== 'NONE').map(c => `<span class="conflict-tag">⚠️ ${groupMap[c] || c}</span>`).join('');
-
-            // 조문 클릭 링크 로직
-            const articleDisplay = item.law_url 
-                ? `<a href="${item.law_url}" target="_blank" class="law-link" title="원문 보기">${item.article} <svg class="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>`
-                : `<span class="px-2 py-0.5 bg-slate-100 text-slate-500 text-[9px] font-black rounded uppercase tracking-wider">${item.article}</span>`;
+            const conflictBadges = item.exclusion_codes.filter(c => c !== 'NONE').map(c => `<span class="conflict-tag">중복배제: ${groupMap[c] || c}</span>`).join('');
 
             const card = `
             <div class="benefit-card">
-                <div class="flex justify-between items-start mb-4">
+                <div class="flex justify-between items-start mb-3">
                     <div>
-                        ${articleDisplay}
-                        <h3 class="text-xl font-extrabold text-slate-900 mt-2 tracking-tight">${item.title}</h3>
-                    </div>
-                    <div class="no-print text-right">
-                         <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[9px] font-bold rounded-full border border-indigo-100 italic">SCORE: ${item.score}</span>
+                        <div class="flex items-center gap-2 mb-1">
+                             <span class="px-2 py-0.5 bg-slate-100 text-slate-500 text-[8px] font-black rounded uppercase">${item.article}</span>
+                             ${item.law_url ? `<a href="${item.law_url}" target="_blank" class="law-link">상세조문 →</a>` : ''}
+                        </div>
+                        <h3 class="text-lg font-black text-slate-900 tracking-tight">${item.title}</h3>
                     </div>
                 </div>
                 <div class="reqs-main-box">
-                    <div class="flex flex-wrap items-center gap-2 mb-3 border-b border-slate-200 pb-3">
-                        <h4 class="text-xs font-black text-indigo-600 uppercase tracking-tighter mr-2">🔎 상세 적용 요건</h4>
+                    <div class="flex flex-wrap items-center gap-1.5 mb-2 pb-2 border-b border-slate-100">
+                        <h4 class="text-[10px] font-black text-indigo-600 uppercase tracking-tighter mr-1">🔎 적용 요건</h4>
                         ${conflictBadges}
                     </div>
                     <ul class="info-list">${textToList(item.reqs)}</ul>
                 </div>
                 <div class="spec-box">
-                    <div class="spec-item"><p class="spec-label text-[8px]">최저한세</p><p class="spec-value ${isMinTaxFree ? 'text-emerald-600 font-bold' : ''}">${item.min_tax || '-'}</p></div>
-                    <div class="spec-item"><p class="spec-label text-[8px]">농특세</p><p class="spec-value">${item.agri_tax || '-'}</p></div>
-                    <div class="spec-item"><p class="spec-label text-[8px]">감가상각의제</p><p class="spec-value">${item.deemed_depr || '-'}</p></div>
-                    <div class="spec-item"><p class="spec-label text-[8px]">이월공제</p><p class="spec-value">${item.carry_over || '-'}</p></div>
-                    <div class="spec-item" style="background:#f8fafc;"><p class="spec-label text-indigo-500 font-black text-[8px]">사후관리</p><p class="spec-value text-indigo-800 font-black">${item.management || '없음'}</p></div>
+                    <div class="spec-item"><p class="spec-label">최저한세</p><p class="spec-value ${isMinTaxFree ? 'text-emerald-600 font-black' : ''}">${item.min_tax || '-'}</p></div>
+                    <div class="spec-item"><p class="spec-label">농특세</p><p class="spec-value">${item.agri_tax || '-'}</p></div>
+                    <div class="spec-item"><p class="spec-label">감가상각의제</p><p class="spec-value">${item.deemed_depr || '-'}</p></div>
+                    <div class="spec-item"><p class="spec-label">이월공제</p><p class="spec-value">${item.carry_over || '-'}</p></div>
+                    <div class="spec-item" style="background:#f8fafc;"><p class="spec-label text-indigo-500 font-black">사후관리</p><p class="spec-value text-indigo-800 font-bold">${item.management || '없음'}</p></div>
                 </div>
             </div>`;
             resultArea.insertAdjacentHTML('beforeend', card);
         });
     }
+
+   async function sendConsultRequest() {
+    const phone = document.getElementById('userPhone').value;
+    const tags = Array.from(selectedTags).join(', '); // 현재 선택된 태그들
+    
+    if(!phone) return alert("전화번호를 입력해 주세요.");
+    if(!confirm("입력하신 번호로 상담을 신청하시겠습니까?")) return;
+
+    const btn = document.getElementById('sendBtn');
+    btn.innerText = "전송 중...";
+    btn.disabled = true;
+
+    try {
+        // fetch를 이용해 구글 서버로 전송
+        await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({ phone: phone, tags: tags })
+        });
+        
+        alert("신청이 완료되었습니다. 대한세무법인 담당자가 연락드리겠습니다.!");
+        document.getElementById('userPhone').value = "";
+    } catch (e) {
+        alert("연결 오류가 발생했습니다.");
+    } finally {
+        btn.innerText = "상담 신청하기";
+        btn.disabled = false;
+    }
+}
 
     function resetTags() {
         selectedTags.clear();
