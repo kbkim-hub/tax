@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선호님 가족간 저가 임대 시뮬레이터 </title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --primary: #1e3a8a;       /* Navy Blue */
+            --primary-light: #3b82f6;
+            --accent-red: #dc2626;    /* Warning Red */
+            --accent-green: #10b981;  /* Safe Green */
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #111827;
+            --text-sub: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; padding: 40px 20px; }
+        
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        /* 헤더 & 요약 테이블 */
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: var(--primary); }
+        .summary-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .summary-table th, .summary-table td { padding: 12px 15px; text-align: center; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        .summary-table th { background-color: var(--primary); color: white; font-weight: 600; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .risk-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; color: white; background-color: var(--accent-red); }
+
+        /* 메인 그리드 */
+        .main-grid { display: grid; grid-template-columns: 350px 1fr; gap: 24px; }
+        @media (max-width: 850px) { .main-grid { grid-template-columns: 1fr; } }
+
+        /* 카드 스타일 */
+        .card { background: var(--bg-card); padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+        
+        /* 라디오 버튼 그룹 */
+        .radio-group { display: flex; gap: 10px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: 8px; }
+        .radio-group label { flex: 1; text-align: center; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; color: #64748b; }
+        .radio-group input[type="radio"] { display: none; }
+        .radio-group input[type="radio"]:checked + label { background-color: var(--primary); color: white; shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* 입력 폼 */
+        .input-group { margin-bottom: 15px; transition: all 0.3s; }
+        .input-group.hidden { display: none; }
+        .input-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; transition: 0.2s; }
+        .input-group input:focus { border-color: var(--primary-light); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .helper { font-size: 0.8rem; color: var(--text-sub); margin-top: 4px; }
+
+        .btn-calc { width: 100%; padding: 14px; background-color: var(--primary); color: white; font-size: 1.1rem; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
+        .btn-calc:hover { background-color: #1e40af; }
+
+        /* 결과 섹션 */
+        .result-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .result-section { grid-template-columns: 1fr; } }
+        
+        .result-box { background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid var(--border); position: relative; }
+        .result-box.danger { border-color: var(--accent-red); background-color: #fef2f2; }
+        .result-box.safe { border-color: var(--accent-green); background-color: #f0fdf4; }
+
+        .result-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
+        .formula-tag { font-size: 0.75rem; background: #e5e7eb; padding: 2px 6px; border-radius: 4px; color: #4b5563; font-weight: normal; }
+
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+        .res-row.highlight { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #d1d5db; font-weight: 700; font-size: 1.05rem; color: var(--primary); }
+        .res-value { font-weight: 600; }
+        
+        .status-text { font-weight: 700; margin-top: 15px; display: block; text-align: center; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.5); }
+        .txt-red { color: var(--accent-red); }
+        .txt-green { color: var(--accent-green); }
+
+        /* 보충적 방법 설명 박스 */
+        .method-info {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>선호님의 가족간 저가 임대 시뮬레이터</h1>
+            <p style="color: var(--text-sub);">시가 불분명 여부에 따른 적정 임대료 판정 및 리스크 분석</p>
+            
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th width="15%">구분</th>
+                        <th width="42.5%">소득세법 (부모)</th>
+                        <th width="42.5%">상증세법 (자녀)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>시가 기준</strong></td>
+                        <td>
+                            <strong>[선택 가능]</strong><br>
+                            ① 시가 존재: 주변 시세<br>
+                            ② 시가 불분명: 보충적 평가액
+                        </td>
+                        <td>법정 산식<br><strong>자산가액 × 2%</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>판단 기준</strong></td>
+                        <td>시가의 5% 차이 <br><span style="font-size:0.8rem">(또는 차액 3억 원 이상)</span></td>
+                        <td>5년간 이익 합계 1,000만 원 이상</td>
+                    </tr>
+                </tbody>
+            </table>
+        </header>
+
+        <div class="main-grid">
+            <!-- 1. 입력 패널 -->
+            <div class="card">
+                <h2>📝 데이터 입력</h2>
+                
+                <!-- 시가 구분 라디오 버튼 -->
+                <div class="radio-group">
+                    <input type="radio" id="typeUnclear" name="calcType" value="unclear" checked onchange="toggleInputs()">
+                    <label for="typeUnclear">시가 불분명 (보충적)</label>
+                    
+                    <input type="radio" id="typeClear" name="calcType" value="clear" onchange="toggleInputs()">
+                    <label for="typeClear">시가 분명 (사례 있음)</label>
+                </div>
+
+                <div class="input-group">
+                    <label>주택 자산가액 (시가/기준시가)</label>
+                    <input type="text" id="assetValue" placeholder="예: 1,000,000,000" onkeyup="formatNumber(this)">
+                    <div class="helper">※ 증여세 계산 및 보충적 평가 시 필수</div>
+                </div>
+
+                <div class="input-group">
+                    <label>보증금 (전세금)</label>
+                    <input type="text" id="deposit" placeholder="예: 300,000,000" onkeyup="formatNumber(this)">
+                </div>
+
+                <!-- 시가가 분명할 때만 나타나는 입력창 -->
+                <div class="input-group hidden" id="marketRentInput">
+                    <label style="color: var(--primary);">📍 주변 시세 (월 임대료)</label>
+                    <input type="text" id="comparableRent" placeholder="예: 2,000,000 (동일 평형 시세)" onkeyup="formatNumber(this)">
+                    <div class="helper">※ 유사 매매사례가 있는 경우 해당 금액 입력</div>
+                </div>
+
+                <div class="input-group">
+                    <label>실제 월 임대료 (자녀 납부)</label>
+                    <input type="text" id="monthlyRent" placeholder="예: 500,000" onkeyup="formatNumber(this)">
+                </div>
+
+                <button class="btn-calc" onclick="calculate()">리스크 분석하기</button>
+            </div>
+
+            <!-- 2. 결과 패널 -->
+            <div class="card">
+                <h2>📊 분석 결과</h2>
+                
+                <div class="result-section">
+                    
+                    <!-- 왼쪽: 부모 소득세 -->
+                    <div id="box-income" class="result-box">
+                        <div class="result-title">
+                            부모: 소득세법
+                            <span class="formula-tag" id="income-tag">보충적 방법</span>
+                        </div>
+
+                        <div class="method-info" id="income-method-desc">
+                            <strong>※ 시가 불분명 산식 적용:</strong><br>
+                            (주택가액 × 50% - 보증금) × 3.5%
+                        </div>
+
+                        <div class="res-row highlight">
+                            <span>적정 연임대료(A)</span>
+                            <span class="res-value" id="res-income-market">0원</span>
+                        </div>
+                        <div class="res-row">
+                            <span>실제 연임대료(B)</span>
+                            <span class="res-value" id="res-income-actual">0원</span>
+                        </div>
+                        <div class="res-row" style="margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
+                            <span>차액 (A-B)</span>
+                            <span class="res-value" id="res-income-diff">0원</span>
+                        </div>
+                        <div class="res-row">
+                            <span>허용 오차 (5%)</span>
+                            <span class="res-value" id="res-income-threshold">0원</span>
+                        </div>
+                        
+                        <span id="status-income" class="status-text">-</span>
+                    </div>
+
+                    <!-- 오른쪽: 자녀 증여세 (항상 동일) -->
+                    <div id="box-gift" class="result-box">
+                        <div class="result-title">
+                            자녀: 상증세법
+                            <span class="formula-tag">법정 산식</span>
+                        </div>
+                        <div class="method-info">
+                            <strong>※ 증여이익 법정 산식:</strong><br>
+                            (주택가액 × 2%) 기준 이익 산출
+                        </div>
+                        <div class="res-row">
+                            <span>적정 연임대료(시가 2%)</span>
+                            <span class="res-value" id="res-gift-market">0원</span>
+                        </div>
+                        <div class="res-row">
+                            <span>실제 연임대료</span>
+                            <span class="res-value" id="res-gift-actual">0원</span>
+                        </div>
+                        <div class="res-row highlight">
+                            <span>연간 이익 (차액)</span>
+                            <span class="res-value" id="res-gift-diff">0원</span>
+                        </div>
+                        
+                        <div class="res-row total" style="margin-top: 15px;">
+                            <span>5년치 이익 현가</span>
+                            <span class="res-value" id="res-gift-pv" style="font-weight:700;">0원</span>
+                        </div>
+                        <div class="helper" style="text-align:right;">(과세 기준: 1,000만원)</div>
+                        
+                        <span id="status-gift" class="status-text">-</span>
+                        
+                        <div style="margin-top:10px; border-top:1px solid #eee; padding-top:10px; font-size:0.9rem;">
+                            <span>예상 증여세: </span>
+                            <span id="res-gift-final-tax" style="float:right; font-weight:bold;">0원</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 초기화
+        window.onload = function() {
+            toggleInputs();
+        }
+
+        // 입력창 토글 함수
+        function toggleInputs() {
+            const type = document.querySelector('input[name="calcType"]:checked').value;
+            const marketInput = document.getElementById('marketRentInput');
+            const infoText = document.getElementById('income-method-desc');
+            const tag = document.getElementById('income-tag');
+
+            if (type === 'clear') {
+                // 시가 분명
+                marketInput.classList.remove('hidden');
+                infoText.innerHTML = "<strong>※ 유사 매매사례가액 적용:</strong><br>입력하신 주변 시세를 기준으로 판단합니다.";
+                tag.innerText = "시가 기준";
+            } else {
+                // 시가 불분명
+                marketInput.classList.add('hidden');
+                infoText.innerHTML = "<strong>※ 시가 불분명 산식 적용:</strong><br>(주택가액 × 50% - 보증금) × 3.5%";
+                tag.innerText = "보충적 방법";
+            }
+        }
+
+        // 숫자 포맷터
+        function formatNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if(value) {
+                input.value = parseInt(value).toLocaleString('ko-KR');
+            }
+        }
+        
+        function getNum(id) {
+            let val = document.getElementById(id).value.replace(/,/g, '');
+            return val ? parseInt(val) : 0;
+        }
+
+        function toMoney(num) {
+            return Math.floor(num).toLocaleString('ko-KR') + "원";
+        }
+
+        function calculate() {
+            // 공통 입력값
+            const asset = getNum('assetValue');
+            const deposit = getNum('deposit');
+            const monthlyRent = getNum('monthlyRent');
+            const actualRentYearly = monthlyRent * 12;
+
+            // 계산 모드 확인
+            const calcType = document.querySelector('input[name="calcType"]:checked').value;
+
+            /* -----------------------------------------
+               1. 소득세 (부모) 계산
+            ----------------------------------------- */
+            let marketRentIncome = 0;
+
+            if (calcType === 'clear') {
+                // Case A: 시가 분명 -> 입력된 시세 사용
+                const comparableMonthly = getNum('comparableRent');
+                marketRentIncome = comparableMonthly * 12;
+            } else {
+                // Case B: 시가 불분명 -> 보충적 방법
+                // (자산 50% - 보증금) * 3.5%
+                let baseVal = (asset * 0.5) - deposit;
+                if (baseVal < 0) baseVal = 0;
+                marketRentIncome = baseVal * 0.035;
+            }
+
+            const diffIncome = marketRentIncome - actualRentYearly;
+            const thresholdIncome = marketRentIncome * 0.05; // 5% 룰
+
+            // 결과 표시 (소득세)
+            document.getElementById('res-income-market').innerText = toMoney(marketRentIncome);
+            document.getElementById('res-income-actual').innerText = toMoney(actualRentYearly);
+            document.getElementById('res-income-diff').innerText = toMoney(diffIncome);
+            document.getElementById('res-income-threshold').innerText = toMoney(thresholdIncome);
+
+            const boxIncome = document.getElementById('box-income');
+            const statusIncome = document.getElementById('status-income');
+
+            // 판단: 차액 >= 5% OR 차액 >= 3억
+            if (diffIncome >= thresholdIncome || diffIncome >= 300000000) {
+                boxIncome.className = "result-box danger";
+                statusIncome.innerHTML = "<span class='txt-red'>⚠ 부당행위 적용 대상</span><br><span style='font-size:0.85rem; font-weight:normal;'>적정 임대료로 소득 재계산 필요</span>";
+            } else {
+                boxIncome.className = "result-box safe";
+                statusIncome.innerHTML = "<span class='txt-green'>✔ 정상 범위 (인정)</span><br><span style='font-size:0.85rem; font-weight:normal;'>현재 임대료 인정 가능</span>";
+            }
+
+
+            /* -----------------------------------------
+               2. 증여세 (자녀) 계산 - 법정 산식 유지
+               기준: 자산가액 * 2%
+            ----------------------------------------- */
+            const marketRentGift = asset * 0.02; 
+            
+            let diffGift = marketRentGift - actualRentYearly; 
+            
+            // 5년치 현가 (할인율 10%, 계수 3.79079)
+            const pvFactor = 3.79079;
+            const totalBenefitPV = diffGift * pvFactor;
+
+            // 결과 표시 (증여세)
+            document.getElementById('res-gift-market').innerText = toMoney(marketRentGift);
+            document.getElementById('res-gift-actual').innerText = toMoney(actualRentYearly);
+            document.getElementById('res-gift-diff').innerText = toMoney(diffGift);
+            document.getElementById('res-gift-pv').innerText = toMoney(totalBenefitPV);
+
+            const boxGift = document.getElementById('box-gift');
+            const statusGift = document.getElementById('status-gift');
+            let finalGiftTax = 0;
+
+            // 판단: 5년 합계 1,000만원 이상
+            if (totalBenefitPV >= 10000000) {
+                boxGift.className = "result-box danger";
+                statusGift.innerHTML = "<span class='txt-red'>⚠ 증여세 과세 대상</span><br><span style='font-size:0.85rem; font-weight:normal;'>이익 현가 1,000만 원 초과</span>";
+                
+                // 약식 세액 계산 (공제 5천만원 가정)
+                let taxBase = totalBenefitPV - 50000000;
+                if (taxBase > 0) {
+                    finalGiftTax = (taxBase * 0.1) * 0.97; // 10% 세율, 3% 신고세액공제
+                }
+            } else {
+                boxGift.className = "result-box safe";
+                statusGift.innerHTML = "<span class='txt-green'>✔ 과세 미달 (면제)</span><br><span style='font-size:0.85rem; font-weight:normal;'>증여세 발생하지 않음</span>";
+            }
+            document.getElementById('res-gift-final-tax').innerText = toMoney(finalGiftTax);
+        }
+    </script>
+</body>
+</html>
