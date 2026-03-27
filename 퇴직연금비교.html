@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소득 방식별 실수령액 비교 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#111;--dark:#333;--mid:#666;--light:#999;
+  --line:#bbb;--line-h:#555;--bg:#f5f5f5;--white:#fff;
+  --warn:#7a1515;--ok:#145228;--blue:#1a3a6e;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.65;}
+
+/* 헤더 */
+.hdr{background:#ebebeb;border-top:3px solid var(--line-h);border-bottom:2px solid var(--line-h);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-title{font-size:18px;font-weight:700;color:var(--black);}
+.hdr-ref{font-size:12px;color:var(--mid);margin-top:2px;}
+.save-btns{display:none;gap:8px;align-items:center;}
+.save-btns.show{display:flex;}
+.btn-s{border:none;padding:8px 20px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--white);}
+.btn-s.pdf{background:var(--dark);} .btn-s.pdf:hover{background:var(--black);}
+.btn-s.word{background:var(--blue);} .btn-s.word:hover{background:#0f2245;}
+
+/* 본문 */
+.wrap{max-width:940px;margin:0 auto;padding:22px 18px 60px;}
+
+/* 블록 */
+.blk{background:var(--white);border:1px solid var(--line);border-top:2px solid var(--line-h);margin-bottom:10px;}
+.blk-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:7px 14px;font-size:13px;font-weight:700;color:var(--dark);}
+.blk-body{padding:14px 18px;}
+
+/* 폼 */
+.row{display:flex;gap:14px;margin-bottom:10px;}
+.row:last-child{margin-bottom:0;}
+.col{flex:1;display:flex;flex-direction:column;gap:5px;}
+.col2{flex:2;} .col3{flex:3;}
+label{font-size:12px;font-weight:700;color:var(--mid);}
+label .sub{font-weight:400;color:var(--light);margin-left:3px;font-size:11px;}
+input[type="text"],input[type="number"],select{
+  border:1px solid var(--line);padding:8px 11px;font-size:14px;
+  font-family:'Noto Sans KR',sans-serif;color:var(--black);background:#fafafa;outline:none;width:100%;
+}
+input:focus,select:focus{border-color:var(--dark);background:var(--white);}
+input[readonly]{background:#f0f0f0;color:var(--mid);cursor:default;}
+.inp-wrap{position:relative;}
+.inp-wrap input{padding-right:30px;}
+.unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--light);pointer-events:none;}
+
+/* 세그먼트 */
+.seg{display:flex;}
+.sbtn{flex:1;padding:7px 2px;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;border:1px solid var(--line);background:var(--white);color:var(--mid);text-align:center;}
+.sbtn:not(:first-child){border-left:none;}
+.sbtn.on{background:var(--dark);color:var(--white);border-color:var(--dark);}
+
+/* 안내문 */
+.note{font-size:12px;color:var(--mid);line-height:1.75;margin-top:8px;padding:7px 12px;border-left:2px solid var(--line);}
+
+/* 계산 버튼 */
+.btn-calc{width:100%;background:var(--dark);color:var(--white);border:none;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
+.btn-calc:hover{background:var(--black);}
+
+/* 결과 */
+.result-wrap{display:none;margin-top:12px;}
+.result-wrap.show{display:block;}
+
+/* 조건 바 */
+.cond-bar{background:var(--white);border:1px solid var(--line);border-top:2px solid var(--line-h);padding:10px 16px;margin-bottom:14px;font-size:12px;color:var(--mid);line-height:1.9;}
+.cond-bar b{color:var(--dark);}
+
+/* 섹션 타이틀 */
+.sec-t{font-size:14px;font-weight:700;color:var(--dark);border-bottom:2px solid var(--line-h);padding-bottom:5px;margin:18px 0 10px;}
+
+/* 비교표 */
+.ct{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;}
+.ct th{background:#ebebeb;border-top:2px solid var(--line-h);border-bottom:1.5px solid var(--line-h);padding:9px 11px;font-size:12px;font-weight:700;text-align:center;color:var(--dark);}
+.ct th.lh{text-align:left;}
+.ct td{padding:9px 11px;border-bottom:1px solid var(--line);color:var(--dark);}
+.ct tr:last-child td{border-bottom:none;}
+.ct .nr{text-align:right;font-weight:500;}
+.ct .nl{font-weight:600;color:var(--dark);}
+.ct .sub-row td{font-size:12px;color:var(--mid);background:#fafafa;}
+.ct .sep-row td{border-top:1.5px solid var(--line-h);background:#ebebeb;font-weight:700;font-size:13px;}
+.ct .recv-row td{border-top:2px solid var(--line-h);border-bottom:2px solid var(--line-h);background:#e8e8e8;font-weight:700;font-size:15px;}
+.ct .rate-row td{font-size:12px;color:var(--mid);background:#fafafa;}
+.ct .plus{color:var(--ok);font-weight:600;}
+.ct .minus{color:var(--warn);}
+.ct .best{background:#eaf3ed !important;}
+.ct .best-recv{background:#d4eadb !important;font-weight:700;}
+
+/* 퇴직연금 기간별 */
+.ann-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.ann-cell{border:1px solid var(--line);border-top:2px solid var(--line-h);padding:12px 14px;background:var(--white);}
+.ann-cell.sel{border-top-color:var(--ok);border-color:#8cb8a0;background:#f5faf7;}
+.ann-yr{font-size:11px;font-weight:700;color:var(--mid);margin-bottom:6px;}
+.ann-recv{font-size:16px;font-weight:700;color:var(--dark);}
+.ann-rows{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.8;}
+.ann-rows .ok{color:var(--ok);}
+.ann-rows .warn{color:var(--warn);}
+
+/* 계산근거 */
+.basis-item{margin-bottom:7px;border:1px solid var(--line);border-top:2px solid var(--line-h);}
+.basis-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:7px 14px;font-size:12px;font-weight:700;color:var(--mid);cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.basis-tog{font-size:11px;color:var(--light);}
+.basis-body{padding:10px 14px;font-size:12px;color:var(--dark);line-height:1.95;white-space:pre-wrap;background:var(--white);display:none;}
+.basis-body.open{display:block;}
+.basis-body b{color:var(--black);}
+
+/* 유의사항 */
+.chk-head{font-size:14px;font-weight:700;color:var(--black);border-bottom:2px solid var(--line-h);padding-bottom:5px;margin-bottom:8px;}
+.chk-list{list-style:none;border-top:1px solid var(--line);margin-bottom:16px;}
+.chk-list li{display:flex;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line);font-size:13px;line-height:1.75;align-items:flex-start;}
+.chk-list li:last-child{border-bottom:none;}
+.ck{flex-shrink:0;width:86px;font-size:11px;font-weight:700;color:var(--dark);padding-top:2px;}
+.cv{color:var(--dark);}
+.cv b{color:var(--black);}
+.footnote{font-size:11px;color:var(--light);text-align:center;padding:8px 0;border-top:1px solid var(--line);margin-top:8px;}
+
+/* 인쇄 */
+@media print{
+  .save-btns,.btn-calc{display:none!important;}
+  body{background:#fff!important;font-size:11px;line-height:1.55;}
+  .hdr{background:#ebebeb!important;padding:10px 20px;border-top:2px solid #555!important;border-bottom:1.5px solid #555!important;}
+  .hdr-title{font-size:15px!important;} .hdr-ref{font-size:10px!important;}
+  .wrap{padding:6px 0 0;max-width:100%;}
+  .result-wrap{display:block!important;}
+  .blk{margin-bottom:6px;} .blk-head{padding:4px 12px;font-size:11px!important;} .blk-body{padding:8px 12px;}
+  .cond-bar{padding:7px 12px;font-size:11px!important;margin-bottom:8px;}
+  .ct th,.ct td{padding:5px 7px!important;font-size:10px!important;}
+  .ct .recv-row td{font-size:12px!important;} .ct .sep-row td{font-size:11px!important;}
+  .ann-grid{gap:5px;} .ann-recv{font-size:13px!important;} .ann-rows{font-size:10px!important;}
+  .basis-body{display:block!important;padding:5px 10px;font-size:10px!important;}
+  .basis-head{padding:4px 10px;font-size:10px!important;}
+  .chk-list li{font-size:11px!important;padding:5px 2px;} .chk-head{font-size:12px!important;}
+  .sec-t{font-size:11px!important;margin:8px 0 5px;}
+  .print-p1{page-break-after:always;}
+  .print-p2{page-break-before:always;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{size:A4 portrait;margin:10mm 12mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-title">소득 방식별 실수령액 비교 계산기</div>
+    <div class="hdr-ref">급여 · 배당 · 퇴직일시금 · 퇴직연금 — 세후 실수령액 및 법인세 절감 통합 비교 (2026년 기준)</div>
+  </div>
+  <div class="save-btns" id="saveBtns">
+    <button class="btn-s pdf" onclick="window.print()">🖨 PDF 저장</button>
+    <button class="btn-s word" onclick="saveWord()">📄 Word 저장</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ① 기본 정보 -->
+<div class="blk">
+  <div class="blk-head">① 기본 정보</div>
+  <div class="blk-body">
+    <div class="row">
+      <div class="col col2">
+        <label>현재 연간 급여 총액 <span class="sub">기존 수령 중인 금액</span></label>
+        <div class="inp-wrap">
+          <input type="text" id="curSalary" placeholder="예) 120,000,000" oninput="fN(this)">
+          <span class="unit">원</span>
+        </div>
+      </div>
+      <div class="col col2">
+        <label>인출하고자 하는 금액 <span class="sub">비교 대상 총액</span></label>
+        <div class="inp-wrap">
+          <input type="text" id="totalAmt" placeholder="예) 1,000,000,000" oninput="fN(this);syncLimit()">
+          <span class="unit">원</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col2">
+        <label>분할 수령 기간 <span class="sub">급여·배당 분할 시 연간 금액 자동 적용</span></label>
+        <div class="seg" id="splitSeg">
+          <div class="sbtn on" onclick="setSplit(1)">일시(1년)</div>
+          <div class="sbtn" onclick="setSplit(2)">2년</div>
+          <div class="sbtn" onclick="setSplit(3)">3년</div>
+          <div class="sbtn" onclick="setSplit(4)">4년</div>
+          <div class="sbtn" onclick="setSplit(5)">5년</div>
+        </div>
+      </div>
+      <div class="col col2">
+        <label>퇴직연금 수령기간 <span class="sub">연금 방식 선택 시</span></label>
+        <div class="seg" id="annSeg">
+          <div class="sbtn on" onclick="setAnn(10)">10년</div>
+          <div class="sbtn" onclick="setAnn(15)">15년</div>
+          <div class="sbtn" onclick="setAnn(20)">20년</div>
+          <div class="sbtn" onclick="setAnn(30)">30년</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>법인 과세표준 구간 <span class="sub">법인세 절감 계산용</span></label>
+        <select id="corpTax">
+          <option value="0.09">2억 이하 — 9%</option>
+          <option value="0.19" selected>2억 ~ 200억 — 19%</option>
+          <option value="0.21">200억 ~ 3,000억 — 21%</option>
+          <option value="0.24">3,000억 초과 — 24%</option>
+        </select>
+      </div>
+      <div class="col col3">
+        <label style="visibility:hidden;">안내</label>
+        <div class="note" style="margin-top:0;">
+          ▪ 급여·배당: 인출금액을 선택 기간에 균등 분할 → 연간 세금 계산 후 총액 합산<br>
+          ▪ 퇴직일시금·연금: 총액 기준 직접 계산
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ② 퇴직소득 정보 -->
+<div class="blk">
+  <div class="blk-head">② 퇴직소득 계산 정보 (퇴직일시금·퇴직연금 계산용)</div>
+  <div class="blk-body">
+    <div class="row">
+      <div class="col">
+        <label>근속연수 <span class="sub">퇴직소득세 산출용</span></label>
+        <div class="inp-wrap">
+          <input type="number" id="tenure" value="20" min="1" max="50">
+          <span class="unit">년</span>
+        </div>
+      </div>
+      <div class="col col3">
+        <label>퇴직소득 한도액 <span class="sub">한도 내 금액 — 인출금액과 자동 일치 (대화1 계산기 결과로 변경 가능)</span></label>
+        <div class="inp-wrap">
+          <input type="text" id="retireLimit" oninput="fN(this)" placeholder="인출금액 자동 입력됨">
+          <span class="unit">원</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      ▪ 퇴직소득 한도액은 <b>인출하고자 하는 금액과 자동으로 일치</b>합니다 — 이 금액은 <b>한도 내 금액</b>으로 전액 퇴직소득으로 인정됩니다<br>
+      ▪ 한도를 초과하는 경우 대화1 퇴직금한도계산기에서 확인한 한도액을 직접 수정 입력하세요 (초과분은 근로소득 과세)
+    </div>
+  </div>
+</div>
+
+<button class="btn-calc" onclick="calc()">비교 계산하기</button>
+
+<!-- 결과 -->
+<div class="result-wrap" id="resultWrap">
+<div class="print-p1">
+
+<div class="cond-bar" id="condBar"></div>
+
+<div class="sec-t">소득 방식별 상세 비교 (총액 기준)</div>
+<table class="ct" id="mainTable">
+  <thead>
+    <tr>
+      <th class="lh" style="width:26%">항목</th>
+      <th id="h1">급여</th>
+      <th id="h2">배당</th>
+      <th id="h3">퇴직일시금</th>
+      <th id="h4">퇴직연금</th>
+    </tr>
+  </thead>
+  <tbody id="mainBody"></tbody>
+</table>
+
+<div class="sec-t">퇴직연금 — 수령기간별 비교 (총액 기준)</div>
+<div class="ann-grid" id="annGrid"></div>
+
+</div><!-- /print-p1 -->
+<div class="print-p2">
+
+<div class="sec-t">계산 근거 (클릭 → 펼치기)</div>
+<div id="basisWrap"></div>
+
+<div style="margin-top:20px;">
+  <div class="chk-head">⚠ 유의사항 및 핵심 정보</div>
+  <ul class="chk-list">
+    <li><span class="ck">급여 누진세</span><span class="cv">기존 급여에 추가되므로 <b>누진세율 적용</b>. 고소득 구간(과세표준 3억↑)은 한계세율 38~45%로 불리합니다. 건강보험료는 회사+본인 전액(14.18%+장기요양) 반영됩니다.</span></li>
+    <li><span class="ck">배당 2천만</span><span class="cv">배당 연 2,000만원 초과 시 근로소득과 <b>합산 종합과세</b>. 법인세 납부 후 세후이익에서 배당하는 <b>실질적 이중과세</b> 구조에 유의하세요.</span></li>
+    <li><span class="ck">퇴직한도</span><span class="cv">퇴직소득은 <b>소득세법상 한도 초과분이 근로소득 과세</b>됩니다. 한도액은 기본적으로 인출금액 전액으로 설정되나, 대화1 퇴직금한도계산기에서 실제 한도를 반드시 확인하세요.</span></li>
+    <li><span class="ck">연금 감면율</span><span class="cv"><b>1~10년차 30% 감면(70% 납부) / 11~20년차 40% 감면(60% 납부) / 21년차~ 50% 감면(50% 납부, 2026년 신설)</b>. 수령기간이 길수록 절세 효과가 커집니다.</span></li>
+    <li><span class="ck">연금 건보료</span><span class="cv">퇴직연금(IRP)·연금저축 등 <b>사적연금 수령액에는 현재 건강보험료 미부과</b>. 법 개정 논의 중으로 향후 변경될 수 있습니다.</span></li>
+    <li><span class="ck">연금수령한도</span><span class="cv">연금계좌에서 한도(연금계좌평가액÷(11-수령연차)×120%)를 초과 인출 시 <b>감면 없이 일시금 세율 그대로 적용</b>됩니다. 한도 내 수령이 중요합니다.</span></li>
+    <li><span class="ck">운용수익 과세</span><span class="cv">퇴직금 <b>원금에는 연금 감면 퇴직소득세</b>가 적용되나, IRP 계좌 내 <b>운용수익에는 연령별 연금소득세(3.3~5.5%)</b>가 별도 부과됩니다. (본 계산기는 원금 기준만 계산)</span></li>
+    <li><span class="ck">법인세절감</span><span class="cv">급여·퇴직금은 <b>법인 손금</b>으로 법인세가 절감됩니다. 배당은 <b>손금불산입(절감 없음)</b>. 법인세 절감액이 실질 수령액에 큰 영향을 미칩니다.</span></li>
+    <li><span class="ck">DB형</span><span class="cv"><b>확정급여형(DB)</b>: 수령액 확정(퇴직직전 평균임금×근속연수). 임금 상승 시 유리. 운용 리스크는 회사 부담. 단, <b>등기임원은 가입 불가</b>(근로자 전용).</span></li>
+    <li><span class="ck">DC형</span><span class="cv"><b>확정기여형(DC)</b>: 개인 계좌 귀속으로 회사 도산 리스크 없음. 추가납입(연 900만 한도) 세액공제 가능. <b>임원도 가입 가능</b>. 운용 성과에 따라 수령액 변동.</span></li>
+    <li><span class="ck">참고용</span><span class="cv">본 계산기는 <b>참고용</b>입니다. 부양가족 수·다른 소득·법인 상황에 따라 실제 세액이 달라질 수 있으며, 실제 세무처리는 반드시 담당 세무사와 상담하세요.</span></li>
+  </ul>
+</div>
+
+<div class="footnote">※ 2026년 세법 기준 · 건강보험료율 7.09% · 장기요양 12.95% · 지방소득세 10% · 사적연금 건보료 현행 미부과</div>
+
+</div><!-- /print-p2 -->
+</div><!-- /result-wrap -->
+</div><!-- /wrap -->
+
+<script>
+let splitYr=1, annYr=10;
+
+/* 유틸 */
+function fN(el){let r=el.value.replace(/[^0-9]/g,'');el.value=r?Number(r).toLocaleString('ko-KR'):'';}
+function pN(id){return parseInt((document.getElementById(id)?.value||'').replace(/[^0-9]/g,''),10)||0;}
+function w(n){return Math.round(n).toLocaleString('ko-KR')+'원';}
+function pc(n){return (n*100).toFixed(1)+'%';}
+
+/* 인출금액 → 한도액 자동 동기화 */
+function syncLimit(){
+  const t=document.getElementById('totalAmt').value;
+  document.getElementById('retireLimit').value=t;
+}
+
+function setSplit(v){splitYr=v;document.querySelectorAll('#splitSeg .sbtn').forEach((b,i)=>b.classList.toggle('on',[1,2,3,4,5][i]===v));}
+function setAnn(v){annYr=v;document.querySelectorAll('#annSeg .sbtn').forEach((b,i)=>b.classList.toggle('on',[10,15,20,30][i]===v));}
+
+/* ── 세금 계산 함수 ── */
+function earnDed(s){
+  if(s<=5e6)      return s;
+  if(s<=15e6)     return 3.5e6+(s-5e6)*0.4;
+  if(s<=45e6)     return 7.5e6+(s-15e6)*0.15;
+  if(s<=100e6)    return 12e6+(s-45e6)*0.05;
+  return Math.min(14.75e6+(s-100e6)*0.02,20e6);
+}
+function taxBracket(b){
+  if(b<=14e6)   return b*0.06;
+  if(b<=50e6)   return 840000+(b-14e6)*0.15;
+  if(b<=88e6)   return 6240000+(b-50e6)*0.24;
+  if(b<=150e6)  return 15360000+(b-88e6)*0.35;
+  if(b<=300e6)  return 37060000+(b-150e6)*0.38;
+  if(b<=500e6)  return 94060000+(b-300e6)*0.40;
+  if(b<=1e9)    return 174060000+(b-500e6)*0.42;
+  return 384060000+(b-1e9)*0.45;
+}
+/* 근로소득세 (결정세액+지방세) */
+function salTax(s){
+  const ded=earnDed(s);
+  const base=Math.max(s-ded-6e6-7e6,0);
+  return Math.max(taxBracket(base)-1.5e6,0)*1.1;
+}
+/* 건강보험 전체 (회사+본인) — 3번 수정사항 */
+function healthTotal(salary){
+  // 건강보험: 7.09%×2(회사+본인) + 장기요양: 건보×12.95%×2
+  const hRate=0.0709*2*(1+0.1295);
+  return salary*hRate;
+}
+/* 배당 소득월액보험료 (직장가입자 본인 전액) */
+function divHealth(divAmt){
+  const over=Math.max(divAmt-20e6,0);
+  return over*0.0709*(1+0.1295);
+}
+
+/* ── 퇴직소득세 (이미지 구조 그대로) ── */
+function retireTaxDetail(amt, tenure){
+  if(amt<=0||tenure<=0) return {tax:0,td:0,taxable:0,aeq:0,aed:0,aeBase:0,aeTax:0,finalTax:0};
+
+  /* ① 퇴직급여액 = amt (비과세 없다고 가정 → 퇴직소득금액 = amt) */
+  /* ③ 근속연수공제 */
+  let td;
+  if(tenure<=5)       td=tenure*1e6;          // 100만×년
+  else if(tenure<=10) td=5e6+(tenure-5)*2e6;  // 500만+(년-5)×200만
+  else if(tenure<=20) td=15e6+(tenure-10)*2.5e6; // 1,500만+(년-10)×250만
+  else                td=40e6+(tenure-20)*3e6; // 4,000만+(년-20)×300만
+
+  /* ④ 환산급여 = (퇴직소득금액 - 근속연수공제) × 12 ÷ 근속연수 */
+  const taxable=Math.max(amt-td,0);
+  const aeq=(taxable/tenure)*12;
+
+  /* ⑤ 환산급여공제 */
+  let aed;
+  if(aeq<=8e6)        aed=aeq;
+  else if(aeq<=70e6)  aed=8e6+(aeq-8e6)*0.6;
+  else if(aeq<=100e6) aed=45.2e6+(aeq-70e6)*0.55;
+  else if(aeq<=300e6) aed=61.7e6+(aeq-100e6)*0.45;
+  else                aed=151.7e6+(aeq-300e6)*0.35;
+
+  /* ⑥ 과세표준 */
+  const aeBase=Math.max(aeq-aed,0);
+
+  /* ⑦ 환산산출세액 = 과세표준 × 기본세율 - 누진공제 */
+  const aeTax=taxBracket(aeBase);
+
+  /* ⑧ 산출세액 = 환산산출세액 × 근속연수 ÷ 12 */
+  const retTax=aeTax*(tenure/12);
+
+  /* 지방소득세 포함 */
+  const finalTax=retTax*1.1;
+
+  return {tax:finalTax,td,taxable,aeq,aed,aeBase,aeTax,retTax,finalTax};
+}
+
+/* ── 퇴직연금 세금 (2026년 새 로직) ──
+   기본 산식: 연간연금수령액 × (이연퇴직소득세÷퇴직금총액) × 연차별감면율
+   = 연간수령액 × 원천징수세율A × 연차별세율B
+*/
+function annuityCalc(retireTotal, lumpTax, years){
+  // 원천징수세율 A = 지방세 제외 순세액 ÷ 퇴직금 총액
+  const rateA = (lumpTax / 1.1) / retireTotal;
+  // 수령기간별 총세금 계산
+  const y1=Math.min(years,10);
+  const y2=Math.max(Math.min(years,20)-10,0);
+  const y3=Math.max(years-20,0);
+  const annAmt = retireTotal / years;  // 연간 수령액
+  // 각 구간 연간세금 (지방소득세 ×1.1 포함)
+  const taxY1 = annAmt * rateA * 0.70 * 1.1;  // 1~10년차: A×70%×1.1
+  const taxY2 = annAmt * rateA * 0.60 * 1.1;  // 11~20년차: A×60%×1.1
+  const taxY3 = annAmt * rateA * 0.50 * 1.1;  // 21년차~: A×50%×1.1 (2026 신설)
+  const totalTax = taxY1*y1 + taxY2*y2 + taxY3*y3;
+  return {rateA, annAmt, taxY1, taxY2, taxY3, totalTax, y1, y2, y3};
+}
+
+/* ── 메인 계산 ── */
+function calc(){
+  const curSal = pN('curSalary');
+  const total  = pN('totalAmt');
+  const tenure = parseInt(document.getElementById('tenure').value)||20;
+  const cRate  = parseFloat(document.getElementById('corpTax').value)||0.19;
+  let rlimit   = pN('retireLimit');
+  if(!rlimit) rlimit=total;
+
+  if(!total){alert('인출하고자 하는 금액을 입력해주세요.');return;}
+
+  const annAmt = total/splitYr;
+
+  /* ━━ 1. 급여 ━━ */
+  const sTaxOld  = salTax(curSal);
+  const sTaxNew  = salTax(curSal+annAmt);
+  const sTaxInc  = sTaxNew - sTaxOld;           // 연간 추가 소득세
+  const sHlth    = healthTotal(annAmt);          // ★ 회사+본인 전액
+  const sCorpSv  = annAmt*cRate;                 // 법인세절감(연간)
+  const S_tax    = sTaxInc*splitYr;
+  const S_hlth   = sHlth*splitYr;
+  const S_corp   = sCorpSv*splitYr;
+  const S_recv   = total - S_tax - S_hlth + S_corp;
+  const S_eff    = (S_tax+S_hlth)/total;
+
+  /* ━━ 2. 배당 ━━ */
+  let D_tax=0, D_hlth=0, divBasisTxt='';
+  if(annAmt<=20e6){
+    D_tax = annAmt*0.154*splitYr;
+    D_hlth= 0;
+    divBasisTxt=`배당 ${w(annAmt)} × 15.4% (분리과세) = ${w(annAmt*0.154)}\n건강보험료: 없음 (2,000만원 이하)\n법인세 절감: 없음 (배당은 손금불산입)`;
+  } else {
+    const grossUp = annAmt*0.11;
+    const salEd   = earnDed(curSal);
+    const salBase = Math.max(curSal-salEd-6e6-7e6,0);
+    const totBase = salBase+annAmt+grossUp;
+    const totSan  = taxBracket(totBase);
+    const totFin  = Math.max(totSan-1.5e6,0)*1.1;
+    const dCredit = Math.min(grossUp, taxBracket(totBase)*0.1)*1.1;
+    const divTx   = Math.max(totFin-sTaxOld-dCredit,0);
+    const dHlth   = divHealth(annAmt);
+    D_tax  = divTx*splitYr;
+    D_hlth = dHlth*splitYr;
+    divBasisTxt=`배당 ${w(annAmt)} (2,000만 초과 → 종합과세)\nGross-up: ${w(annAmt)} × 11% = ${w(grossUp)}\n근로소득 과세표준: ${w(salBase)}\n합산 과세표준: ${w(totBase)}\n합산세액 - 기존근로소득세 - 배당세액공제 = ${w(divTx)}\n건강보험 소득월액(초과분 본인전액): ${w(dHlth)}\n법인세 절감: 없음 (손금불산입)`;
+  }
+  const D_corp = 0;
+  const D_recv = total - D_tax - D_hlth + D_corp;
+  const D_eff  = (D_tax+D_hlth)/total;
+
+  /* ━━ 3. 퇴직일시금 ━━ */
+  const retAmt  = Math.min(total,rlimit);
+  const retExc  = Math.max(total-rlimit,0);
+  const rd      = retireTaxDetail(retAmt, tenure);   // 상세 계산
+  const R_retTx = rd.finalTax;
+  const R_excTx = retExc>0 ? (salTax(curSal+retExc)-salTax(curSal)) : 0;
+  const R_tax   = R_retTx + R_excTx;
+  const R_hlth  = 0;
+  const R_corp  = retAmt*cRate;
+  const R_recv  = total - R_tax - R_hlth + R_corp;
+  const R_eff   = R_tax/total;
+
+  /* ━━ 4. 퇴직연금 ━━ */
+  // 원천징수세율 A = 일시금 퇴직소득세 ÷ 퇴직금 총액
+  const ac = annuityCalc(retAmt, R_retTx, annYr);
+  const A_tax  = ac.totalTax;
+  const A_hlth = 0;
+  const A_corp = retAmt*cRate;
+  const A_recv = total - A_tax - A_hlth + A_corp;
+  const A_eff  = A_tax/total;
+
+  /* ━━ 조건 바 ━━ */
+  const splitTxt=splitYr===1?'일시 수령':`${splitYr}년 분할 (연간 ${w(annAmt)})`;
+  document.getElementById('condBar').innerHTML=
+    `<b>인출 금액:</b> ${w(total)} &nbsp;|&nbsp; <b>현재 급여:</b> ${w(curSal)} &nbsp;|&nbsp; <b>수령방식:</b> ${splitTxt} &nbsp;|&nbsp; <b>근속:</b> ${tenure}년 &nbsp;|&nbsp; <b>법인세율:</b> ${(cRate*100).toFixed(0)}% &nbsp;|&nbsp; <b>퇴직연금:</b> ${annYr}년 수령 &nbsp;|&nbsp; <b>한도액:</b> ${w(rlimit)} (한도 내 금액)`;
+
+  /* ━━ 비교표 헤더 ━━ */
+  document.getElementById('h1').textContent=splitYr>1?`급여 (${splitYr}년 합계)`:'급여';
+  document.getElementById('h2').textContent=splitYr>1?`배당 (${splitYr}년 합계)`:'배당';
+  document.getElementById('h3').textContent='퇴직일시금';
+  document.getElementById('h4').textContent=`퇴직연금 (${annYr}년)`;
+
+  /* 순위 */
+  const rv={sal:S_recv,div:D_recv,ret:R_recv,ann:A_recv};
+  const rnk={};
+  Object.entries(rv).sort((a,b)=>b[1]-a[1]).forEach(([k],i)=>rnk[k]=i+1);
+
+  /* ━━ 비교표 행 ━━ */
+  const dRows=[
+    {lbl:'인출(지급) 총액',          vs:[total,total,total,total],                       cls:''},
+    {lbl:'(−) 소득세 + 지방소득세',  vs:[S_tax,D_tax,R_tax,A_tax],                      cls:'sub-row',isDeduct:true},
+    {lbl:'(−) 건강보험 + 장기요양',  vs:[S_hlth,D_hlth,R_hlth,A_hlth],                 cls:'sub-row',isDeduct:true},
+    {lbl:'실질 세부담 합계',          vs:[S_tax+S_hlth,D_tax+D_hlth,R_tax,A_tax],        cls:'sep-row'},
+    {lbl:'(+) 법인세 절감 (손금)',    vs:[S_corp,D_corp,R_corp,A_corp],                  cls:'sub-row',isPlus:true},
+    {lbl:'실수령액 (법인절감 포함)',  vs:[S_recv,D_recv,R_recv,A_recv],                  cls:'recv-row'},
+    {lbl:'실효세율 (세금÷총액)',      vs:[S_eff,D_eff,R_eff,A_eff],                      cls:'rate-row',isPct:true},
+    {lbl:'유불리 순위',               vs:[rnk.sal,rnk.div,rnk.ret,rnk.ann],              cls:'rate-row',isRank:true},
+  ];
+
+  const tbody=document.getElementById('mainBody');
+  tbody.innerHTML='';
+  const bestRecvIdx=[S_recv,D_recv,R_recv,A_recv].indexOf(Math.max(S_recv,D_recv,R_recv,A_recv));
+
+  dRows.forEach(r=>{
+    const tr=document.createElement('tr');
+    if(r.cls) tr.className=r.cls;
+    let cells=`<td class="nl">${r.lbl}</td>`;
+    r.vs.forEach((v,i)=>{
+      let txt='';
+      if(r.isPct)      txt=pc(v);
+      else if(r.isRank) txt=v===1?'★ 1위':v+'위';
+      else             txt=(v===0&&r.isDeduct)?'없음':w(v);
+      let cls='nr';
+      if(r.cls==='recv-row'&&i===bestRecvIdx) cls+=' best-recv';
+      else if(r.cls==='recv-row') cls+=' best';
+      if(r.isPlus&&v>0) cls+=' plus';
+      if(r.isDeduct&&v>0) cls+=' minus';
+      cells+=`<td class="${cls}">${txt}</td>`;
+    });
+    tr.innerHTML=cells;
+    tbody.appendChild(tr);
+  });
+
+  /* ━━ 퇴직연금 기간별 ━━ */
+  const ag=document.getElementById('annGrid');
+  ag.innerHTML='';
+  [10,15,20,30].forEach(yr=>{
+    const ac2=annuityCalc(retAmt,R_retTx,yr);
+    const corp=retAmt*cRate;
+    const net=total-ac2.totalTax+corp;
+    const isSelected=yr===annYr;
+    const d=document.createElement('div');
+    d.className='ann-cell'+(isSelected?' sel':'');
+
+    // 구간별 감면 설명
+    let discText='';
+    if(yr<=10) discText=`1~${yr}년차: A×70% (30%감면)`;
+    else if(yr<=20) discText=`1~10년차: A×70%\n11~${yr}년차: A×60%`;
+    else discText=`1~10년차: A×70%\n11~20년차: A×60%\n21~${yr}년차: A×50%`;
+
+    d.innerHTML=`<div class="ann-yr">${yr}년 수령${isSelected?' ★ 선택':''}</div>
+<div class="ann-recv">${w(net)}</div>
+<div class="ann-rows">
+연간 수령액: ${w(ac2.annAmt)}<br>
+<span class="warn">납부세금 합계: ${w(ac2.totalTax)}</span><br>
+<span class="ok">법인세 절감: △${w(corp)}</span><br>
+원천징수세율 A: ${pc(ac2.rateA)}<br>
+${ac2.y1>0?`1~10년 연세금: ${w(ac2.taxY1)}/년`:''}
+${ac2.y2>0?`\n11~20년 연세금: ${w(ac2.taxY2)}/년`:''}
+${ac2.y3>0?`\n21년~ 연세금: ${w(ac2.taxY3)}/년`:''}
+</div>`;
+    ag.appendChild(d);
+  });
+
+  /* ━━ 계산 근거 ━━ */
+  const bw=document.getElementById('basisWrap');
+  bw.innerHTML='';
+
+  const salEdN=earnDed(curSal+annAmt), salEdO=earnDed(curSal);
+  const salBN=Math.max(curSal+annAmt-salEdN-6e6-7e6,0);
+  const salBO=Math.max(curSal-salEdO-6e6-7e6,0);
+  const hRatePct='14.18%+장기요양(7.09%×2×12.95%)';
+
+  const bases=[
+    {
+      h:'① 급여 — 총액 기준 세금 계산 (회사+본인 건강보험 전액 반영)',
+      t:`[인출 총액] ${w(total)} ÷ ${splitYr}년 = 연간 ${w(annAmt)}
+
+[기존 급여 ${w(curSal)} 기준 세금]
+  근로소득공제: ${w(salEdO)}
+  과세표준: ${w(salBO)}
+  결정세액 + 지방세: ${w(salTax(curSal))}
+
+[급여 추가 후 합계 ${w(curSal+annAmt)}]
+  근로소득공제: ${w(salEdN)}
+  과세표준: ${w(salBN)}
+  결정세액 + 지방세: ${w(salTax(curSal+annAmt))}
+
+<b>연간 추가 소득세:</b> ${w(sTaxInc)}
+<b>건강보험+장기요양 (회사+본인 전액):</b>
+  ${w(annAmt)} × 7.09% × 2 × 1.1295 = ${w(sHlth)}
+<b>법인세 절감 (급여는 손금):</b> ${w(annAmt)} × ${(cRate*100).toFixed(0)}% = ${w(sCorpSv)}
+
+[${splitYr}년 총액 기준]
+소득세 합계: ${w(S_tax)}
+건강보험 합계: ${w(S_hlth)}
+법인세 절감 합계: △${w(S_corp)}
+━━━━━━━━━━━━━━━━━━
+<b>실수령액 = ${w(total)} - ${w(S_tax)} - ${w(S_hlth)} + ${w(S_corp)} = ${w(S_recv)}</b>
+실효세율: ${pc(S_eff)}`
+    },
+    {
+      h:'② 배당 — 총액 기준 세금 계산',
+      t:`[인출 총액] ${w(total)} ÷ ${splitYr}년 = 연간 ${w(annAmt)}
+
+${divBasisTxt}
+
+[${splitYr}년 총액 기준]
+소득세 합계: ${w(D_tax)}
+건강보험 합계: ${w(D_hlth)}
+법인세 절감: 없음 (배당은 손금불산입)
+※ 법인세 이미 납부한 세후이익에서 배당 — 이중과세 구조
+━━━━━━━━━━━━━━━━━━
+<b>실수령액 = ${w(total)} - ${w(D_tax)} - ${w(D_hlth)} = ${w(D_recv)}</b>
+실효세율: ${pc(D_eff)}`
+    },
+    {
+      h:'③ 퇴직일시금 — 퇴직소득세 계산 구조 (소득세법 §48)',
+      t:`[인출 총액] ${w(total)} · 퇴직소득 한도 내 금액: ${w(retAmt)} · 한도 초과: ${w(retExc)}
+
+① 퇴직급여액 (퇴직소득금액): ${w(retAmt)}
+
+③ 근속연수공제 (근속 ${tenure}년):
+   산식: ${tenure<=5?`${tenure}년 × 100만 = ${w(rd.td)}`:tenure<=10?`500만 + (${tenure}-5) × 200만 = ${w(rd.td)}`:tenure<=20?`1,500만 + (${tenure}-10) × 250만 = ${w(rd.td)}`:`4,000만 + (${tenure}-20) × 300만 = ${w(rd.td)}`}
+   근속연수공제: ${w(rd.td)}
+
+④ 환산급여 = (${w(retAmt)} - ${w(rd.td)}) × 12 ÷ ${tenure}년
+   과세대상 퇴직소득: ${w(rd.taxable)}
+   환산급여: ${w(rd.aeq)}
+
+⑤ 환산급여공제: ${w(rd.aed)}
+
+⑥ 과세표준 = ${w(rd.aeq)} - ${w(rd.aed)} = ${w(rd.aeBase)}
+
+⑦ 환산산출세액 (기본세율 적용): ${w(rd.aeTax)}
+
+⑧ 산출세액 = ${w(rd.aeTax)} × ${tenure}년 ÷ 12 = ${w(rd.retTax)}
+   지방소득세(10%) 포함: ${w(rd.finalTax)}
+
+한도 초과 근로소득세: ${w(R_excTx)}
+건강보험료: 없음 (퇴직소득)
+법인세 절감: ${w(retAmt)} × ${(cRate*100).toFixed(0)}% = △${w(R_corp)}
+━━━━━━━━━━━━━━━━━━
+<b>실수령액 = ${w(total)} - ${w(R_tax)} + ${w(R_corp)} = ${w(R_recv)}</b>
+실효세율: ${pc(R_eff)}`
+    },
+    {
+      h:'④ 퇴직연금 — 2026년 연금수령 세금 계산 (이연퇴직소득세 × 연차별 감면율)',
+      t:`[인출 총액] ${w(total)} → IRP 이체 후 ${annYr}년 수령
+
+1단계: 원천징수세율(A) 구하기
+  일시금 퇴직소득세: ${w(R_retTx)}
+  퇴직금 총액: ${w(retAmt)}
+  <b>원천징수세율 A = ${w(R_retTx)} ÷ ${w(retAmt)} = ${pc(ac.rateA)}</b>
+
+2단계: 연간 수령액
+  ${w(retAmt)} ÷ ${annYr}년 = 연간 ${w(ac.annAmt)}
+
+3단계: 연차별 적용세율(B) × 연간수령액 = 연간세금
+  1~10년차:   B = A(${pc(ac.rateA)}) × 70% = ${pc(ac.rateA*0.7)}  → 연 ${w(ac.taxY1)}
+${annYr>10?`  11~20년차:  B = A(${pc(ac.rateA)}) × 60% = ${pc(ac.rateA*0.6)}  → 연 ${w(ac.taxY2)}`:''}
+${annYr>20?`  21년차~:    B = A(${pc(ac.rateA)}) × 50% = ${pc(ac.rateA*0.5)}  → 연 ${w(ac.taxY3)} ← 2026년 신설`:''}
+
+수령기간별 총 세금 합계:
+  1~10년차(${ac.y1}년): ${w(ac.taxY1)} × ${ac.y1} = ${w(ac.taxY1*ac.y1)}
+${ac.y2>0?`  11~20년차(${ac.y2}년): ${w(ac.taxY2)} × ${ac.y2} = ${w(ac.taxY2*ac.y2)}`:''}
+${ac.y3>0?`  21년차~(${ac.y3}년): ${w(ac.taxY3)} × ${ac.y3} = ${w(ac.taxY3*ac.y3)}`:''}
+<b>총 납부세금: ${w(A_tax)}</b>
+일시금 대비 절감: ${w(R_retTx-A_tax)}
+
+건강보험료: 없음 (사적연금 현행 미부과)
+법인세 절감 (DC형): △${w(A_corp)}
+━━━━━━━━━━━━━━━━━━
+<b>실수령액 = ${w(total)} - ${w(A_tax)} + ${w(A_corp)} = ${w(A_recv)}</b>
+실효세율: ${pc(A_eff)}`
+    },
+  ];
+
+  bases.forEach(b=>{
+    const d=document.createElement('div');
+    d.className='basis-item';
+    d.innerHTML=`<div class="basis-head" onclick="togB(this)">${b.h}<span class="basis-tog">▼ 펼치기</span></div><div class="basis-body">${b.t}</div>`;
+    bw.appendChild(d);
+  });
+
+  document.getElementById('resultWrap').classList.add('show');
+  document.getElementById('saveBtns').classList.add('show');
+  document.getElementById('resultWrap').scrollIntoView({behavior:'smooth'});
+}
+
+function togB(el){
+  const b=el.nextElementSibling;
+  const o=b.classList.toggle('open');
+  el.querySelector('.basis-tog').textContent=o?'▲ 닫기':'▼ 펼치기';
+}
+
+/* Word 저장 */
+async function saveWord(){
+  if(!window.docx){
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';
+      s.onload=res;s.onerror=rej;document.head.appendChild(s);
+    });
+  }
+  const {Document,Packer,Paragraph,Table,TableRow,TableCell,TextRun,
+         WidthType,AlignmentType,ShadingType,TableLayoutType}=window.docx;
+  const F='Noto Sans KR';
+  const H=(t,sz=28)=>new Paragraph({children:[new TextRun({text:t,bold:true,size:sz,font:F})],spacing:{before:200,after:80}});
+  const P=(t,sz=20)=>new Paragraph({children:[new TextRun({text:t,size:sz,font:F})],spacing:{after:40}});
+
+  const thEls=[...document.querySelectorAll('#mainTable thead th')];
+  const tbRows=[...document.querySelectorAll('#mainTable tbody tr')];
+  const headers=thEls.map(t=>t.textContent.trim());
+  const bodyRows=tbRows.map(tr=>[...tr.querySelectorAll('td')].map(td=>td.textContent.trim()));
+
+  const mkH=t=>new TableCell({shading:{fill:'EBEBEB',type:ShadingType.CLEAR},children:[new Paragraph({children:[new TextRun({text:t,bold:true,size:18,font:F})],alignment:AlignmentType.CENTER})],margins:{top:50,bottom:50,left:60,right:60}});
+  const mkD=(t,bold)=>new TableCell({children:[new Paragraph({children:[new TextRun({text:t,bold:!!bold,size:18,font:F})],alignment:AlignmentType.RIGHT})],margins:{top:50,bottom:50,left:60,right:60}});
+  const mkL=t=>new TableCell({children:[new Paragraph({children:[new TextRun({text:t,size:18,font:F})]})],margins:{top:50,bottom:50,left:60,right:60}});
+
+  const tbl=new Table({width:{size:100,type:WidthType.PERCENTAGE},layout:TableLayoutType.FIXED,
+    rows:[new TableRow({children:headers.map(mkH)}),
+    ...bodyRows.map((row,ri)=>new TableRow({children:[mkL(row[0]||''),...row.slice(1).map((c,ci)=>mkD(c,ri===5))]}))]
+  });
+
+  const basisEls=[...document.querySelectorAll('.basis-item')];
+  const basisP=basisEls.flatMap(b=>[
+    new Paragraph({children:[new TextRun({text:b.querySelector('.basis-head').childNodes[0].textContent.trim(),bold:true,size:20,font:F})],spacing:{before:140,after:60}}),
+    ...b.querySelector('.basis-body').textContent.trim().split('\n').map(l=>new Paragraph({children:[new TextRun({text:l,size:18,font:F})],spacing:{after:20}}))
+  ]);
+
+  const chkEls=[...document.querySelectorAll('.chk-list li')];
+  const chkP=chkEls.map(li=>new Paragraph({children:[new TextRun({text:`[${li.querySelector('.ck').textContent.trim()}] `,bold:true,size:20,font:F}),new TextRun({text:li.querySelector('.cv').textContent.trim(),size:20,font:F})],spacing:{after:60}}));
+
+  const doc=new Document({styles:{default:{document:{run:{font:F,size:22}}}},sections:[{children:[
+    H('소득 방식별 실수령액 비교 계산기',32),
+    P('급여 · 배당 · 퇴직일시금 · 퇴직연금 세후 실수령액 통합 비교 (2026년 기준)',20),
+    new Paragraph({border:{bottom:{style:'single',size:6,color:'555555'}},spacing:{before:60,after:80}}),
+    H('■ 계산 조건',24),
+    P(document.getElementById('condBar').textContent.trim(),20),
+    new Paragraph({border:{bottom:{style:'single',size:6,color:'555555'}},spacing:{before:60,after:80}}),
+    H('■ 소득 방식별 상세 비교 (총액 기준)',24),
+    tbl,
+    new Paragraph({text:'',spacing:{after:200}}),
+    new Paragraph({children:[new TextRun({text:'',size:22})],pageBreakBefore:true}),
+    H('■ 계산 근거',24),
+    ...basisP,
+    new Paragraph({border:{bottom:{style:'single',size:6,color:'555555'}},spacing:{before:60,after:80}}),
+    H('■ 유의사항 및 핵심 정보',24),
+    ...chkP,
+    new Paragraph({border:{bottom:{style:'single',size:6,color:'555555'}},spacing:{before:60,after:80}}),
+    P('※ 2026년 세법 기준 · 건강보험료율 7.09% · 장기요양 12.95% · 지방소득세 10% · 본 계산기는 참고용입니다.',18),
+  ]}]});
+
+  const blob=await Packer.toBlob(doc);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`비교계산기_${new Date().toISOString().slice(0,10)}.docx`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* 초기화 */
+window.onload=()=>{
+  document.getElementById('totalAmt').addEventListener('input',function(){
+    document.getElementById('retireLimit').value=this.value;
+  });
+};
+</script>
+</body>
+</html>

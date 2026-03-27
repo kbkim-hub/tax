@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퇴직소득세 정밀 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#111;--dark:#333;--mid:#666;--light:#999;
+  --line:#bbb;--lh:#555;--bg:#f5f5f5;--white:#fff;
+  --warn:#7a1515;--ok:#145228;--blue:#1a3a6e;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.65;}
+
+/* 헤더 */
+.hdr{background:#ebebeb;border-top:3px solid var(--lh);border-bottom:2px solid var(--lh);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-title{font-size:18px;font-weight:700;color:var(--black);}
+.hdr-ref{font-size:12px;color:var(--mid);margin-top:2px;}
+.save-btns{display:none;gap:8px;}
+.save-btns.show{display:flex;}
+.btn-sv{border:none;padding:8px 18px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--white);}
+.btn-sv.pdf{background:var(--dark);} .btn-sv.pdf:hover{background:var(--black);}
+.btn-sv.word{background:var(--blue);} .btn-sv.word:hover{background:#0f2245;}
+
+/* 본문 */
+.wrap{max-width:960px;margin:0 auto;padding:22px 18px 60px;}
+
+/* 블록 */
+.blk{background:var(--white);border:1px solid var(--line);border-top:2px solid var(--lh);margin-bottom:10px;}
+.blk-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:7px 14px;font-size:13px;font-weight:700;color:var(--dark);}
+.blk-body{padding:14px 18px;}
+
+/* 폼 */
+.row{display:flex;gap:14px;margin-bottom:10px;}
+.row:last-child{margin-bottom:0;}
+.col{flex:1;display:flex;flex-direction:column;gap:5px;}
+.col2{flex:2;} .col3{flex:3;}
+label{font-size:12px;font-weight:700;color:var(--mid);}
+label .sub{font-weight:400;color:var(--light);margin-left:3px;font-size:11px;}
+input[type="text"],input[type="number"]{
+  border:1px solid var(--line);padding:8px 11px;font-size:14px;
+  font-family:'Noto Sans KR',sans-serif;color:var(--black);background:#fafafa;outline:none;width:100%;
+}
+input:focus{border-color:var(--dark);background:var(--white);}
+.inp-wrap{position:relative;}
+.inp-wrap input{padding-right:30px;}
+.unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--light);pointer-events:none;}
+
+/* 세그먼트 */
+.seg{display:flex;}
+.sbtn{flex:1;padding:7px 2px;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;border:1px solid var(--line);background:var(--white);color:var(--mid);text-align:center;}
+.sbtn:not(:first-child){border-left:none;}
+.sbtn.on{background:var(--dark);color:var(--white);border-color:var(--dark);}
+
+/* 안내 */
+.note{font-size:12px;color:var(--mid);line-height:1.75;margin-top:8px;padding:7px 12px;border-left:2px solid var(--line);}
+
+/* 계산 버튼 */
+.btn-calc{width:100%;background:var(--dark);color:var(--white);border:none;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;}
+.btn-calc:hover{background:var(--black);}
+
+/* 결과 */
+.result-wrap{display:none;margin-top:12px;}
+.result-wrap.show{display:block;}
+
+/* 섹션 타이틀 */
+.sec-t{font-size:14px;font-weight:700;color:var(--dark);border-bottom:2px solid var(--lh);padding-bottom:5px;margin:18px 0 10px;}
+
+/* ── 단계별 계산 박스 ── */
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.step-box{border:1px solid var(--line);border-top:2px solid var(--lh);background:var(--white);}
+.step-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:6px 14px;font-size:12px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;}
+.step-num{font-size:11px;color:var(--mid);font-weight:500;}
+.step-body{padding:10px 14px;}
+.step-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px dashed #e0e0e0;font-size:13px;}
+.step-row:last-child{border-bottom:none;}
+.step-lbl{color:var(--mid);font-size:12px;}
+.step-val{font-weight:600;color:var(--dark);font-size:14px;}
+.step-val.big{font-size:17px;font-weight:700;color:var(--black);}
+.step-val.warn{color:var(--warn);}
+.step-val.ok{color:var(--ok);}
+.step-formula{font-size:11px;color:var(--light);margin-top:3px;padding:4px 8px;background:#f8f8f8;border-left:2px solid #ddd;line-height:1.7;}
+
+/* ── 최종 결과 바 ── */
+.result-bar{border:2px solid var(--lh);border-top:3px solid var(--black);background:var(--white);padding:16px 22px;margin-bottom:16px;}
+.result-bar-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.rb-cell{display:flex;flex-direction:column;gap:4px;}
+.rb-lbl{font-size:11px;color:var(--mid);font-weight:700;}
+.rb-val{font-size:22px;font-weight:700;color:var(--black);letter-spacing:-.5px;}
+.rb-sub{font-size:11px;color:var(--light);}
+.rb-cell.highlight .rb-val{color:var(--warn);}
+.rb-cell.ok .rb-val{color:var(--ok);}
+
+/* ── 비교표 ── */
+.ct{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px;}
+.ct th{background:#ebebeb;border-top:2px solid var(--lh);border-bottom:1.5px solid var(--lh);padding:9px 11px;font-size:12px;font-weight:700;text-align:center;color:var(--dark);}
+.ct th.lh{text-align:left;}
+.ct td{padding:9px 11px;border-bottom:1px solid var(--line);color:var(--dark);}
+.ct tr:last-child td{border-bottom:none;}
+.ct .nr{text-align:right;font-weight:500;}
+.ct .nl{font-weight:600;color:var(--dark);}
+.ct .sub-row td{font-size:12px;color:var(--mid);background:#fafafa;}
+.ct .sep-row td{background:#ebebeb;font-weight:700;border-top:2px solid var(--lh);border-bottom:2px solid var(--lh);font-size:14px;}
+.ct .best-col{background:#eaf3ed !important;font-weight:700;}
+.ct .warn-val{color:var(--warn);font-weight:600;}
+.ct .ok-val{color:var(--ok);font-weight:600;}
+
+/* ── 연금 연차별 상세표 ── */
+.ann-detail{margin-bottom:16px;}
+.ann-detail table{width:100%;border-collapse:collapse;font-size:12px;}
+.ann-detail th{background:#ebebeb;border-top:2px solid var(--lh);border-bottom:1px solid var(--lh);padding:7px 10px;font-size:11px;font-weight:700;text-align:center;color:var(--dark);}
+.ann-detail td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;color:var(--dark);}
+.ann-detail td:first-child{text-align:center;font-weight:700;color:var(--mid);}
+.ann-detail td:nth-child(2){text-align:left;}
+.ann-detail tr.zone-1 td{background:#fafafa;}
+.ann-detail tr.zone-2 td{background:#f5f9fc;}
+.ann-detail tr.zone-3 td{background:#f0f5f0;}
+.ann-detail tr.total-row td{background:#ebebeb;font-weight:700;border-top:2px solid var(--lh);}
+
+/* ── 계산 과정 간단 테이블 ── */
+.ct .tot td{background:#ebebeb;font-weight:700;border-top:2px solid var(--lh);border-bottom:2px solid var(--lh);font-size:14px;}
+.ct .big-val{font-size:15px;font-weight:700;text-align:right;}
+.ct .warn-val{color:var(--warn);font-weight:600;}
+.ct .ok-val{color:var(--ok);font-weight:600;}
+.ct .num{text-align:right;font-weight:500;}
+.ct .ctr{text-align:center;}
+
+.basis-item{margin-bottom:7px;border:1px solid var(--line);border-top:2px solid var(--lh);}
+.basis-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:7px 14px;font-size:12px;font-weight:700;color:var(--mid);cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.basis-tog{font-size:11px;color:var(--light);}
+.basis-body{padding:10px 14px;font-size:12px;color:var(--dark);line-height:1.95;white-space:pre-wrap;background:var(--white);display:none;}
+.basis-body.open{display:block;}
+
+/* ── 유의사항 ── */
+.chk-head{font-size:14px;font-weight:700;color:var(--black);border-bottom:2px solid var(--lh);padding-bottom:5px;margin-bottom:8px;}
+.chk-list{list-style:none;border-top:1px solid var(--line);margin-bottom:16px;}
+.chk-list li{display:flex;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line);font-size:13px;line-height:1.75;align-items:flex-start;}
+.chk-list li:last-child{border-bottom:none;}
+.ck{flex-shrink:0;width:86px;font-size:11px;font-weight:700;color:var(--dark);padding-top:2px;}
+.cv{color:var(--dark);} .cv b{color:var(--black);}
+
+.footnote{font-size:11px;color:var(--light);text-align:center;padding:8px 0;border-top:1px solid var(--line);margin-top:8px;}
+
+/* 인쇄 */
+@media print{
+  .save-btns,.btn-calc{display:none!important;}
+  body{background:#fff!important;font-size:11px;line-height:1.55;}
+  .hdr{background:#ebebeb!important;padding:10px 20px;border-top:2px solid #555!important;border-bottom:1.5px solid #555!important;}
+  .hdr-title{font-size:15px!important;} .hdr-ref{font-size:10px!important;}
+  .wrap{padding:6px 0 0;max-width:100%;}
+  .result-wrap{display:block!important;}
+  .blk{margin-bottom:6px;} .blk-head{padding:4px 12px;font-size:11px!important;} .blk-body{padding:8px 12px;}
+  .steps-grid{gap:8px;}
+  .step-body{padding:7px 10px;}
+  .step-row{font-size:11px!important;}
+  .step-val{font-size:12px!important;} .step-val.big{font-size:14px!important;}
+  .step-formula{font-size:10px!important;}
+  .rb-val{font-size:17px!important;}
+  .ct th,.ct td{padding:5px 7px!important;font-size:10px!important;}
+  .ct .sep-row td{font-size:11px!important;}
+  .ann-detail th,.ann-detail td{padding:4px 7px!important;font-size:10px!important;}
+  .basis-body{display:block!important;padding:5px 10px;font-size:10px!important;}
+  .basis-head{padding:4px 10px;font-size:10px!important;}
+  .chk-list li{font-size:11px!important;padding:5px 2px;}
+  .sec-t{font-size:11px!important;margin:8px 0 5px;}
+  .print-p1{page-break-after:always;}
+  .print-p2{page-break-before:always;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{size:A4 portrait;margin:10mm 12mm;}
+}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="hdr">
+  <div>
+    <div class="hdr-title">퇴직소득세 정밀 계산기</div>
+    <div class="hdr-ref">퇴직일시금 · 퇴직연금 세금 단계별 산출 및 수령방식 비교 (2026년 기준 · 소득세법 §48)</div>
+  </div>
+  <div class="save-btns" id="saveBtns">
+    <button class="btn-sv pdf" onclick="window.print()">🖨 PDF 저장</button>
+    <button class="btn-sv word" onclick="saveWord()">📄 Word 저장</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- 입력 -->
+<div class="blk">
+  <div class="blk-head">입력 정보</div>
+  <div class="blk-body">
+    <div class="row">
+      <div class="col col2">
+        <label>퇴직급여액 <span class="sub">실제 수령할 퇴직금 총액</span></label>
+        <div class="inp-wrap">
+          <input type="text" id="retireAmt" placeholder="예) 100,000,000" oninput="fN(this)">
+          <span class="unit">원</span>
+        </div>
+      </div>
+      <div class="col col2">
+        <label>비과세소득 <span class="sub">장해보상금 등 — 없으면 0</span></label>
+        <div class="inp-wrap">
+          <input type="text" id="taxFree" placeholder="예) 0" oninput="fN(this)" value="0">
+          <span class="unit">원</span>
+        </div>
+      </div>
+      <div class="col">
+        <label>근속연수 <span class="sub">취임일~퇴직일</span></label>
+        <div class="inp-wrap">
+          <input type="number" id="tenure" value="20" min="1" max="50">
+          <span class="unit">년</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col2">
+        <label>퇴직연금 수령기간 선택 <span class="sub">연금 방식 상세 계산용</span></label>
+        <div class="seg" id="annSeg">
+          <div class="sbtn on"  onclick="setAnn(10)">10년</div>
+          <div class="sbtn" onclick="setAnn(15)">15년</div>
+          <div class="sbtn" onclick="setAnn(20)">20년</div>
+          <div class="sbtn" onclick="setAnn(30)">30년</div>
+        </div>
+      </div>
+      <div class="col col3">
+        <label style="visibility:hidden;">안내</label>
+        <div class="note" style="margin-top:0;">
+          ▪ 비과세소득 차감 후 퇴직소득금액 기준으로 계산합니다<br>
+          ▪ 퇴직연금은 IRP 계좌 이체 후 연금 수령을 전제합니다 (2026년 감면율 적용)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn-calc" onclick="calc()">세금 계산하기</button>
+
+<!-- 결과 -->
+<div class="result-wrap" id="resultWrap">
+<div class="print-p1">
+
+<!-- ① 일시금 vs 연금 비교표 -->
+<div class="sec-t" id="lumpSumTitle"></div>
+<div class="result-bar" id="lumpSumBar"></div>
+
+<div class="sec-t">일시금 vs 연금 수령방식 비교 (총액 기준)</div>
+<table class="ct" id="cmpTable">
+  <thead>
+    <tr>
+      <th class="lh" style="width:26%">항목</th>
+      <th>일시금</th>
+      <th>연금 10년</th>
+      <th>연금 15년</th>
+      <th>연금 20년</th>
+      <th>연금 30년</th>
+    </tr>
+  </thead>
+  <tbody id="cmpBody"></tbody>
+</table>
+
+<!-- ② 계산 과정 (간단) -->
+<div class="sec-t">퇴직소득세 계산 과정 (소득세법 §48)</div>
+<table class="ct" id="procTable" style="font-size:13px;">
+  <thead>
+    <tr>
+      <th style="width:8%">단계</th>
+      <th class="lh" style="width:24%">항목</th>
+      <th class="lh" style="width:38%">산식</th>
+      <th style="width:30%">금액</th>
+    </tr>
+  </thead>
+  <tbody id="procBody"></tbody>
+</table>
+
+</div><!-- /print-p1 -->
+<div class="print-p2">
+
+<!-- ③ 유의사항 -->
+<div class="chk-head">⚠ 유의사항</div>
+<ul class="chk-list">
+  <li><span class="ck">근속연수</span><span class="cv">1년 미만 기간은 <b>1년으로 올림</b> 처리가 원칙입니다. 정확한 근속연수는 취임일·퇴직일로 계산하세요.</span></li>
+  <li><span class="ck">비과세소득</span><span class="cv">장해보상금 등 <b>비과세 퇴직소득은 과세대상에서 제외</b>됩니다. 해당 금액을 정확히 파악하여 입력하세요.</span></li>
+  <li><span class="ck">퇴직소득 한도</span><span class="cv">임원의 경우 <b>소득세법상 한도 초과분은 근로소득 과세</b>됩니다. 대화1 퇴직금한도계산기에서 한도를 반드시 확인하세요.</span></li>
+  <li><span class="ck">연금 감면율</span><span class="cv"><b>1~10년차 30% 감면 / 11~20년차 40% 감면 / 21년차~ 50% 감면(2026년 신설)</b>. 수령기간이 길수록 절세 효과가 커집니다.</span></li>
+  <li><span class="ck">연금수령한도</span><span class="cv">연금계좌 평가액 ÷ (11−수령연차) × 120% 초과 수령 시 <b>초과분은 감면 없이 일시금 세율 그대로 적용</b>됩니다.</span></li>
+  <li><span class="ck">운용수익 과세</span><span class="cv">IRP 계좌 내 운용수익에는 <b>연령별 연금소득세(55~69세 5.5% / 70~79세 4.4% / 80세~ 3.3%)</b>가 별도 부과됩니다. 본 계산기는 원금 기준만 계산합니다.</span></li>
+  <li><span class="ck">건강보험료</span><span class="cv">사적연금(IRP) 수령액에는 <b>현재 건강보험료 미부과</b>. 법 개정 논의 중으로 향후 변경될 수 있습니다.</span></li>
+  <li><span class="ck">DB / DC형</span><span class="cv"><b>DB형</b>: 수령액 확정·등기임원 가입불가. <b>DC형</b>: 임원 가입가능·추가납입 세액공제(연 900만 한도)·운용실적에 따라 수령액 변동.</span></li>
+  <li><span class="ck">참고용</span><span class="cv">본 계산기는 <b>참고용</b>입니다. 실제 세무처리는 반드시 담당 세무사와 상담하시기 바랍니다.</span></li>
+</ul>
+<div class="footnote">※ 2026년 소득세법 기준 · 지방소득세 10% 포함 · 사적연금 건보료 현행 미부과</div>
+
+</div><!-- /print-p2 -->
+</div><!-- /result-wrap -->
+</div><!-- /wrap -->
+
+<script>
+let annYr = 10;
+
+/* ── 유틸 ── */
+function fN(el){let r=el.value.replace(/[^0-9]/g,'');el.value=r?Number(r).toLocaleString('ko-KR'):'';}
+function pN(id){return parseInt((document.getElementById(id)?.value||'').replace(/[^0-9]/g,''),10)||0;}
+function w(n){return Math.round(n).toLocaleString('ko-KR')+'원';}
+function w억(n){
+  n=Math.round(n);
+  if(n===0)return '0원';
+  const 억=Math.floor(n/1e8), 만=Math.floor((n%1e8)/1e4), 나머지=n%1e4;
+  let s='';
+  if(억>0)s+=억+'억 ';
+  if(만>0)s+=만+'만 ';
+  if(나머지>0)s+=나머지+'원';
+  else if(s)s+='원';
+  return s.trim();
+}
+function pc(n,d=2){return (n*100).toFixed(d)+'%';}
+function setAnn(v){annYr=v;document.querySelectorAll('#annSeg .sbtn').forEach((b,i)=>b.classList.toggle('on',[10,15,20,30][i]===v));}
+
+/* ── 세금 계산 ── */
+function taxBracket(b){
+  if(b<=14e6)    return b*0.06;
+  if(b<=50e6)    return 840000+(b-14e6)*0.15;
+  if(b<=88e6)    return 6240000+(b-50e6)*0.24;
+  if(b<=150e6)   return 15360000+(b-88e6)*0.35;
+  if(b<=300e6)   return 37060000+(b-150e6)*0.38;
+  if(b<=500e6)   return 94060000+(b-300e6)*0.40;
+  if(b<=1e9)     return 174060000+(b-500e6)*0.42;
+  return 384060000+(b-1e9)*0.45;
+}
+function getTaxRate(b){
+  if(b<=14e6)return'6%';if(b<=50e6)return'15%';if(b<=88e6)return'24%';
+  if(b<=150e6)return'35%';if(b<=300e6)return'38%';if(b<=500e6)return'40%';
+  if(b<=1e9)return'42%';return'45%';
+}
+
+/* 근속연수공제 */
+function tenureDed(yr){
+  if(yr<=5)       return yr*1e6;
+  if(yr<=10)      return 5e6+(yr-5)*2e6;
+  if(yr<=20)      return 15e6+(yr-10)*2.5e6;
+  return 40e6+(yr-20)*3e6;
+}
+function tenureDedFormula(yr){
+  if(yr<=5)       return `${yr}년 × 100만원`;
+  if(yr<=10)      return `500만원 + (${yr}-5)년 × 200만원`;
+  if(yr<=20)      return `1,500만원 + (${yr}-10)년 × 250만원`;
+  return `4,000만원 + (${yr}-20)년 × 300만원`;
+}
+
+/* 환산급여공제 */
+function aeDeduct(aeq){
+  if(aeq<=8e6)        return aeq;
+  if(aeq<=70e6)       return 8e6+(aeq-8e6)*0.6;
+  if(aeq<=100e6)      return 45.2e6+(aeq-70e6)*0.55;
+  if(aeq<=300e6)      return 61.7e6+(aeq-100e6)*0.45;
+  return 151.7e6+(aeq-300e6)*0.35;
+}
+function aeDeductFormula(aeq){
+  if(aeq<=8e6)        return `${w(aeq)} (전액공제)`;
+  if(aeq<=70e6)       return `800만원 + (${w(aeq)}-800만원) × 60%`;
+  if(aeq<=100e6)      return `4,520만원 + (${w(aeq)}-7,000만원) × 55%`;
+  if(aeq<=300e6)      return `6,170만원 + (${w(aeq)}-1억원) × 45%`;
+  return `15,170만원 + (${w(aeq)}-3억원) × 35%`;
+}
+
+/* 퇴직소득세 완전 계산 */
+function calcRetireTax(retireAmt, taxFreeAmt, tenure){
+  const retireIncome = retireAmt - taxFreeAmt;           // ① 퇴직소득금액
+  const td           = tenureDed(tenure);                 // ③ 근속연수공제
+  const taxable      = Math.max(retireIncome - td, 0);   // 과세대상
+  const aeq          = (taxable / tenure) * 12;           // ④ 환산급여
+  const aed          = aeDeduct(aeq);                     // ⑤ 환산급여공제
+  const base         = Math.max(aeq - aed, 0);            // ⑥ 과세표준
+  const aeTax        = taxBracket(base);                  // ⑦ 환산산출세액
+  const retTax       = aeTax * (tenure / 12);             // ⑧ 산출세액
+  const finalTax     = retTax * 1.1;                      // ⑨ 지방세 포함
+  const netRecv      = retireAmt - finalTax;
+  const effRate      = finalTax / retireAmt;
+  return {
+    retireIncome,td,taxable,aeq,aed,base,aeTax,retTax,finalTax,
+    netRecv,effRate,
+    tdFormula: tenureDedFormula(tenure),
+    aedFormula: aeDeductFormula(aeq),
+    taxRateStr: getTaxRate(base)
+  };
+}
+
+/* 연금 계산 — 수령기간별 */
+function calcAnnuity(retireAmt, lumpTax, years){
+  const rateA   = (lumpTax / 1.1) / retireAmt;  // 지방세 제외 순세액 기준 세율 A
+  const annAmt  = retireAmt / years;              // 연간 수령액
+  const y1=Math.min(years,10), y2=Math.max(Math.min(years,20)-10,0), y3=Math.max(years-20,0);
+  // 지방소득세(×1.1) 포함
+  const txY1 = annAmt * rateA * 0.70 * 1.1;  // 1~10년차
+  const txY2 = annAmt * rateA * 0.60 * 1.1;  // 11~20년차
+  const txY3 = annAmt * rateA * 0.50 * 1.1;  // 21년차~ (2026 신설)
+  const totalTax = txY1*y1 + txY2*y2 + txY3*y3;
+  return {rateA,annAmt,txY1,txY2,txY3,totalTax,y1,y2,y3,
+    saving: lumpTax - totalTax,
+    netRecv: retireAmt - totalTax,
+    effRate: totalTax / retireAmt};
+}
+
+/* ── 메인 계산 ── */
+function calc(){
+  const retireAmt  = pN('retireAmt');
+  const taxFreeAmt = pN('taxFree');
+  const tenure     = parseInt(document.getElementById('tenure').value)||20;
+
+  if(!retireAmt){alert('퇴직급여액을 입력해주세요.');return;}
+
+  const R = calcRetireTax(retireAmt, taxFreeAmt, tenure);
+  const annData=[10,15,20,30].map(yr=>({yr,...calcAnnuity(retireAmt,R.finalTax,yr)}));
+  const bestAnn=annData.reduce((a,b)=>b.netRecv>a.netRecv?b:a);
+
+  /* ① 최종납부세액 바 */
+  document.getElementById('lumpSumTitle').textContent =
+    `퇴직일시금 — 최종 납부세액  (근속 ${tenure}년 · 퇴직급여 ${w억(retireAmt)})`;
+
+  document.getElementById('lumpSumBar').innerHTML=`
+    <div class="result-bar-inner">
+      <div class="rb-cell highlight">
+        <div class="rb-lbl">최종 납부세액 (퇴직소득세 + 지방세)</div>
+        <div class="rb-val">${w(R.finalTax)}</div>
+        <div class="rb-sub">퇴직소득세 ${w(R.retTax)} + 지방소득세 ${w(R.finalTax-R.retTax)}</div>
+      </div>
+      <div class="rb-cell ok">
+        <div class="rb-lbl">실수령액</div>
+        <div class="rb-val">${w(R.netRecv)}</div>
+        <div class="rb-sub">${w(retireAmt)} − ${w(R.finalTax)}</div>
+      </div>
+      <div class="rb-cell">
+        <div class="rb-lbl">실효세율</div>
+        <div class="rb-val">${pc(R.effRate)}</div>
+        <div class="rb-sub">납부세액 ÷ 퇴직급여액</div>
+      </div>
+    </div>`;
+
+  /* ② 비교표 */
+  const cmpRows=[
+    {lbl:'퇴직급여액',            vals:[retireAmt,...annData.map(_=>retireAmt)], isAmt:true},
+    {lbl:'납부세액 (소득세+지방세)',vals:[R.finalTax,...annData.map(a=>a.totalTax)],isAmt:true,isDed:true,isSep:true},
+    {lbl:'실수령액',               vals:[R.netRecv,...annData.map(a=>a.netRecv)], isAmt:true,isRecv:true},
+    {lbl:'실효세율',               vals:[R.effRate,...annData.map(a=>a.effRate)],  isPct:true},
+    {lbl:'일시금 대비 절감세액',   vals:[0,...annData.map(a=>a.saving)],            isAmt:true,isOk:true,isDash0:true},
+    {lbl:'연간 세후수령액',        vals:[0,...annData.map(a=>a.netRecv/a.yr)],     isAmt:true,isDash0:true},
+  ];
+
+  const cb=document.getElementById('cmpBody');
+  cb.innerHTML='';
+  const bestIdx=annData.findIndex(a=>a.yr===bestAnn.yr);
+  cmpRows.forEach(r=>{
+    const tr=document.createElement('tr');
+    if(r.isRecv) tr.className='sep-row';
+    let cells=`<td class="nl">${r.lbl}</td>`;
+    r.vals.forEach((v,i)=>{
+      let txt='';
+      if(r.isDash0&&i===0)       txt='—';
+      else if(r.isPct)           txt=pc(v);
+      else                       txt=w(v);
+      let cls='nr';
+      if(r.isRecv&&i===bestIdx+1) cls+=' best-col';
+      if(r.isDed&&v>0)            cls+=' warn-val';
+      if(r.isOk&&v>0)             cls+=' ok-val';
+      cells+=`<td class="${cls}">${txt}</td>`;
+    });
+    tr.innerHTML=cells;
+    cb.appendChild(tr);
+  });
+
+  /* ③ 계산 과정 (간단 테이블) */
+  const procSteps=[
+    {n:'①', lbl:'퇴직소득금액',   f:`${w(retireAmt)} − ${w(taxFreeAmt)}`,                  v:R.retireIncome, hilite:false},
+    {n:'③', lbl:'근속연수공제',    f:R.tdFormula,                                             v:R.td,           hilite:true},
+    {n:'④', lbl:'환산급여',        f:`(${w(R.taxable)} ÷ ${tenure}년) × 12`,                v:R.aeq,          hilite:false},
+    {n:'⑤', lbl:'환산급여공제',    f:R.aedFormula,                                            v:R.aed,          hilite:true},
+    {n:'⑥', lbl:'과세표준',        f:`환산급여 − 환산급여공제`,                              v:R.base,         hilite:false},
+    {n:'⑦', lbl:'환산산출세액',    f:`과세표준 × ${R.taxRateStr}`,                           v:R.aeTax,        hilite:true},
+    {n:'⑧', lbl:'산출세액',        f:`${w(R.aeTax)} × ${tenure}년 ÷ 12`,                    v:R.retTax,       hilite:false},
+    {n:'⑨', lbl:'퇴직소득세',      f:'산출세액 (= ⑧)',                                      v:R.retTax,       hilite:true},
+    {n:'',  lbl:'지방소득세',       f:`퇴직소득세 × 10%`,                                    v:R.finalTax-R.retTax, hilite:true},
+    {n:'합계',lbl:'최종 납부세액',  f:`퇴직소득세 + 지방소득세`,                             v:R.finalTax,     isResult:true, isWarn:true},
+    {n:'',  lbl:'실수령액',         f:`${w(retireAmt)} − ${w(R.finalTax)}`,                  v:R.netRecv,      isResult:true, isOk:true},
+  ];
+
+  const pb=document.getElementById('procBody');
+  pb.innerHTML='';
+  procSteps.forEach(s=>{
+    const tr=document.createElement('tr');
+    if(s.isResult) tr.className='tot';
+    else if(s.hilite) tr.style.background='#fafafa';
+    const vcls='num'+(s.isWarn?' warn-val':'')+(s.isOk?' ok-val':'')+(s.isResult?' big-val':'');
+    tr.innerHTML=`
+      <td class="ctr" style="font-size:12px;font-weight:700;color:var(--mid)">${s.n}</td>
+      <td>${s.lbl}</td>
+      <td style="font-size:11px;color:var(--light)">${s.f}</td>
+      <td class="${vcls}">${w(s.v)}</td>`;
+    pb.appendChild(tr);
+  });
+
+  document.getElementById('resultWrap').classList.add('show');
+  document.getElementById('saveBtns').classList.add('show');
+  document.getElementById('resultWrap').scrollIntoView({behavior:'smooth'});
+}
+
+
+/* ── Word 저장 ── */
+async function saveWord(){
+  if(!window.docx){
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';
+      s.onload=res;s.onerror=rej;document.head.appendChild(s);
+    });
+  }
+  const {Document,Packer,Paragraph,Table,TableRow,TableCell,
+         TextRun,WidthType,AlignmentType,ShadingType,TableLayoutType}=window.docx;
+  const F='Noto Sans KR';
+  const H=(t,sz=28)=>new Paragraph({children:[new TextRun({text:t,bold:true,size:sz,font:F})],spacing:{before:200,after:80}});
+  const P=(t,sz=20)=>new Paragraph({children:[new TextRun({text:t,size:sz,font:F})],spacing:{after:40}});
+  const HR=()=>new Paragraph({border:{bottom:{style:'single',size:6,color:'555555'}},spacing:{before:60,after:80}});
+
+  /* 비교표 */
+  const thEls=[...document.querySelectorAll('#cmpTable thead th')];
+  const tbRows=[...document.querySelectorAll('#cmpTable tbody tr')];
+  const headers=thEls.map(t=>t.textContent.trim());
+  const bodyRows=tbRows.map(tr=>[...tr.querySelectorAll('td')].map(td=>td.textContent.trim()));
+  const mkH=t=>new TableCell({shading:{fill:'EBEBEB',type:ShadingType.CLEAR},children:[new Paragraph({children:[new TextRun({text:t,bold:true,size:18,font:F})],alignment:AlignmentType.CENTER})],margins:{top:50,bottom:50,left:60,right:60}});
+  const mkD=(t,b)=>new TableCell({children:[new Paragraph({children:[new TextRun({text:t,bold:!!b,size:18,font:F})],alignment:AlignmentType.RIGHT})],margins:{top:50,bottom:50,left:60,right:60}});
+  const mkL=t=>new TableCell({children:[new Paragraph({children:[new TextRun({text:t,size:18,font:F})]})],margins:{top:50,bottom:50,left:60,right:60}});
+  const cmpTbl=new Table({width:{size:100,type:WidthType.PERCENTAGE},layout:TableLayoutType.FIXED,
+    rows:[new TableRow({children:headers.map(mkH)}),...bodyRows.map((row,ri)=>new TableRow({children:[mkL(row[0]||''),...row.slice(1).map((c,ci)=>mkD(c,ri===2))]}))]
+  });
+
+  /* 계산 과정 테이블 */
+  const procThEls=[...document.querySelectorAll('#procTable thead th')];
+  const procTbRows=[...document.querySelectorAll('#procTable tbody tr')];
+  const procHeaders=procThEls.map(t=>t.textContent.trim());
+  const procBodyRows=procTbRows.map(tr=>[...tr.querySelectorAll('td')].map(td=>td.textContent.trim()));
+  const procTbl=new Table({width:{size:100,type:WidthType.PERCENTAGE},layout:TableLayoutType.FIXED,
+    rows:[new TableRow({children:procHeaders.map(mkH)}),
+    ...procBodyRows.map((row,ri)=>{
+      const isResult=ri>=9;
+      return new TableRow({children:[
+        mkL(row[0]||''), mkL(row[1]||''), mkL(row[2]||''),
+        new TableCell({shading:isResult?{fill:'EBEBEB',type:ShadingType.CLEAR}:undefined,
+          children:[new Paragraph({children:[new TextRun({text:row[3]||'',bold:isResult,size:isResult?20:18,font:F})],alignment:AlignmentType.RIGHT})],
+          margins:{top:50,bottom:50,left:60,right:60}})
+      ]});
+    })]
+  });
+
+  /* 유의사항 */
+  const chkP=[...document.querySelectorAll('.chk-list li')].map(li=>
+    new Paragraph({children:[
+      new TextRun({text:`[${li.querySelector('.ck').textContent.trim()}] `,bold:true,size:20,font:F}),
+      new TextRun({text:li.querySelector('.cv').textContent.trim(),size:20,font:F})
+    ],spacing:{after:60}})
+  );
+
+  const retAmt=pN('retireAmt'), taxF=pN('taxFree'), ten=parseInt(document.getElementById('tenure').value)||20;
+  const R=calcRetireTax(retAmt,taxF,ten);
+  const condTxt=`퇴직급여액: ${w(retAmt)} · 비과세소득: ${w(taxF)} · 근속연수: ${ten}년 · 퇴직연금: ${annYr}년 수령`;
+
+  const doc=new Document({styles:{default:{document:{run:{font:F,size:22}}}},sections:[{children:[
+    H('퇴직소득세 계산기',32),
+    P('퇴직일시금 · 퇴직연금 세금 비교 (2026년 기준 · 소득세법 §48)',20),
+    HR(),
+    H('■ 계산 조건',24), P(condTxt,20), HR(),
+    H('■ 퇴직일시금 최종 납부세액',24),
+    P(`최종 납부세액: ${w(R.finalTax)}  |  실수령액: ${w(R.netRecv)}  |  실효세율: ${pc(R.effRate)}`,22),
+    HR(),
+    H('■ 일시금 vs 연금 수령방식 비교',24),
+    cmpTbl,
+    new Paragraph({text:'',spacing:{after:200}}),
+    HR(),
+    H('■ 퇴직소득세 계산 과정',24),
+    procTbl,
+    new Paragraph({text:'',spacing:{after:200}}),
+    new Paragraph({children:[new TextRun({text:'',size:22})],pageBreakBefore:true}),
+    H('■ 유의사항',24),
+    ...chkP,
+    HR(),
+    P('※ 2026년 소득세법 기준 · 지방소득세 10% 포함 · 본 계산기는 참고용입니다.',18),
+  ]}]});
+
+  const blob=await Packer.toBlob(doc);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`퇴직소득세계산기_${new Date().toISOString().slice(0,10)}.docx`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
