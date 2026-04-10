@@ -117,11 +117,19 @@ textarea{resize:vertical;min-height:70px;}
 #board-section{border-left:3px solid #93c5fd;padding-left:16px;margin:4px 0;}
 @media print{
   .sidebar,.topbar,.btn-group,.doc-toolbar{display:none!important;}
+  /* 크롬/엣지 인쇄 헤더·푸터 제거 */
+  header, footer { display: none !important; }
+  html { -webkit-print-color-adjust: exact; }
   .main{margin:0;padding:0;}
   .doc-wrap{border:none;border-radius:0;}
   .doc-body{max-height:none;padding:20px 40px;}
   .editable{border-bottom:none;}
-  @page{size:A4;margin:18mm 16mm;}
+    @page{size:A4;margin:18mm 16mm;}
+  @page{margin-top:10mm;margin-bottom:10mm;}
+  * { -webkit-print-color-adjust: exact; }
+  /* 브라우저 기본 인쇄 헤더/푸터 제거 */
+  html { margin: 0; }
+  @page { margin-header: 0; margin-footer: 0; }
 }
 @media(max-width:768px){
   .sidebar{display:none;}
@@ -317,6 +325,7 @@ textarea{resize:vertical;min-height:70px;}
     <div><h1>임시 주주총회 의사록</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
     <div class="btn-group"><button class="btn btn-sm" onclick="doPrint()">인쇄 / PDF</button></div>
   </div>
+<<<<<<< HEAD
   <div class="doc-wrap"><div class="doc-toolbar"><span>임시 주주총회 의사록</span></div>
   <div class="doc-body">
     <div class="doc-title">임 시 주 주 총 회 의 사 록</div>
@@ -402,13 +411,111 @@ textarea{resize:vertical;min-height:70px;}
     <div class="note-box">
       【첨부서류】 1. 개정 정관 전문 &nbsp; 2. 임원보수지급규정 &nbsp; 3. 임원퇴직금지급규정 &nbsp; 4. 유족보상금지급규정 &nbsp; 5. 주주 출석 확인서<br>
       ※ 본 의사록은 회사 본점에 10년간 보관 (상법 §396) / 정관 변경 후 2주 이내 법인등기소 변경등기 신청 / 세무조사 시 핵심 증빙 서류
+=======
+  <div class="doc-wrap">
+    <div class="doc-toolbar"><span>임시 주주총회 의사록</span></div>
+    <div class="doc-body">
+      <div class="doc-title">임 시 주 주 총 회 의 사 록</div>
+      <table class="doc-info-table">
+        <tr><td>회 사 명</td><td><span class="editable" contenteditable id="d1-company" data-ph="회사명을 입력하세요"></span></td></tr>
+        <tr><td>회의 일시</td><td><span class="editable" contenteditable id="d1-date" data-ph="예) 2025년 3월 15일"></span> &nbsp; <span class="editable" contenteditable id="d1-time" data-ph="예) 오전 10시 00분"></span></td></tr>
+        <tr><td>회의 장소</td><td><span class="editable" contenteditable id="d1-place" data-ph="예) 경기도 화성시 ○○ 본점 회의실"></span></td></tr>
+        <tr><td>발행주식총수</td><td><span class="editable" contenteditable id="d1-shares" data-ph="예) 71,000주 (보통주 전액)"></span></td></tr>
+        <tr><td>출 석 주 주</td><td><span class="editable" contenteditable id="d1-attend" data-ph="예) 2명 (71,000주 / 100%)"></span></td></tr>
+        <tr><td>의 &nbsp;&nbsp;&nbsp; 장</td><td>대표이사 <span class="editable" contenteditable id="d1-ceo" data-ph="대표이사 성명"></span> (출석 주주 전원 동의로 선출)</td></tr>
+      </table>
+
+      <p>의장은 위와 같이 주주 전원이 출석하였음을 확인하고, 주주 전원의 동의로 소집절차를 생략하여 본 임시 주주총회를 적법하게 개최한다고 선언하였다.</p><br>
+      <p>의장은 오늘 본 주주총회의 목적사항을 다음과 같이 설명하였다.</p><br>
+      <p><strong>【 안 건 목 록 】</strong></p>
+      <p style="margin-left:24px;">제1호 안건 : 정관 일부 변경의 건</p>
+      <p style="margin-left:24px;">제2호 안건 : 임원보수지급규정 제정의 건</p>
+      <p style="margin-left:24px;">제3호 안건 : 임원퇴직금지급규정 제정의 건</p>
+      <p style="margin-left:24px;">제4호 안건 : 유족보상금지급규정 제정의 건</p><br><br>
+
+      <div class="agenda-head">제1호 안건 &nbsp; <u>정관 일부 변경의 건</u></div>
+      <p style="margin-left:18px;">의장은 임원 보수·퇴직금·유족보상금 지급 근거를 별도 지급규정으로 위임하여 법인세법상 손금 인정 요건을 충족하고, 전자투표·이사회 화상회의 등 상법 개정사항을 반영하기 위하여 정관 일부를 변경하고자 함을 설명하였다.</p><br>
+      <p style="margin-left:18px;"><strong>【 주요 변경 내용 】</strong></p>
+      <table class="doc-table">
+        <tr><th>조항</th><th>구분</th><th>변경 전</th><th>변경 후</th></tr>
+        <tr><td class="c">제9조</td><td class="c">종류주식</td><td class="l">보통주만 규정</td><td class="l">종류주식 발행 근거 추가</td></tr>
+        <tr><td class="c">제20조(신설)</td><td class="c">전자투표</td><td class="l">규정 없음</td><td class="l">전자투표 도입, 감사 선임 의결정족수 완화</td></tr>
+        <tr><td class="c">제31조(신설)</td><td class="c">이사회 화상</td><td class="l">규정 없음</td><td class="l">화상회의 방식 이사회 허용</td></tr>
+        <tr><td class="c">제36조</td><td class="c">보수·퇴직금</td><td class="l">주총 결의로 정한다</td><td class="l">별도 지급규정으로 위임</td></tr>
+        <tr><td class="c">제42~44조(신설)</td><td class="c">배당</td><td class="l">이익배당만 규정</td><td class="l">중간·차등·현물배당 신설</td></tr>
+        <tr><td class="c">제46~47조(신설)</td><td class="c">자기주식</td><td class="l">규정 없음</td><td class="l">취득·소각·처분 근거 신설</td></tr>
+        <tr><td class="c">제48~49조(신설)</td><td class="c">종류주식</td><td class="l">규정 없음</td><td class="l">우선주·상환주·전환주 발행 절차</td></tr>
+      </table>
+      <p style="margin-left:18px;">의장은 이의 없음을 확인하고 표결에 부쳤다.<br>
+      <small style="color:#666;">※ 정관 변경은 상법 제434조 특별결의 사항 (출석 주주 의결권 2/3 이상 + 발행주식총수 1/3 이상)</small></p>
+      <table class="doc-table vote-table">
+        <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
+        <tr><td class="c">주식수</td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
+      </table>
+      <div class="result-box">결 의 : 원안대로 가결되다.</div>
+
+      <div class="agenda-head">제2호 안건 &nbsp; <u>임원보수지급규정 제정의 건</u></div>
+      <p style="margin-left:18px;">의장은 임원 보수 지급 기준을 명확히 하고 법인세법상 손금 인정 요건을 충족하기 위하여 임원보수지급규정을 제정하고자 함을 설명하였다.</p><br>
+      <p style="margin-left:18px;"><strong>임원 1인당 연간 보수 한도: 금 <span class="editable" contenteditable id="d1-salary" data-ph="예) 500,000,000원(오억원)"></span></strong></p>
+      <table class="doc-table vote-table" style="margin-top:10px;">
+        <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
+        <tr><td class="c">주식수</td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
+      </table>
+      <div class="result-box">결 의 : 원안대로 가결되다.</div>
+
+      <div class="agenda-head">제3호 안건 &nbsp; <u>임원퇴직금지급규정 제정의 건</u></div>
+      <p style="margin-left:18px;">의장은 임원 퇴직금 지급 기준을 법인세법 시행령 제44조에 따라 명확히 정하여 손금 인정 요건을 충족하고자 임원퇴직금지급규정을 제정하고자 함을 설명하였다.</p><br>
+      <p style="margin-left:18px;">산정기준: 퇴직 전 3년간 연평균 환산액 × 1/10 × 근속연수 × 지급배수</p>
+      <p style="margin-left:18px;">대표이사 <strong><span class="editable" contenteditable id="d1-ceomult" data-ph="3"></span>배수</strong> / 그 외 임원 <strong><span class="editable" contenteditable id="d1-othermult" data-ph="1.5"></span>배수</strong> (이사회 최종 결의)</p>
+      <table class="doc-table vote-table" style="margin-top:10px;">
+        <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
+        <tr><td class="c">주식수</td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
+      </table>
+      <div class="result-box">결 의 : 원안대로 가결되다.</div>
+
+      <div class="agenda-head">제4호 안건 &nbsp; <u>유족보상금지급규정 제정의 건</u></div>
+      <p style="margin-left:18px;">의장은 임원이 재임 중 사망한 경우 유족의 생활 안정을 도모하기 위하여 유족보상금지급규정을 제정하고자 함을 설명하였다.</p>
+      <p style="margin-left:18px;">지급 상한: 사망 당시 월급여 × <strong><span class="editable" contenteditable id="d1-bereave" data-ph="36"></span>개월</strong> 이내 (이사회 최종 결의)</p>
+      <table class="doc-table vote-table" style="margin-top:10px;">
+        <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
+        <tr><td class="c">주식수</td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
+          <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
+      </table>
+      <div class="result-box">결 의 : 원안대로 가결되다.</div>
+
+      <br><br>
+      <p>의장은 위 4개 안건이 모두 원안대로 가결되었음을 선언하고 폐회하였다.</p><br>
+      <p>위 결의를 명확히 하기 위하여 이 의사록을 작성하고 의장 및 출석한 이사가 기명날인한다.</p><br>
+      <p style="text-align:right;"><span class="editable" contenteditable id="d1-sign-date" data-ph="예) 2025년 3월 15일"></span></p><br>
+      <p style="text-align:center;font-size:15px;font-weight:700;"><span id="d1-company2"></span></p><br>
+      <div id="d1-sign-wrap"></div>
+      <div class="note-box">
+        【첨부서류】 1. 개정 정관 전문 &nbsp; 2. 임원보수지급규정 &nbsp; 3. 임원퇴직금지급규정 &nbsp; 4. 유족보상금지급규정 &nbsp; 5. 주주 출석 확인서<br>
+        ※ 본 의사록은 회사 본점에 10년간 보관 (상법 §396) / 정관 변경 후 2주 이내 법인등기소 변경등기 신청 / 세무조사 시 핵심 증빙 서류
+      </div>
+>>>>>>> 34bccd5578e12d19c36aeb8b54c43a45b21ef6ee
     </div>
   </div></div>
 </div>
 <!-- ══ DOC2: 정관 전문 ══ -->
 <div id="page-doc2" class="page">
   <div class="topbar">
+<<<<<<< HEAD
     <div><h1>정관 전문</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
+=======
+    <div><h1>개정 정관</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
+>>>>>>> 34bccd5578e12d19c36aeb8b54c43a45b21ef6ee
     <div class="btn-group"><button class="btn btn-sm" onclick="doPrint()">인쇄 / PDF</button></div>
   </div>
   <div class="doc-wrap"><div class="doc-toolbar"><span>정관</span></div>
@@ -463,6 +570,7 @@ textarea{resize:vertical;min-height:70px;}
     <div class="art-title" data-art="minute1">제20조 (의사록)</div>
     <div class="art-body">주주총회의 의사에 관하여는 의사록을 작성하여야 한다. 의사록에는 의사의 경과요령과 결과를 기재하고, 의장과 출석한 이사가 기명날인 또는 서명하여 본점과 지점에 비치한다.</div>
 
+<<<<<<< HEAD
     <div class="ch-title">제 4 장 &nbsp; 이사·이사회 및 대표이사</div>
     <div class="art-title" data-art="dirnum">제21조 (이사의 수)</div>
     <div class="art-body">본 회사의 이사는 1인 이상으로 한다. 다만, 자본금 총액이 10억원 이상인 경우에는 이사를 3인 이상으로 하여야 한다.</div>
@@ -485,6 +593,60 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-body clause-boardvideo">① 이사회는 이사가 동영상 및 음성을 동시에 송수신하는 통신수단에 의하여 결의할 수 있다. 이 경우 이사는 이사회에 직접 출석한 것으로 본다.<br>② 화상회의로 진행된 이사회의 의사록에는 참석 이사 전원이 기명날인 또는 서명한다.</div>
       <div class="art-title" data-art="board5">제30조 (이사회의 의사록)</div>
       <div class="art-body">이사회의 의사에 관하여는 의사록을 작성하여야 한다. 의사록에는 의사의 안건, 경과요령, 그 결과, 반대하는 자와 그 반대이유를 기재하고 출석한 이사 및 감사가 기명날인 또는 서명하여 본점에 비치한다.</div>
+=======
+      <div class="ch-title">제 2 장 &nbsp; 주식과 주권</div>
+      <div class="art-title">제6조 (회사가 발행할 주식의 총수)</div>
+      <div class="art-body">본 회사가 발행할 주식의 총수는 <span class="editable" contenteditable id="d2-maxshares" data-ph="예) 1,000,000주"></span>로서 보통주식으로 한다.</div>
+      <div class="art-title">제7조 (1주의 금액)</div>
+      <div class="art-body">본 회사가 발행하는 주식 1주의 금액은 금 <span class="editable" contenteditable id="d2-parval" data-ph="예) 10,000원"></span>정으로 한다.</div>
+      <div class="art-title">제8조 (회사가 발행하는 주식의 총수)</div>
+      <div class="art-body">본 회사는 <span class="editable" contenteditable id="d2-issued" data-ph="예) 71,000주"></span>의 주식을 발행하기로 한다.</div>
+      <div class="art-title">제9조 (주식 및 주권의 종류)</div>
+      <div class="art-body">① 본 회사의 주식은 보통주식으로서 전부 기명식으로 하고, 주권은 1주권, 10주권, 100주권의 3종으로 한다.<br>② 본 회사는 이익배당, 잔여재산분배, 주식의 전환·상환 등에 관하여 내용이 다른 종류주식을 발행할 수 있다.<br>③ 의결권이 없거나 제한되는 종류주식의 총수는 발행주식 총수의 4분의 1을 초과하지 못한다.</div>
+
+      <div class="ch-title">제 3 장 &nbsp; 주주 총회</div>
+      <div class="art-title">제19조 (소집)</div>
+      <div class="art-body">① 본 회사의 정기주주총회는 영업년도 말일의 다음날부터 3월이내에 소집하고 임시주주총회는 필요한 경우에 수시 소집한다.<br>② 총회의 소집은 법령에 다른 규정이 있는 경우를 제외하고는 이사회의 결의에 의하여 대표이사가 소집한다.</div>
+      <div class="art-title">제20조 (전자투표)</div>
+      <div class="art-body">① 회사는 이사회 결의로 주주총회에서 주주가 전자적 방법으로 의결권을 행사할 수 있도록 전자투표제를 도입할 수 있다.<br>② 전자투표를 실시하는 경우 감사 선임 시 "발행주식총수의 4분의 1 이상" 요건을 적용하지 아니한다.</div>
+      <div class="art-title">제22조 (결의)</div>
+      <div class="art-body">① 주주총회의 결의는 출석한 주주의 의결권의 과반수와 발행주식의 4분의 1이상의 수로 한다.<br>② 정관변경의 특별결의는 출석한 주주의 의결권의 3분의 2이상의 수와 발행주식총수의 3분의 1 이상의 수로 한다.<br>③ 자본금 10억원 미만인 경우 주주 전원의 서면동의로 주주총회 결의를 갈음할 수 있다.</div>
+
+      <div class="ch-title">제 4 장 &nbsp; 임원과 이사회</div>
+      <div class="art-title">제25조 (이사와 감사의 원수)</div>
+      <div class="art-body">본 회사의 이사는 1인 이상이며, 감사는 1인 이상으로 한다. 다만, 자본금이 10억미만일 경우 감사를 선임하지 않을 수 있다.</div>
+      <div class="art-title">제31조 (이사회 화상회의)</div>
+      <div class="art-body">① 이사회는 이사가 동영상 및 음성을 동시에 송수신하는 통신수단에 의하여 결의할 수 있다. 이 경우 이사는 이사회에 직접 출석한 것으로 본다.<br>② 화상회의로 진행된 이사회의 의사록에는 참석 이사 전원이 기명날인 또는 서명한다.</div>
+
+      <div class="ch-title">제 5 장 &nbsp; 임원 보수·퇴직금·유족보상금</div>
+      <div class="art-title">제36조 (임원의 보수, 상여금, 퇴직금, 유족보상금)</div>
+      <div class="art-body">① 임원의 보수 및 상여금은 주주총회의 결의를 거친 별도의 임원보수지급규정에 의한다.<br>② 임원에 대한 퇴직금의 지급은 주주총회의 결의를 거친 별도의 임원퇴직금지급규정에 의한다.<br>③ 임원 사망 시 유족에게 지급하는 유족보상금은 주주총회의 결의를 거친 별도의 유족보상금지급규정에 의한다.<br>④ 각 지급규정은 주주총회의 일반결의로 제정·변경하며, 개별 임원에 대한 실제 지급액은 이사회 결의로 확정한다.</div>
+
+      <div class="ch-title">제 6 장 &nbsp; 계 산</div>
+      <div class="art-title">제37조 (영업년도)</div>
+      <div class="art-body">본 회사의 영업년도는 매년 <span class="editable" contenteditable data-ph="1월 1일"></span>부터 매년 <span class="editable" contenteditable data-ph="12월 31일"></span>까지로 한다.</div>
+      <div class="art-title">제41조 (중간배당)</div>
+      <div class="art-body">① 회사는 이사회의 결의로 사업연도 중 1회에 한하여 일정한 날을 기준일로 정하여 그 날의 주주에 대하여 금전으로 이익을 배당할 수 있다.</div>
+      <div class="art-title">제45조 (자기주식의 취득 및 소각)</div>
+      <div class="art-body">① 회사는 이사회의 결의로 자기주식을 취득할 수 있다.<br>② 취득한 자기주식은 취득일로부터 1년 이내에 소각함을 원칙으로 한다.</div>
+
+      <div class="ch-title">제 7 장 &nbsp; 보 칙</div>
+      <div class="art-title">제49조 (내부규정)</div>
+      <div class="art-body">본 회사는 필요에 따라 이사회의 결의로 업무수행 및 경영상 필요한 세칙 등 내규를 정할 수 있다.</div>
+      <div class="art-title">제50조 (준용)</div>
+      <div class="art-body">이 정관에 정하지 아니한 사항은 주주총회의 결의 및 상법 기타 관계법령이 정하는 바에 의한다.</div>
+
+      <div style="margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;">
+        <div style="text-align:center;margin-bottom:12px;">부 &nbsp;&nbsp; 칙</div>
+        <div class="art-body">이 정관은 <span class="editable" contenteditable id="d2-date" data-ph="예) 2025년 3월 15일"></span> 주주총회 결의일부터 시행한다.</div>
+      </div>
+
+      <br><br>
+      <p style="text-align:center;">위 정관은 본 회사의 정관임이 틀림 없음.</p>
+      <p style="text-align:center;margin-top:8px;"><span class="editable" contenteditable id="d2-date2" data-ph="예) 2025년 3월 15일"></span></p><br>
+      <p style="text-align:center;font-size:15px;font-weight:700;"><span id="d2-company3"></span></p><br>
+      <div id="d2-sign-wrap"></div>
+>>>>>>> 34bccd5578e12d19c36aeb8b54c43a45b21ef6ee
     </div>
 
     <div class="ch-title">제 5 장 &nbsp; 감 사</div>
