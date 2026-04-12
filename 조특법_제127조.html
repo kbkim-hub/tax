@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>조세특례제한법 제127조 중복지원 배제 체크리스트</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap');
+body{font-family:'Pretendard',sans-serif;background:#f8fafc;color:#1e293b}
+.chk-group{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:12px}
+.chk-group h3{font-size:11px;font-weight:900;color:#6366f1;text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:10px}
+.chk-item{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:8px;cursor:pointer;transition:background .15s}
+.chk-item:hover{background:#f1f5f9}
+.chk-item input[type=checkbox]{accent-color:#4f46e5;width:16px;height:16px;flex-shrink:0}
+.chk-item label{font-size:13px;font-weight:600;color:#334155;cursor:pointer;line-height:1.4}
+.chk-item label .code{font-size:11px;font-weight:800;color:#6366f1;margin-right:4px}
+.warn-card{border-radius:12px;padding:14px 16px;margin-bottom:8px;border-left:4px solid;font-size:13px;font-weight:600;line-height:1.5}
+.warn-danger{background:#fef2f2;border-color:#ef4444;color:#991b1b}
+.warn-warn{background:#fffbeb;border-color:#f59e0b;color:#92400e}
+.warn-ok{background:#f0fdf4;border-color:#22c55e;color:#166534}
+.warn-info{background:#eff6ff;border-color:#3b82f6;color:#1e40af}
+.clause-acc{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:8px;overflow:hidden}
+.clause-header{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:14px;color:#1e293b;transition:background .15s}
+.clause-header:hover{background:#f8fafc}
+.clause-header .arrow{transition:transform .2s;font-size:12px;color:#94a3b8}
+.clause-header.open .arrow{transform:rotate(180deg)}
+.clause-body{display:none;padding:0 16px 16px;font-size:13px;line-height:1.7;color:#475569}
+.clause-body.open{display:block}
+.clause-body table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.clause-body th{background:#f1f5f9;padding:8px 10px;text-align:left;font-weight:800;color:#475569;border:1px solid #e2e8f0}
+.clause-body td{padding:8px 10px;border:1px solid #e2e8f0}
+.owner-input{width:70px;padding:4px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-weight:700;text-align:center}
+.badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;margin-right:4px}
+.badge-red{background:#fef2f2;color:#ef4444;border:1px solid #fee2e2}
+.badge-green{background:#f0fdf4;color:#22c55e;border:1px solid #dcfce7}
+.badge-blue{background:#eff6ff;color:#3b82f6;border:1px solid #dbeafe}
+.no-warn{text-align:center;padding:40px;color:#cbd5e1;font-weight:800;font-size:14px}
+@media print{
+@page{size:A4;margin:12mm 15mm}
+body{background:#fff!important;font-size:11pt}
+.no-print{display:none!important}
+.print-only{display:block!important}
+.chk-group{break-inside:avoid;border:1px solid #ccc;box-shadow:none}
+.warn-card{break-inside:avoid}
+.clause-acc{break-inside:avoid}
+.clause-body{display:block!important}
+.clause-header .arrow{display:none}
+#sidebar{width:100%!important;max-width:100%!important}
+#layout{flex-direction:column!important}
+#main{width:100%!important}
+#print-header{display:flex!important}
+}
+</style>
+</head>
+<body class="py-6">
+<div class="max-w-7xl mx-auto px-4">
+
+<!-- 인쇄용 헤더 -->
+<div id="print-header" class="hidden print-only mb-6 flex-col items-center text-center border-b pb-4">
+<h1 class="text-xl font-black">조세특례제한법 제127조 【중복지원의 배제】 체크리스트</h1>
+<p class="text-sm text-slate-500 mt-1">2025년 최신 기준 (최종 개정 2025.12.23, 시행 2026.1.1)</p>
+<p class="text-xs text-slate-400 mt-1" id="print-date"></p>
+</div>
+
+<!-- 웹 헤더 -->
+<header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-5 no-print">
+<div>
+<h1 class="text-xl font-black text-slate-900">조세특례제한법 제127조 <span class="text-indigo-600">중복지원의 배제</span></h1>
+<p class="text-slate-500 text-xs font-semibold mt-1">2025년 최신 기준 (최종 개정 2025.12.23, 시행 2026.1.1) | 체크리스트 자동 충돌 감지</p>
+</div>
+<div class="flex gap-2">
+<button onclick="doPrint()" class="px-4 py-2 bg-indigo-600 text-white font-bold rounded-xl text-sm hover:bg-indigo-700">인쇄 / PDF 저장</button>
+<button onclick="resetAll()" class="px-4 py-2 bg-white border border-slate-200 text-slate-500 font-bold rounded-xl text-sm hover:bg-slate-50">초기화</button>
+</div>
+</header>
+
+<!-- 레이아웃 -->
+<div id="layout" class="flex flex-col lg:flex-row gap-6">
+
+<!-- 사이드바: 체크리스트 -->
+<aside id="sidebar" class="w-full lg:w-80 flex-shrink-0 space-y-3">
+
+<div class="chk-group">
+<h3>Step 1. 적용하려는 세액감면 선택</h3>
+<div id="chk-reductions"></div>
+</div>
+
+<div class="chk-group">
+<h3>Step 2. 적용하려는 세액공제 선택</h3>
+<div id="chk-credits"></div>
+</div>
+
+<div class="chk-group">
+<h3>Step 3. 양도소득세 감면</h3>
+<div id="chk-capgains"></div>
+</div>
+
+<div class="chk-group">
+<h3>Step 4. 자금출처 (제1항 차감)</h3>
+<div id="chk-funds"></div>
+</div>
+
+<div class="chk-group">
+<h3>Step 5. 추가 상황</h3>
+<div id="chk-structs"></div>
+<div class="mt-3 flex items-center gap-2 px-2">
+<label class="text-xs font-bold text-slate-500">내국인 지분비율</label>
+<input type="number" id="ownership" class="owner-input" value="100" min="0" max="100" onchange="analyze()"> <span class="text-xs font-bold text-slate-400">%</span>
+</div>
+</div>
+
+</aside>
+
+<!-- 메인 영역 -->
+<main id="main" class="flex-1 space-y-6">
+
+<section>
+<h2 class="text-base font-black text-slate-700 mb-3 flex items-center gap-2">충돌 분석 결과 <span id="warn-count" class="text-sm font-black text-indigo-600"></span></h2>
+<div id="warn-area"><div class="no-warn">좌측에서 적용하려는 세액혜택을 체크하세요</div></div>
+</section>
+
+<section>
+<h2 class="text-base font-black text-slate-700 mb-3">제127조 조문 레퍼런스 (제1항~제11항)</h2>
+<div id="clause-area"></div>
+</section>
+
+</main>
+</div>
+</div>
+
+<script>
+// ===== 데이터 모델 =====
+const REDUCTIONS = [
+  {code:"§6",label:"창업중소기업 등에 대한 세액감면"},
+  {code:"§7",label:"중소기업에 대한 특별세액감면"},
+  {code:"§12의2",label:"연구개발특구 첨단기술기업 세액감면"},
+  {code:"§31④⑤",label:"농공단지 입주기업 등 세액감면"},
+  {code:"§32④",label:"영농조합법인 등 조세특례"},
+  {code:"§62④",label:"감염병 특별재난지역 중소기업 세액감면"},
+  {code:"§63①",label:"수도권 밖 이전 중소기업 세액감면"},
+  {code:"§63의2①",label:"법인본사 수도권 밖 이전 세액감면"},
+  {code:"§64",label:"농업회사법인 세액면제"},
+  {code:"§66",label:"영농조합법인 세액면제"},
+  {code:"§67",label:"영어조합법인 세액면제"},
+  {code:"§68",label:"영림조합법인 세액면제"},
+  {code:"§85의6①②",label:"사회적기업·장애인표준사업장 세액감면"},
+  {code:"§99의9②",label:"위기지역 창업기업 세액감면"},
+  {code:"§99의11①",label:"고용위기지역 창업기업 세액감면"},
+  {code:"§104의24①",label:"해외진출기업 국내복귀 세액감면"},
+  {code:"§121의8",label:"제주첨단과학기술단지 입주기업"},
+  {code:"§121의9②",label:"제주투자진흥지구·자유무역지역"},
+  {code:"§121의17②",label:"기업도시개발구역 입주기업"},
+  {code:"§121의20②",label:"아시아문화중심도시 투자진흥지구"},
+  {code:"§121의21②",label:"금융중심지 창업·이전 기업"},
+  {code:"§121의22②",label:"첨단의료복합단지 입주기업"},
+  {code:"§121의33②",label:"기회발전특구 창업·이전 기업"}
+];
+
+const CREDITS = [
+  {code:"§8의3",label:"창업중소기업 세액감면(공제부분)"},
+  {code:"§8의3③",label:"창업중소기업 투자 세액공제"},
+  {code:"§13의2",label:"벤처기업 등 출자 과세특례"},
+  {code:"§19①",label:"성과공유 중소기업 경영성과급 공제"},
+  {code:"§24",label:"통합투자세액공제"},
+  {code:"§25의6",label:"영상콘텐츠 제작비용 세액공제"},
+  {code:"§26",label:"중소기업 투자세액공제"},
+  {code:"§29의4",label:"고용창출투자세액공제"},
+  {code:"§29의5",label:"청년고용증대 세액공제"},
+  {code:"§29의7",label:"고용을 증대시킨 기업 세액공제"},
+  {code:"§29의8①",label:"통합고용세액공제"},
+  {code:"§30의4",label:"중소기업 사회보험료 세액공제"},
+  {code:"§104의14",label:"제3자물류비용 세액공제"},
+  {code:"§104의15",label:"해외자원개발투자 과세특례"},
+  {code:"§104의22",label:"운동경기부 설치·운영 과세특례"},
+  {code:"§104의25",label:"석유제품 전자상거래 세액공제"},
+  {code:"§104의35",label:"이스포츠대회 운영비용 세액공제"},
+  {code:"§122의4①",label:"금·스크랩사업자 수입금액 세액공제"},
+  {code:"§126의7⑧",label:"현금영수증 사업자 VAT 세액공제"}
+];
+
+const CAPGAINS = [
+  {code:"§77",label:"농지대토 양도소득세 감면"},
+  {code:"§85의7",label:"공익사업용 토지 양도소득세 감면"},
+  {code:"§98의2",label:"미분양주택 양도소득세 감면(1)"},
+  {code:"§98의3",label:"미분양주택 양도소득세 감면(2)"}
+];
+
+const FUNDS = [
+  {code:"F1",label:"국가·지자체·공공기관 출연금 수령 → 투자지출"},
+  {code:"F2",label:"금융회사 융자 이자를 국가 등이 대납"},
+  {code:"F3",label:"국가 등 융자의 이자지원금 수령"},
+  {code:"F4",label:"수요자·편익자 공사부담금 수령 → 투자지출"}
+];
+
+const STRUCTS = [
+  {code:"S_FOREIGN",label:"외국인투자기업 (§121의2 또는 §121의4 적용)"},
+  {code:"S_SEPARATE",label:"감면사업과 그 외 사업 구분경리 중 (§143)"},
+  {code:"S_SAMEBIZ",label:"동일 사업장에 복수 감면 동시 적용"},
+  {code:"S_121_2",label:"§121의2 외국인투자 취득세·재산세 감면"},
+  {code:"S_121_4",label:"§121의4 외국인투자 취득세·재산세 감면"}
+];
+
+// ===== 제④항 대상 목록 =====
+const P4_REDUCTIONS = ["§6","§7","§12의2","§31④⑤","§32④","§62④","§63①","§63의2①","§64","§66","§67","§68","§85의6①②","§99의9②","§99의11①","§104의24①","§121의8","§121의9②","§121의17②","§121의20②","§121의21②","§121의22②","§121의33②"];
+const P4_CREDITS = ["§8의3","§13의2","§24","§25의6","§26","§30의4","§104의14","§104의15","§104의22","§104의25","§104의35","§122의4①","§126의7⑧"];
+
+// ===== 제③항 안분 대상 =====
+const P3_CODES = ["§8의3③","§24","§26","§29의5","§29의7","§29의8①","§30의4","§104의14","§104의15"];
+
+// ===== 상태 =====
+let selected = new Set();
+let funds = new Set();
+let structs = new Set();
+</script>
+
+<script>
+// ===== 규칙 엔진 =====
+function detectConflicts() {
+  const w = [];
+  const own = parseInt(document.getElementById('ownership').value) || 100;
+
+  // ── 제①항: 투자금액 차감 ──
+  const p1Triggers = ["§8의3③","§24","§26","§104의15"];
+  const p1Hit = p1Triggers.filter(c => selected.has(c));
+  if (p1Hit.length > 0 && funds.size > 0) {
+    const fLabels = [];
+    if(funds.has("F1")) fLabels.push("출연금 지출액 전액 차감");
+    if(funds.has("F2")) fLabels.push("국가 대납 이자 상당액 차감");
+    if(funds.has("F3")) fLabels.push("국가 이자지원금 상당액 차감");
+    if(funds.has("F4")) fLabels.push("공사부담금 지출액 전액 차감");
+    w.push({level:"info",clause:"제①항",msg:p1Hit.join(", ")+" 적용 시 투자금액에서 차감 필요: "+fLabels.join("; ")});
+  }
+
+  // ── 제②항: 투자세액공제 중복 ──
+  const g2 = [
+    {scope:"동일 투자자산",codes:["§8의3③","§24","§26"]},
+    {scope:"동일 과세연도",codes:["§19①","§29의4"]},
+    {scope:"동일 과세연도",codes:["§26","§29의5"]},
+    {scope:"동일 과세연도",codes:["§26","§30의4"]}
+  ];
+  g2.forEach(g => {
+    const hit = g.codes.filter(c => selected.has(c));
+    if(hit.length >= 2) w.push({level:"danger",clause:"제②항",msg:g.scope+" — "+hit.join(" + ")+" 동시 적용 불가, 하나만 선택해야 합니다"});
+  });
+
+  // ── 제③항: 외국인투자 안분 ──
+  if(structs.has("S_FOREIGN")) {
+    const affected = P3_CODES.filter(c => selected.has(c));
+    if(affected.length > 0) {
+      w.push({level:"warn",clause:"제③항",msg:affected.join(", ")+" 공제세액 × 내국인지분비율("+own+"%)만 공제 가능"});
+    }
+  }
+
+  // ── 제④항: 감면 vs 공제 택일 ──
+  const redHit = P4_REDUCTIONS.filter(c => selected.has(c));
+  const credHit = P4_CREDITS.filter(c => selected.has(c));
+  if(redHit.length > 0 && credHit.length > 0) {
+    // §7 + §30의4 예외 확인
+    const isOnly7and304 = redHit.length===1 && credHit.length===1 && redHit[0]==="§7" && credHit[0]==="§30의4";
+    if(!isOnly7and304) {
+      const filteredRed = redHit.filter(c => !(c==="§7" && credHit.length===1 && credHit[0]==="§30의4"));
+      const filteredCred = credHit.filter(c => !(c==="§30의4" && redHit.length===1 && redHit[0]==="§7"));
+      if(filteredRed.length > 0 && filteredCred.length > 0) {
+        w.push({level:"danger",clause:"제④항",msg:"감면("+filteredRed.join(", ")+") + 공제("+filteredCred.join(", ")+") 동시 적용 불가 → 하나만 선택"});
+      }
+    }
+    if(selected.has("§7") && selected.has("§30의4")) {
+      w.push({level:"ok",clause:"제④항 단서",msg:"§7(중소기업 감면) + §30의4(사회보험료 공제) → 예외적으로 중복 허용"});
+    }
+  }
+  // §6 단서
+  if(selected.has("§6") && selected.has("§29의7")) {
+    w.push({level:"danger",clause:"제④항 단서",msg:"§6(창업중소기업) + §29의7(고용증대) → 동시 적용 불가"});
+  }
+  if(selected.has("§6") && selected.has("§29의8①")) {
+    w.push({level:"danger",clause:"제④항 단서",msg:"§6(창업중소기업) + §29의8①(통합고용) → 동시 적용 불가"});
+  }
+
+  // ── 제⑤항: 동일 사업장 감면 중복 ──
+  if(structs.has("S_SAMEBIZ")) {
+    const allRed = [...redHit];
+    if(structs.has("S_FOREIGN")) allRed.push("§121의2/§121의4");
+    if(allRed.length >= 2) {
+      w.push({level:"danger",clause:"제⑤항",msg:"동일 사업장 내 감면 "+allRed.length+"건("+allRed.join(", ")+") → 하나만 선택"});
+    }
+  }
+
+  // ── 제⑥항: 외국인투자 지방세 ──
+  if(structs.has("S_121_2") && structs.has("S_121_4")) {
+    w.push({level:"danger",clause:"제⑥항",msg:"§121의2 + §121의4 취득세·재산세 감면 → 하나만 선택"});
+  }
+
+  // ── 제⑦항: 양도소득세 감면 2개 이상 ──
+  const capCodes = ["§77","§85의7","§98의2","§98의3"];
+  const capHit = capCodes.filter(c => selected.has(c));
+  if(capHit.length >= 2) {
+    w.push({level:"warn",clause:"제⑦항",msg:"양도소득세 감면 "+capHit.length+"건("+capHit.join(", ")+") → 선택한 하나만 적용"});
+  }
+
+  // ── 제⑧항: §77 + §85의7 ──
+  if(selected.has("§77") && selected.has("§85의7")) {
+    w.push({level:"danger",clause:"제⑧항",msg:"§77(농지대토) + §85의7(공익수용) → 하나만 선택"});
+  }
+
+  // ── 제⑨항: §98의2 + §98의3 ──
+  if(selected.has("§98의2") && selected.has("§98의3")) {
+    w.push({level:"danger",clause:"제⑨항",msg:"§98의2 + §98의3(미분양주택) → 하나만 선택"});
+  }
+
+  // ── 제⑩항: 구분경리 예외 ──
+  if(structs.has("S_SEPARATE") && (redHit.length > 0 || structs.has("S_FOREIGN"))) {
+    w.push({level:"ok",clause:"제⑩항",msg:"구분경리 중 → '그 밖의 사업'에 적용되는 공제는 중복지원 해당 없음 (예외)"});
+  }
+
+  // ── 제⑪항: 통합고용 제한 ──
+  if(selected.has("§29의8①") && (selected.has("§29의7") || selected.has("§30의4"))) {
+    w.push({level:"danger",clause:"제⑪항",msg:"§29의8①(통합고용) → §29의7(고용증대) 또는 §30의4(사회보험료) 미적용 시에만 가능"});
+  }
+
+  return w;
+}
+</script>
+
+<script>
+// ===== 조문 레퍼런스 =====
+const CLAUSES = [
+  {id:"P1",num:"제①항",title:"투자금액 차감 (국가출연금 등)",
+   body:`<p><b>§8의3③ · §24 · §26 · §104의15① 적용 시</b>, 투자금액에서 아래 금액을 차감 후 공제 계산</p>
+<table><tr><th>호</th><th>지원 유형</th><th>차감 금액</th></tr>
+<tr><td>1호</td><td>국가·지자체·공공기관으로부터 출연금 수령 → 투자 지출</td><td>출연금 지출액 전액</td></tr>
+<tr><td>2호</td><td>금융회사 융자 → 이자를 국가 등이 대납</td><td>국가 등 대납 이자 상당액</td></tr>
+<tr><td>3호</td><td>국가 등으로부터 융자 → 투자</td><td>국가 등 이자지원금 상당액</td></tr>
+<tr><td>4호</td><td>수요자·편익자로부터 공사부담금 수령 → 투자 지출</td><td>공사부담금 지출액 전액</td></tr></table>`},
+
+  {id:"P2",num:"제②항",title:"투자세액공제 간 중복 선택 (하나만)",
+   body:`<p><b>동일 투자자산</b>에 동시 적용 → 하나만 선택</p>
+<table><tr><th>중복 조합</th><th>조문</th></tr>
+<tr><td>§8의3③ + §24 + §26</td><td>창업중소기업 투자공제 / 통합투자 / 중소기업 투자</td></tr></table>
+<p class="mt-2"><b>동일 과세연도</b>에 동시 적용 → 하나만 선택</p>
+<table><tr><th>중복 조합</th><th>조문</th></tr>
+<tr><td>§19① + §29의4</td><td>성과공유 경영성과급 / 고용창출투자</td></tr>
+<tr><td>§26 + §29의5</td><td>중소기업 투자 / 청년고용증대</td></tr>
+<tr><td>§26 + §30의4</td><td>중소기업 투자 / 사회보험료</td></tr></table>`},
+
+  {id:"P3",num:"제③항",title:"외국인투자기업 공제 안분",
+   body:`<p>아래 공제 적용 시 <b>§121의2 또는 §121의4(외국인투자 법인세 감면)</b>가 동시 적용되면 → <b>공제세액 × 내국인 지분비율</b>만 공제</p>
+<table><tr><th>대상 조문</th><th>조문 제목</th></tr>
+<tr><td>§8의3③</td><td>창업중소기업 투자 공제</td></tr>
+<tr><td>§24</td><td>통합투자세액공제</td></tr>
+<tr><td>§26</td><td>중소기업 투자세액공제</td></tr>
+<tr><td>§29의5</td><td>청년고용증대 세액공제</td></tr>
+<tr><td>§29의7</td><td>고용증대 세액공제</td></tr>
+<tr><td>§29의8①</td><td>통합고용세액공제</td></tr>
+<tr><td>§30의4</td><td>중소기업 사회보험료 세액공제</td></tr>
+<tr><td>§104의14</td><td>제3자물류비용 세액공제</td></tr>
+<tr><td>§104의15</td><td>해외자원개발투자 과세특례</td></tr></table>`},
+
+  {id:"P4",num:"제④항",title:"세액감면 vs 세액공제 간 선택",
+   body:`<p>동일 과세연도에 아래 <b>[감면]</b>과 <b>[공제]</b>가 동시 적용 가능 시 → <b>하나만 선택</b></p>
+<p class="mt-2"><b>[감면 조문 — 21개]</b></p>
+<table><tr><th>조문</th><th>제목</th></tr>
+<tr><td>§6</td><td>창업중소기업 세액감면</td></tr>
+<tr><td>§7</td><td>중소기업 특별세액감면</td></tr>
+<tr><td>§12의2</td><td>연구개발특구 첨단기술기업 세액감면</td></tr>
+<tr><td>§31④⑤</td><td>농공단지 입주기업 세액감면</td></tr>
+<tr><td>§32④</td><td>영농조합법인 조세특례</td></tr>
+<tr><td>§62④</td><td>감염병 특별재난지역 중소기업 세액감면</td></tr>
+<tr><td>§63①</td><td>수도권 밖 이전 중소기업 세액감면</td></tr>
+<tr><td>§63의2①</td><td>본사 수도권 밖 이전 세액감면</td></tr>
+<tr><td>§64</td><td>농업회사법인 세액면제</td></tr>
+<tr><td>§66~§68</td><td>영농·영어·영림조합법인 세액면제</td></tr>
+<tr><td>§85의6①②</td><td>사회적기업·장애인표준사업장 세액감면</td></tr>
+<tr><td>§99의9②</td><td>위기지역 창업기업 세액감면</td></tr>
+<tr><td>§99의11①</td><td>고용위기지역 창업기업 세액감면</td></tr>
+<tr><td>§104의24①</td><td>해외진출기업 국내복귀 세액감면</td></tr>
+<tr><td>§121의8</td><td>제주첨단과학기술단지</td></tr>
+<tr><td>§121의9②</td><td>제주투자진흥지구·자유무역지역</td></tr>
+<tr><td>§121의17②</td><td>기업도시개발구역</td></tr>
+<tr><td>§121의20②</td><td>아시아문화중심도시</td></tr>
+<tr><td>§121의21②</td><td>금융중심지 창업·이전</td></tr>
+<tr><td>§121의22②</td><td>첨단의료복합단지</td></tr>
+<tr><td>§121의33②</td><td>기회발전특구 창업·이전</td></tr></table>
+<p class="mt-2"><b>[공제 조문 — 13개]</b></p>
+<table><tr><th>조문</th><th>제목</th></tr>
+<tr><td>§8의3</td><td>창업중소기업 (공제부분)</td></tr>
+<tr><td>§13의2</td><td>벤처기업 출자 과세특례</td></tr>
+<tr><td>§24</td><td>통합투자세액공제</td></tr>
+<tr><td>§25의6</td><td>영상콘텐츠 제작비용</td></tr>
+<tr><td>§26</td><td>중소기업 투자세액공제</td></tr>
+<tr><td>§30의4</td><td>사회보험료 세액공제 <span class="badge badge-green">§7과 중복 허용</span></td></tr>
+<tr><td>§104의14</td><td>제3자물류비용</td></tr>
+<tr><td>§104의15</td><td>해외자원개발투자</td></tr>
+<tr><td>§104의22</td><td>운동경기부 설치·운영</td></tr>
+<tr><td>§104의25</td><td>석유제품 전자상거래</td></tr>
+<tr><td>§104의35</td><td>이스포츠대회 운영비용</td></tr>
+<tr><td>§122의4①</td><td>금·스크랩사업자 수입금액</td></tr>
+<tr><td>§126의7⑧</td><td>현금영수증 사업자 VAT</td></tr></table>
+<p class="mt-2 text-red-600 font-bold text-xs">단서: §6 적용 시 → §29의7(고용증대) 또는 §29의8(통합고용) 동시 적용 불가</p>`},
+
+  {id:"P5",num:"제⑤항",title:"동일 사업장 감면 간 중복 배제",
+   body:`<p>동일 사업장·동일 과세연도에 <b>④항의 감면 조문 + §121의2·§121의4</b> 중 <b>2개 이상</b> 적용 가능 시 → <b>하나만 선택</b></p>`},
+
+  {id:"P6",num:"제⑥항",title:"외국인투자 지방세 감면 선택",
+   body:`<p><b>§121의2 + §121의4</b> 취득세·재산세 감면이 모두 적용 가능 시 → <b>하나만 선택</b></p>`},
+
+  {id:"P7",num:"제⑦항",title:"양도소득세 감면 선택",
+   body:`<p>토지 등 양도 시 <b>2개 이상</b> 양도소득세 감면 동시 적용 가능 → <b>선택한 하나만 적용</b></p>
+<p class="text-xs text-slate-500 mt-1">단, 토지 일부에 특정 감면 적용 후 나머지 부분에는 다른 감면 가능</p>`},
+
+  {id:"P8",num:"제⑧항",title:"§77(농지대토) + §85의7(공익수용) 배제",
+   body:`<p><b>§77 농지대토 감면</b> + <b>§85의7 공익사업용 토지 양도 감면</b> → <b>하나만 선택</b></p>`},
+
+  {id:"P9",num:"제⑨항",title:"§98의2 + §98의3 미분양주택 배제",
+   body:`<p>미분양주택 취득 후 양도세 감면 규정 간 → <b>하나만 선택</b></p>`},
+
+  {id:"P10",num:"제⑩항",title:"구분경리 시 중복 예외",
+   body:`<p>③항·④항 적용 시, <b>§143에 따라 감면 사업과 그 밖의 사업을 구분경리</b>하는 경우 → 그 밖의 사업에 적용되는 공제는 <b>중복지원 해당 없음 (예외)</b></p>`},
+
+  {id:"P11",num:"제⑪항",title:"통합고용세액공제(§29의8①) 적용 제한",
+   body:`<p><b>§29의8①(통합고용세액공제)</b>은 <b>§29의7(고용증대)</b> 또는 <b>§30의4(사회보험료)</b>를 <b>받지 않은 경우에만</b> 적용</p>`}
+];
+</script>
+
+<script>
+// ===== 렌더링 =====
+function renderCheckboxes(containerId, items, stateSet) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(it => `
+    <div class="chk-item">
+      <input type="checkbox" id="c_${it.code}" value="${it.code}" onchange="toggleItem('${it.code}','${stateSet}')">
+      <label for="c_${it.code}"><span class="code">${it.code}</span>${it.label}</label>
+    </div>`).join('');
+}
+
+function toggleItem(code, stateSet) {
+  const s = stateSet === 'funds' ? funds : stateSet === 'structs' ? structs : selected;
+  s.has(code) ? s.delete(code) : s.add(code);
+  analyze();
+}
+
+function analyze() {
+  const warnings = detectConflicts();
+  const area = document.getElementById('warn-area');
+  const cnt = document.getElementById('warn-count');
+
+  if (selected.size === 0 && funds.size === 0 && structs.size === 0) {
+    area.innerHTML = '<div class="no-warn">좌측에서 적용하려는 세액혜택을 체크하세요</div>';
+    cnt.textContent = '';
+    highlightClauses([]);
+    return;
+  }
+
+  if (warnings.length === 0) {
+    area.innerHTML = '<div class="warn-card warn-ok">선택한 조합에서 중복배제 충돌이 감지되지 않았습니다.</div>';
+    cnt.textContent = '(0건)';
+    highlightClauses([]);
+    return;
+  }
+
+  cnt.textContent = '(' + warnings.length + '건)';
+  const levelOrder = {danger:0,warn:1,info:2,ok:3};
+  warnings.sort((a,b) => levelOrder[a.level] - levelOrder[b.level]);
+
+  area.innerHTML = warnings.map(w => {
+    const icon = w.level==='danger' ? '🚫' : w.level==='warn' ? '⚠️' : w.level==='ok' ? '✅' : 'ℹ️';
+    return `<div class="warn-card warn-${w.level}">
+      <span style="font-size:11px;font-weight:900;opacity:0.7">${icon} ${w.clause}</span><br>${w.msg}</div>`;
+  }).join('');
+
+  highlightClauses(warnings.map(w => w.clause));
+}
+
+function highlightClauses(activeClauses) {
+  document.querySelectorAll('.clause-acc').forEach(el => {
+    const cid = el.dataset.clause;
+    const match = activeClauses.some(c => c.includes(cid));
+    el.style.borderColor = match ? '#6366f1' : '#e2e8f0';
+    el.style.borderWidth = match ? '2px' : '1px';
+  });
+}
+
+function renderClauses() {
+  const area = document.getElementById('clause-area');
+  area.innerHTML = CLAUSES.map(c => `
+    <div class="clause-acc" data-clause="${c.num}">
+      <div class="clause-header" onclick="toggleClause(this)">
+        <span><span class="badge badge-blue">${c.num}</span> ${c.title}</span>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="clause-body">${c.body}</div>
+    </div>`).join('');
+}
+
+function toggleClause(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+function resetAll() {
+  selected.clear(); funds.clear(); structs.clear();
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+  document.getElementById('ownership').value = 100;
+  analyze();
+}
+
+function doPrint() {
+  document.getElementById('print-date').textContent = '출력일시: ' + new Date().toLocaleString('ko-KR');
+  // 인쇄 시 모든 아코디언 열기
+  document.querySelectorAll('.clause-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.clause-header').forEach(h => h.classList.add('open'));
+  window.print();
+}
+
+// ===== 초기화 =====
+renderCheckboxes('chk-reductions', REDUCTIONS, 'selected');
+renderCheckboxes('chk-credits', CREDITS, 'selected');
+renderCheckboxes('chk-capgains', CAPGAINS, 'selected');
+renderCheckboxes('chk-funds', FUNDS, 'funds');
+renderCheckboxes('chk-structs', STRUCTS, 'structs');
+renderClauses();
+
+// 요약표 (인쇄용 하단)
+</script>
+
+<!-- 인쇄용 요약표 -->
+<div class="print-only hidden mt-8 px-4" style="page-break-before:always">
+<h2 style="font-size:14pt;font-weight:900;margin-bottom:12px">제127조 전체 요약표</h2>
+<table style="width:100%;border-collapse:collapse;font-size:9pt">
+<tr style="background:#f1f5f9"><th style="padding:6px;border:1px solid #ccc">항</th><th style="padding:6px;border:1px solid #ccc">적용 대상</th><th style="padding:6px;border:1px solid #ccc">배제 방식</th><th style="padding:6px;border:1px solid #ccc">예외</th></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">①</td><td style="padding:6px;border:1px solid #ccc">국가출연금·공사부담금 등으로 투자한 자산</td><td style="padding:6px;border:1px solid #ccc">출연금 등을 투자금액에서 차감</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">②</td><td style="padding:6px;border:1px solid #ccc">§8의3③·§24·§26 / §19①+§29의4 / §26+§29의5 / §26+§30의4</td><td style="padding:6px;border:1px solid #ccc">하나만 선택</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">③</td><td style="padding:6px;border:1px solid #ccc">§8의3③·§24 등 + §121의2·§121의4</td><td style="padding:6px;border:1px solid #ccc">내국인 지분비율만큼만 공제</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">④</td><td style="padding:6px;border:1px solid #ccc">감면 21개 vs 공제 13개</td><td style="padding:6px;border:1px solid #ccc">하나만 선택</td><td style="padding:6px;border:1px solid #ccc">§7+§30의4 허용</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑤</td><td style="padding:6px;border:1px solid #ccc">동일 사업장 감면 2개 이상 + 외국인투자</td><td style="padding:6px;border:1px solid #ccc">하나만 선택</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑥</td><td style="padding:6px;border:1px solid #ccc">§121의2 + §121의4 취득세·재산세</td><td style="padding:6px;border:1px solid #ccc">하나만 선택</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑦</td><td style="padding:6px;border:1px solid #ccc">토지 양도 시 감면 2개 이상</td><td style="padding:6px;border:1px solid #ccc">선택한 하나만</td><td style="padding:6px;border:1px solid #ccc">일부 토지 예외</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑧</td><td style="padding:6px;border:1px solid #ccc">§77 + §85의7</td><td style="padding:6px;border:1px solid #ccc">하나만 선택</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑨</td><td style="padding:6px;border:1px solid #ccc">§98의2 + §98의3</td><td style="padding:6px;border:1px solid #ccc">하나만 선택</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑩</td><td style="padding:6px;border:1px solid #ccc">감면사업 + 그 밖의 사업 구분경리</td><td style="padding:6px;border:1px solid #ccc">그 밖의 사업 공제 중복 해당 없음</td><td style="padding:6px;border:1px solid #ccc">예외 허용</td></tr>
+<tr><td style="padding:6px;border:1px solid #ccc">⑪</td><td style="padding:6px;border:1px solid #ccc">§29의8①</td><td style="padding:6px;border:1px solid #ccc">§29의7·§30의4 미적용 시에만</td><td style="padding:6px;border:1px solid #ccc">—</td></tr>
+</table>
+</div>
+
+</body>
+</html>
