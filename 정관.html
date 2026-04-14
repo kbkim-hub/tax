@@ -66,6 +66,7 @@ textarea{resize:vertical;min-height:70px;}
 .num-card .unit{font-size:12px;color:var(--light);white-space:nowrap;}
 .num-card .badge-def{font-size:10px;padding:2px 8px;border-radius:12px;
   background:var(--ok-bg);color:var(--ok);white-space:nowrap;}
+/* 문서 서식 */
 .doc-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
 .doc-toolbar{background:#f3f4f6;border-bottom:1px solid var(--border);
   padding:8px 16px;display:flex;align-items:center;gap:8px;}
@@ -99,22 +100,15 @@ textarea{resize:vertical;min-height:70px;}
 .sign-table td{padding:20px 8px;border:1px solid #d1d5db;font-size:12px;text-align:center;}
 .officer-row{display:grid;grid-template-columns:140px 1fr;gap:8px;margin-bottom:6px;align-items:center;}
 .officer-row label{font-size:12px;color:var(--mid);font-weight:600;}
+
 .note-box{margin:20px 0 0;padding:10px 14px;border-top:1px solid #e5e7eb;
   font-size:11px;color:#6b7280;line-height:1.8;}
+/* 편집 가능 필드 */
 .editable{display:inline-block;min-width:40px;border-bottom:1.5px solid #93c5fd;
   padding:0 3px;cursor:text;color:inherit;background:transparent;}
 .editable:focus{outline:none;border-bottom-color:#1d4ed8;background:#eff6ff;border-radius:2px;}
 .editable:empty::before{content:attr(data-ph);color:#9ca3af;font-style:italic;}
-/* 조항 설정 */
-.preset-btn{padding:10px 16px;border-radius:8px;border:2px solid #d0d5dd;background:#fff;
-  color:#374151;font-size:12px;font-weight:600;cursor:pointer;text-align:left;transition:all .15s;}
-.preset-btn:hover{border-color:#93c5fd;background:#f0f9ff;}
-.preset-btn.active{border-color:#1d4ed8;background:#eff6ff;color:#1d4ed8;}
-.toggle-row{display:flex;align-items:center;gap:8px;padding:8px 12px;
-  background:#f9fafb;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all .12s;}
-.toggle-row:hover{background:#eff6ff;border-color:#bfdbfe;}
-.toggle-row input[type=checkbox]{width:15px;height:15px;accent-color:#1d4ed8;cursor:pointer;}
-#board-section{border-left:3px solid #93c5fd;padding-left:16px;margin:4px 0;}
+/* 인쇄 */
 @media print{
   .sidebar,.topbar,.btn-group,.doc-toolbar{display:none!important;}
   /* 크롬/엣지 인쇄 헤더·푸터 제거 */
@@ -140,6 +134,7 @@ textarea{resize:vertical;min-height:70px;}
 </head>
 <body>
 <div class="app">
+
 <nav class="sidebar">
   <div class="sidebar-logo">법인 정관개정 서식<span>정관·의사록·지급규정</span></div>
   <div class="nav-group">
@@ -149,19 +144,24 @@ textarea{resize:vertical;min-height:70px;}
   <div class="nav-group">
     <div class="nav-label">문서 서식</div>
     <div class="nav-item" onclick="showPage('doc1',this)">주주총회 의사록</div>
-    <div class="nav-item" onclick="showPage('doc2',this)">정관 전문</div>
+    <div class="nav-item" onclick="showPage('doc2',this)">개정 정관</div>
     <div class="nav-item" onclick="showPage('doc3',this)">임원보수지급규정</div>
     <div class="nav-item" onclick="showPage('doc4',this)">임원퇴직금지급규정</div>
     <div class="nav-item" onclick="showPage('doc5',this)">유족보상금지급규정</div>
     <div class="nav-item" onclick="showPage('doc6',this)">이사회결의서</div>
   </div>
 </nav>
+
 <main class="main">
+
 <!-- ══ 공통 입력 ══ -->
 <div id="page-input" class="page active">
   <div class="topbar">
-    <div><h1>기본 정보 입력</h1><div class="topbar-sub">한 번 입력하면 모든 문서 서식에 자동 반영됩니다</div></div>
-    <div class="btn-group"><button class="btn btn-primary" onclick="applyAll()">모든 문서에 적용</button></div>
+    <div><h1>기본 정보 입력</h1>
+      <div class="topbar-sub">한 번 입력하면 모든 문서 서식에 자동 반영됩니다</div></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="applyAll()">모든 문서에 적용</button>
+    </div>
   </div>
   <div class="info-banner">입력 후 <strong>모든 문서에 적용</strong> 버튼을 눌러주세요. 각 문서에서 파란 밑줄 항목을 클릭하면 추가 수정할 수 있습니다.</div>
 
@@ -182,27 +182,17 @@ textarea{resize:vertical;min-height:70px;}
         <input type="text" id="i-maxshares" placeholder="예) 1,000,000주"></div>
       <div class="form-field"><label class="lbl">1주의 금액</label>
         <input type="text" id="i-parval" placeholder="예) 10,000원"></div>
-      <div class="form-field full">
+      <div class="form-field full" style="margin-top:4px;">
         <label class="lbl">공고방법 (공고 게재 언론사)</label>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
           <select id="i-notice-sel" onchange="handleNoticeSelect()" style="width:auto;min-width:200px;">
             <option value="same">기존과 동일 (대구광역시 매일신문)</option>
             <option value="custom">다른 언론사로 변경</option>
           </select>
-          <input type="text" id="i-notice-custom" placeholder="예) 서울특별시에서 발행하는 일간 조선일보" style="flex:1;display:none;" oninput="syncNotice()">
+          <input type="text" id="i-notice-custom" placeholder="예) 서울특별시에서 발행하는 일간 조선일보"
+            style="flex:1;display:none;" oninput="syncNotice()">
         </div>
         <span class="hint" id="i-notice-hint">기존 공고방법 그대로 적용됩니다 — 대구광역시에서 발행하는 일간 매일신문</span>
-      </div>
-      <div class="form-field full" id="fiscal-row">
-        <label class="lbl">영업연도</label>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <span style="font-size:13px;">매년</span>
-          <input type="text" id="i-fiscal-start" value="1월 1일" placeholder="예) 1월 1일" style="width:100px;">
-          <span style="font-size:13px;">부터 매년</span>
-          <input type="text" id="i-fiscal-end" value="12월 31일" placeholder="예) 12월 31일" style="width:100px;">
-          <span style="font-size:13px;">까지</span>
-        </div>
-        <span class="hint">입력하지 않으면 기본값(1월 1일 ~ 12월 31일)이 적용됩니다</span>
       </div>
     </div>
   </div>
@@ -211,10 +201,16 @@ textarea{resize:vertical;min-height:70px;}
     <div class="card-title">목적사업</div>
     <div class="form-field">
       <label class="lbl">사업 목적 (한 줄에 하나씩 입력)</label>
-      <textarea id="i-purpose" rows="8" placeholder="예)&#10;1. 조경공사업&#10;1. 조경시설물 설치공사업&#10;1. 토목공사업&#10;1. 건축공사업&#10;1. 각 호에 관련된 부대사업 일체"></textarea>
+      <textarea id="i-purpose" rows="8" placeholder="예)
+1. 조경공사업
+1. 조경시설물 설치공사업
+1. 토목공사업
+1. 건축공사업
+1. 각 호에 관련된 부대사업 일체"></textarea>
       <span class="hint">입력한 내용이 정관 제2조(목적)에 그대로 반영됩니다</span>
     </div>
   </div>
+
 
   <div class="card">
     <div class="card-title">임원 구성 설정</div>
@@ -222,7 +218,7 @@ textarea{resize:vertical;min-height:70px;}
     <div class="form-grid3" style="margin-bottom:12px;">
       <div class="form-field">
         <label class="lbl">이사 수 <span class="req">*</span></label>
-        <select id="i-dir-count" onchange="updateOfficerRows();updateBoardSection();">
+        <select id="i-dir-count" onchange="updateOfficerRows()">
           <option value="1">1명</option>
           <option value="2" selected>2명</option>
           <option value="3">3명</option>
@@ -240,44 +236,6 @@ textarea{resize:vertical;min-height:70px;}
       </div>
     </div>
     <div id="officer-rows"></div>
-    <div style="margin-top:8px;padding:8px 12px;background:#fef3c7;border-radius:6px;font-size:11px;color:#92400e;">
-      ⚠️ 상법 제383조: 자본금 10억원 미만이면 이사 1~2인 가능 (이사회 불요). 10억원 이상이면 이사 3인 이상 필수.
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">📋 정관 조항 구성 설정</div>
-    <div style="margin-bottom:16px;">
-      <label class="lbl" style="margin-bottom:8px;display:block;">🏢 회사 유형 선택 (프리셋)</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="preset-btn active" onclick="applyPreset('small')" id="preset-small">
-          🏠 소규모 기본형<br><span style="font-size:10px;font-weight:400;">자본금 10억 미만·이사 1~2명</span>
-        </button>
-        <button class="preset-btn" onclick="applyPreset('standard')" id="preset-standard">
-          🏢 일반형<br><span style="font-size:10px;font-weight:400;">이사 3인이상·이사회 운영</span>
-        </button>
-        <button class="preset-btn" onclick="applyPreset('full')" id="preset-full">
-          🏦 확장형<br><span style="font-size:10px;font-weight:400;">사채·신주인수권 등 전체 포함</span>
-        </button>
-      </div>
-    </div>
-    <div style="border-top:1px solid #e5e7eb;padding-top:14px;">
-      <label class="lbl" style="margin-bottom:10px;display:block;">⚙️ 조항별 세부 설정 (개별 ON/OFF)</label>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <label class="toggle-row"><input type="checkbox" id="clause-branch" onchange="updateClauses()"><span style="font-size:12px;">지점 설치 조항 <small style="color:#9ca3af;">(제4조)</small></span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-evote" onchange="updateClauses()"><span style="font-size:12px;">전자투표 조항</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-boardvideo" onchange="updateClauses()"><span style="font-size:12px;">이사회 화상회의</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-interimDiv" onchange="updateClauses()"><span style="font-size:12px;">중간배당 조항</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-diffDiv" onchange="updateClauses()"><span style="font-size:12px;">차등·현물배당 조항</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-treasury" onchange="updateClauses()"><span style="font-size:12px;">자기주식 취득·소각</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-prefshare" onchange="updateClauses()"><span style="font-size:12px;">종류주식(우선주 등)</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-bond" onchange="updateClauses()"><span style="font-size:12px;">사채(전환사채 등)</span></label>
-        <label class="toggle-row"><input type="checkbox" id="clause-newstockright" onchange="updateClauses()"><span style="font-size:12px;">신주인수권부사채</span></label>
-      </div>
-    </div>
-    <div style="margin-top:10px;padding:8px 12px;background:#fef3c7;border-radius:6px;font-size:11px;color:#92400e;">
-      💡 조항 설정은 정관 조문 표시에 자동 반영됩니다. 프리셋 선택 후 개별 조항을 추가/제거할 수 있습니다.
-    </div>
   </div>
 
   <div class="card">
@@ -301,117 +259,46 @@ textarea{resize:vertical;min-height:70px;}
   <div class="card">
     <div class="card-title">보수 및 퇴직금 설정</div>
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <div class="num-card"><label>임원 1인당 연간 보수 한도</label>
-        <input type="text" id="i-salarylimit" value="500,000,000" oninput="fmtComma(this)" style="text-align:right;">
-        <span class="unit">원</span><span class="badge-def">주총 결의</span></div>
-      <div class="num-card"><label>대표이사 퇴직금 배수</label>
+      <div class="num-card">
+        <label>임원 1인당 연간 보수 한도</label>
+        <input type="text" id="i-salarylimit" value="500,000,000" placeholder="예) 500,000,000" oninput="fmtComma(this)" style="text-align:right;">
+        <span class="unit">원</span>
+        <span class="badge-def">주총 결의</span>
+      </div>
+      <div class="num-card">
+        <label>대표이사 퇴직금 배수</label>
         <input type="number" id="i-ceomult" value="3" min="1" max="5" step="0.5">
-        <span class="unit">배수</span><span class="badge-def">주총 한도</span></div>
-      <div class="num-card"><label>그 외 임원 퇴직금 배수</label>
+        <span class="unit">배수</span>
+        <span class="badge-def">주총 한도</span>
+      </div>
+      <div class="num-card">
+        <label>그 외 임원 퇴직금 배수</label>
         <input type="number" id="i-othermult" value="1.5" min="1" max="3" step="0.5">
-        <span class="unit">배수</span><span class="badge-def">주총 한도</span></div>
-      <div class="num-card"><label>유족보상금 지급 상한 (월급여 기준)</label>
+        <span class="unit">배수</span>
+        <span class="badge-def">주총 한도</span>
+      </div>
+      <div class="num-card">
+        <label>유족보상금 지급 상한 (월급여 기준)</label>
         <input type="number" id="i-bereavement" value="36" min="1" max="60">
-        <span class="unit">개월치</span><span class="badge-def">주총 한도</span></div>
+        <span class="unit">개월치</span>
+        <span class="badge-def">주총 한도</span>
+      </div>
     </div>
   </div>
+
   <div style="text-align:center;margin-top:8px;">
-    <button class="btn btn-primary" style="padding:12px 40px;font-size:15px;" onclick="applyAll()">모든 문서에 적용하기</button>
+    <button class="btn btn-primary" style="padding:12px 40px;font-size:15px;" onclick="applyAll()">
+      모든 문서에 적용하기
+    </button>
   </div>
 </div>
+
 <!-- ══ DOC1: 주주총회 의사록 ══ -->
 <div id="page-doc1" class="page">
   <div class="topbar">
     <div><h1>임시 주주총회 의사록</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
     <div class="btn-group"><button class="btn btn-sm" onclick="doPrint()">인쇄 / PDF</button></div>
   </div>
-<<<<<<< HEAD
-  <div class="doc-wrap"><div class="doc-toolbar"><span>임시 주주총회 의사록</span></div>
-  <div class="doc-body">
-    <div class="doc-title">임 시 주 주 총 회 의 사 록</div>
-    <table class="doc-info-table"><tbody>
-      <tr><td>회 사 명</td><td><span class="editable" contenteditable id="d1-company" data-ph="회사명을 입력하세요"></span></td></tr>
-      <tr><td>회의 일시</td><td><span class="editable" contenteditable id="d1-date" data-ph="예) 2025년 3월 15일"></span> &nbsp; <span class="editable" contenteditable id="d1-time" data-ph="예) 오전 10시 00분"></span></td></tr>
-      <tr><td>회의 장소</td><td><span class="editable" contenteditable id="d1-place" data-ph="예) 경기도 화성시 ○○ 본점 회의실"></span></td></tr>
-      <tr><td>발행주식총수</td><td><span class="editable" contenteditable id="d1-shares" data-ph="예) 71,000주"></span></td></tr>
-      <tr><td>출 석 주 주</td><td><span class="editable" contenteditable id="d1-attend" data-ph="예) 2명 (71,000주 / 100%)"></span></td></tr>
-      <tr><td>의 &nbsp;&nbsp;&nbsp; 장</td><td>대표이사 <span class="editable" contenteditable id="d1-ceo" data-ph="대표이사 성명"></span> (출석 주주 전원 동의로 선출)</td></tr>
-    </tbody></table>
-    <p>의장은 위와 같이 주주 전원이 출석하였음을 확인하고, 주주 전원의 동의로 소집절차를 생략하여 본 임시 주주총회를 적법하게 개최한다고 선언하였다.</p><br>
-    <p>의장은 오늘 본 주주총회의 목적사항을 다음과 같이 설명하였다.</p><br>
-    <p><strong>【 안 건 목 록 】</strong></p>
-    <p style="margin-left:24px;">제1호 안건 : 정관 일부 변경의 건</p>
-    <p style="margin-left:24px;">제2호 안건 : 임원보수지급규정 제정의 건</p>
-    <p style="margin-left:24px;">제3호 안건 : 임원퇴직금지급규정 제정의 건</p>
-    <p style="margin-left:24px;">제4호 안건 : 유족보상금지급규정 제정의 건</p><br><br>
-    <div class="agenda-head">제1호 안건 &nbsp; <u>정관 일부 변경의 건</u></div>
-    <p style="margin-left:18px;">의장은 임원 보수·퇴직금·유족보상금 지급 근거를 별도 지급규정으로 위임하여 법인세법상 손금 인정 요건을 충족하고, 전자투표·이사회 화상회의 등 상법 개정사항을 반영하기 위하여 정관 일부를 변경하고자 함을 설명하였다.</p><br>
-    <p style="margin-left:18px;"><strong>【 주요 변경 내용 】</strong></p>
-    <table class="doc-table"><tbody>
-      <tr><th>조항</th><th>구분</th><th>변경 전</th><th>변경 후</th></tr>
-      <tr><td class="c">제9조</td><td class="c">주식의 종류</td><td class="l">기명식 보통주식만 규정, 주권 3종 규정</td><td class="l">주권 종류 규정 삭제, 종류주식 발행 근거 추가</td></tr>
-      <tr><td class="c">제18조(신설)</td><td class="c">전자투표</td><td class="l">규정 없음</td><td class="l">전자투표 도입, 감사 선임 의결정족수 완화</td></tr>
-      <tr><td class="c">제29조(신설)</td><td class="c">이사회 화상회의</td><td class="l">규정 없음</td><td class="l">화상회의 방식 이사회 허용</td></tr>
-      <tr><td class="c">제35조</td><td class="c">보수·퇴직금</td><td class="l">주총 결의로 정한다</td><td class="l">별도 지급규정으로 위임</td></tr>
-      <tr><td class="c">제40~41조(신설)</td><td class="c">배당</td><td class="l">이익배당만 규정</td><td class="l">중간·차등·현물배당 신설</td></tr>
-      <tr><td class="c">제42조(신설)</td><td class="c">자기주식</td><td class="l">규정 없음</td><td class="l">취득·소각·처분 근거 신설</td></tr>
-      <tr><td class="c">제46~47조(신설)</td><td class="c">종류주식</td><td class="l">규정 없음</td><td class="l">우선주·상환주·전환주 발행 절차 신설</td></tr>
-      <tr><td class="c">제43~45조(신설)</td><td class="c">사채</td><td class="l">규정 없음</td><td class="l">일반사채·전환사채·신주인수권부사채 발행 근거</td></tr>
-    </tbody></table>
-    <p style="margin-left:18px;">의장은 이의 없음을 확인하고 표결에 부쳤다.<br>
-    <small style="color:#666;">※ 정관 변경은 상법 제434조 특별결의 사항 (출석 주주 의결권 2/3 이상 + 발행주식총수 1/3 이상)</small></p>
-    <table class="doc-table vote-table"><tbody>
-      <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
-      <tr><td class="c">주식수</td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
-    </tbody></table>
-    <div class="result-box">결 의 : 원안대로 가결되다.</div>
-    <div class="agenda-head">제2호 안건 &nbsp; <u>임원보수지급규정 제정의 건</u></div>
-    <p style="margin-left:18px;">의장은 임원 보수 지급 기준을 명확히 하고 법인세법상 손금 인정 요건을 충족하기 위하여 임원보수지급규정을 제정하고자 함을 설명하였다.</p><br>
-    <p style="margin-left:18px;"><strong>임원 1인당 연간 보수 한도: 금 <span class="editable" contenteditable id="d1-salary" data-ph="예) 500,000,000원"></span></strong></p>
-    <table class="doc-table vote-table" style="margin-top:10px;"><tbody>
-      <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
-      <tr><td class="c">주식수</td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
-    </tbody></table>
-    <div class="result-box">결 의 : 원안대로 가결되다.</div>
-    <div class="agenda-head">제3호 안건 &nbsp; <u>임원퇴직금지급규정 제정의 건</u></div>
-    <p style="margin-left:18px;">의장은 임원 퇴직금 지급 기준을 법인세법 시행령 제44조에 따라 명확히 정하여 손금 인정 요건을 충족하고자 임원퇴직금지급규정을 제정하고자 함을 설명하였다.</p><br>
-    <p style="margin-left:18px;">산정기준: 퇴직 전 3년간 연평균 환산액 × 1/10 × 근속연수 × 지급배수</p>
-    <p style="margin-left:18px;">대표이사 <strong><span class="editable" contenteditable id="d1-ceomult" data-ph="3"></span>배수</strong> / 그 외 임원 <strong><span class="editable" contenteditable id="d1-othermult" data-ph="1.5"></span>배수</strong> (이사회 최종 결의)</p>
-    <table class="doc-table vote-table" style="margin-top:10px;"><tbody>
-      <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
-      <tr><td class="c">주식수</td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
-    </tbody></table>
-    <div class="result-box">결 의 : 원안대로 가결되다.</div>
-    <div class="agenda-head">제4호 안건 &nbsp; <u>유족보상금지급규정 제정의 건</u></div>
-    <p style="margin-left:18px;">의장은 임원이 재임 중 사망한 경우 유족의 생활 안정을 도모하기 위하여 유족보상금지급규정을 제정하고자 함을 설명하였다.</p>
-    <p style="margin-left:18px;">지급 상한: 사망 당시 월급여 × <strong><span class="editable" contenteditable id="d1-bereave" data-ph="36"></span>개월</strong> 이내 (이사회 최종 결의)</p>
-    <table class="doc-table vote-table" style="margin-top:10px;"><tbody>
-      <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
-      <tr><td class="c">주식수</td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td>
-        <td class="c"><span class="editable" contenteditable data-ph="주수"></span></td></tr>
-    </tbody></table>
-    <div class="result-box">결 의 : 원안대로 가결되다.</div>
-    <br><br>
-    <p>의장은 위 4개 안건이 모두 원안대로 가결되었음을 선언하고 폐회하였다.</p><br>
-    <p>위 결의를 명확히 하기 위하여 이 의사록을 작성하고 의장 및 출석한 이사가 기명날인한다.</p><br>
-    <p style="text-align:right;"><span class="editable" contenteditable id="d1-sign-date" data-ph="예) 2025년 3월 15일"></span></p><br>
-    <p style="text-align:center;font-size:15px;font-weight:700;"><span id="d1-company2"></span></p><br>
-    <div id="d1-sign-wrap"></div>
-    <div class="note-box">
-      【첨부서류】 1. 개정 정관 전문 &nbsp; 2. 임원보수지급규정 &nbsp; 3. 임원퇴직금지급규정 &nbsp; 4. 유족보상금지급규정 &nbsp; 5. 주주 출석 확인서<br>
-      ※ 본 의사록은 회사 본점에 10년간 보관 (상법 §396) / 정관 변경 후 2주 이내 법인등기소 변경등기 신청 / 세무조사 시 핵심 증빙 서류
-=======
   <div class="doc-wrap">
     <div class="doc-toolbar"><span>임시 주주총회 의사록</span></div>
     <div class="doc-body">
@@ -504,96 +391,37 @@ textarea{resize:vertical;min-height:70px;}
         【첨부서류】 1. 개정 정관 전문 &nbsp; 2. 임원보수지급규정 &nbsp; 3. 임원퇴직금지급규정 &nbsp; 4. 유족보상금지급규정 &nbsp; 5. 주주 출석 확인서<br>
         ※ 본 의사록은 회사 본점에 10년간 보관 (상법 §396) / 정관 변경 후 2주 이내 법인등기소 변경등기 신청 / 세무조사 시 핵심 증빙 서류
       </div>
->>>>>>> 34bccd5578e12d19c36aeb8b54c43a45b21ef6ee
     </div>
-  </div></div>
+  </div>
 </div>
-<!-- ══ DOC2: 정관 전문 ══ -->
+
+<!-- ══ DOC2: 개정 정관 ══ -->
 <div id="page-doc2" class="page">
   <div class="topbar">
-<<<<<<< HEAD
-    <div><h1>정관 전문</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
-=======
     <div><h1>개정 정관</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
->>>>>>> 34bccd5578e12d19c36aeb8b54c43a45b21ef6ee
     <div class="btn-group"><button class="btn btn-sm" onclick="doPrint()">인쇄 / PDF</button></div>
   </div>
-  <div class="doc-wrap"><div class="doc-toolbar"><span>정관</span></div>
-  <div class="doc-body" id="jeonggwan-body">
-    <div class="doc-title">정 &nbsp;&nbsp;&nbsp; 관</div>
-    <div class="doc-sub-title"><span class="editable" contenteditable id="d2-company" data-ph="회사명"></span></div>
+  <div class="doc-wrap">
+    <div class="doc-toolbar"><span>정관</span></div>
+    <div class="doc-body">
+      <div class="doc-title">정 &nbsp;&nbsp;&nbsp; 관</div>
+      <div class="doc-sub-title"><span class="editable" contenteditable id="d2-company" data-ph="회사명"></span></div>
 
-    <div class="ch-title">제 1 장 &nbsp; 총 칙</div>
-    <div class="art-title" data-art="1">제1조 (상호)</div>
-    <div class="art-body">본 회사는 <span class="editable" contenteditable id="d2-company2" data-ph="회사명"></span>이라고 한다.</div>
-    <div class="art-title" data-art="2">제2조 (목적)</div>
-    <div class="art-body">본 회사는 다음 사업을 경영함을 목적으로 한다.</div>
-    <div class="art-item"><span class="editable" contenteditable id="d2-purpose" style="display:block;min-width:100%;min-height:80px;white-space:pre-wrap;" data-ph="목적사업을 입력하세요"></span></div>
-    <div class="art-title" data-art="3">제3조 (본점의 소재지)</div>
-    <div class="art-body">본 회사의 본점은 <span class="editable" contenteditable id="d2-addr" data-ph="예) 경기도 화성시"></span> 내에 둔다.</div>
-    <div class="art-title clause-branch" data-art="4">제4조 (지점)</div>
-    <div class="art-body clause-branch">본 회사는 이사회결의로 각지에 지점 및 영업소를 설치할 수 있다.</div>
-    <div class="art-title" data-art="5">제5조 (공고방법)</div>
-    <div class="art-body">본 회사의 공고는 <span class="editable" contenteditable id="d2-notice" data-ph="예) 대구광역시에서 발행하는 일간 매일신문">대구광역시에서 발행하는 일간 매일신문</span>에 게재한다.</div>
+      <div class="ch-title">제 1 장 &nbsp; 총 칙</div>
+      <div class="art-title">제1조 (상호)</div>
+      <div class="art-body">본 회사는 <span class="editable" contenteditable id="d2-company2" data-ph="회사명"></span>이라고 한다.</div>
 
-    <div class="ch-title">제 2 장 &nbsp; 주 식</div>
-    <div class="art-title" data-art="6">제6조 (발행예정주식의 총수)</div>
-    <div class="art-body">본 회사가 발행할 주식의 총수는 <span class="editable" contenteditable id="d2-maxshares" data-ph="예) 1,000,000주"></span>로 한다.</div>
-    <div class="art-title" data-art="7">제7조 (1주의 금액)</div>
-    <div class="art-body">본 회사가 발행하는 주식 1주의 금액은 금 <span class="editable" contenteditable id="d2-parval" data-ph="예) 10,000원"></span>으로 한다.</div>
-    <div class="art-title" data-art="8">제8조 (설립 시의 발행주식)</div>
-    <div class="art-body">본 회사가 설립 시에 발행하는 주식의 총수는 <span class="editable" contenteditable id="d2-issued" data-ph="예) 71,000주"></span>로 한다.</div>
-    <div class="art-title" data-art="9">제9조 (주식의 종류)</div>
-    <div class="art-body">① 본 회사의 주식은 기명식 보통주식으로 한다.<br>② 본 회사는 이익배당, 잔여재산분배, 주식의 전환·상환 등에 관하여 내용이 다른 종류주식을 발행할 수 있다.<br>③ 의결권이 없거나 제한되는 종류주식의 총수는 발행주식 총수의 4분의 1을 초과하지 못한다.</div>
-    <div class="art-title" data-art="10">제10조 (신주인수권)</div>
-    <div class="art-body">① 본 회사의 주주는 그가 소유한 주식의 수에 비례하여 신주의 배정을 받을 권리를 갖는다.<br>② 제1항의 규정에도 불구하고 다음 각 호의 경우에는 이사회 결의로 주주 외의 자에게 신주를 배정할 수 있다.<br>&nbsp;&nbsp;1. 자본시장과 금융투자업에 관한 법률에 따라 일반공모증자 방식으로 신주를 발행하는 경우<br>&nbsp;&nbsp;2. 상법 제418조 제2항에 따라 신기술 도입, 재무구조 개선 등 회사의 경영상 목적 달성을 위하여 필요한 경우</div>
-    <div class="art-title" data-art="11">제11조 (주식의 발행가액)</div>
-    <div class="art-body">① 신주를 발행함에 있어서 그 일부 또는 전부를 시가 또는 액면 이상의 금액으로 발행할 수 있으며, 이때 발행가액은 이사회 결의로 정한다.<br>② 신주의 발행가액이 액면가를 하회하는 경우에는 법령이 정하는 바에 따른다.</div>
-    <div class="art-title" data-art="12">제12조 (명의개서)</div>
-    <div class="art-body">① 주식의 취득자가 명의개서를 청구함에 있어서는 회사가 정하는 청구서에 기명날인 또는 서명하고 이에 관련 서류를 첨부하여 제출하여야 한다.<br>② 외국에 거주하는 주주는 대한민국 내에 통지를 받을 장소와 대리인을 정하여 신고하여야 한다.</div>
-    <div class="art-title" data-art="13">제13조 (주주명부의 폐쇄 및 기준일)</div>
-    <div class="art-body">① 회사는 매사업연도 말일의 다음날부터 그 사업연도에 관한 정기주주총회의 종결일까지 주주명부의 기재변경을 정지한다.<br>② 회사는 매사업연도 말일의 최종 주주명부에 기재되어 있는 주주를 그 사업연도에 관한 정기주주총회에서 권리를 행사할 주주로 한다.<br>③ 회사는 임시주주총회 개최, 기타 필요한 경우 이사회 결의로 일정한 날을 기준일로 정할 수 있다.</div>
+      <div class="art-title">제2조 (목적)</div>
+      <div class="art-body">본 회사는 다음 사업을 경영함을 목적으로 한다.</div>
+      <div class="art-item"><span class="editable" contenteditable id="d2-purpose" style="display:block;min-width:100%;min-height:100px;white-space:pre-wrap;" data-ph="목적사업을 입력하세요&#10;예) 1. 조경공사업&#10;1. 토목공사업"></span></div>
 
-    <div class="ch-title">제 3 장 &nbsp; 주주총회</div>
-    <div class="art-title" data-art="14">제14조 (소집)</div>
-    <div class="art-body">① 본 회사의 정기주주총회는 매사업연도 말일의 다음날부터 3개월 이내에 소집하고, 임시주주총회는 필요한 경우에 수시 소집한다.<br>② 주주총회의 소집은 법령에 다른 규정이 있는 경우를 제외하고는 이사회의 결의에 따라 대표이사가 소집한다.<br>③ 자본금 총액이 10억원 미만인 회사의 경우 주주 전원의 동의가 있을 때에는 소집절차 없이 주주총회를 개최할 수 있다.</div>
-    <div class="art-title" data-art="15">제15조 (소집통지)</div>
-    <div class="art-body">① 주주총회를 소집할 때에는 회일 2주 전에 각 주주에게 서면 또는 전자문서로 통지를 발송한다.<br>② 자본금 총액이 10억원 미만인 회사는 주주 전원의 동의가 있는 경우 소집통지 기간을 단축하거나 생략할 수 있다.</div>
-    <div class="art-title" data-art="16">제16조 (의장)</div>
-    <div class="art-body">주주총회의 의장은 대표이사로 한다. 대표이사가 궐위되거나 유고인 때에는 이사회에서 정한 순서에 따라 다른 이사가 그 직무를 대행한다.</div>
-    <div class="art-title" data-art="17">제17조 (의결권)</div>
-    <div class="art-body">① 주주의 의결권은 1주마다 1개로 한다.<br>② 주주는 대리인으로 하여금 그 의결권을 행사하게 할 수 있으며, 대리인은 주주총회 개최 전에 그 대리권을 증명하는 서면(위임장)을 제출하여야 한다.</div>
-    <div class="art-title clause-evote" data-art="evote">제18조 (전자투표)</div>
-    <div class="art-body clause-evote">① 회사는 이사회 결의로 주주총회에서 주주가 전자적 방법으로 의결권을 행사할 수 있도록 전자투표제를 도입할 수 있다.<br>② 전자투표를 실시하는 경우 감사 선임 시 "발행주식총수의 4분의 1 이상" 요건을 적용하지 아니한다.</div>
-    <div class="art-title" data-art="vote">제19조 (결의방법)</div>
-    <div class="art-body">① 주주총회의 결의는 법령 또는 이 정관에 다른 규정이 없는 경우에는 출석한 주주의 의결권의 과반수로 하되, 발행주식총수의 4분의 1 이상이어야 한다.<br>② 다음 각 호의 경우에는 출석한 주주의 의결권의 3분의 2 이상의 수와 발행주식총수의 3분의 1 이상의 수로 결의한다.<br>&nbsp;&nbsp;1. 정관의 변경 &nbsp; 2. 회사의 해산 &nbsp; 3. 이사·감사의 해임 &nbsp; 4. 자본금의 감소<br>③ 자본금 10억원 미만인 경우 주주 전원의 서면동의로 주주총회 결의를 갈음할 수 있다.</div>
-    <div class="art-title" data-art="minute1">제20조 (의사록)</div>
-    <div class="art-body">주주총회의 의사에 관하여는 의사록을 작성하여야 한다. 의사록에는 의사의 경과요령과 결과를 기재하고, 의장과 출석한 이사가 기명날인 또는 서명하여 본점과 지점에 비치한다.</div>
+      <div class="art-title">제3조 (본점의 소재지)</div>
+      <div class="art-body">본 회사의 본점은 <span class="editable" contenteditable id="d2-addr" data-ph="예) 경기도 화성시"></span>내에 둔다.</div>
+      <div class="art-title">제4조 (지점)</div>
+      <div class="art-body">본 회사는 이사회결의로 각지에 지점 및 영업소를 설치할 수 있다.</div>
+      <div class="art-title">제5조 (공고방법)</div>
+      <div class="art-body">본 회사의 공고는 <span class="editable" contenteditable id="d2-notice" data-ph="예) 대구광역시에서 발행하는 일간 매일신문"></span>에 게재한다.</div>
 
-<<<<<<< HEAD
-    <div class="ch-title">제 4 장 &nbsp; 이사·이사회 및 대표이사</div>
-    <div class="art-title" data-art="dirnum">제21조 (이사의 수)</div>
-    <div class="art-body">본 회사의 이사는 1인 이상으로 한다. 다만, 자본금 총액이 10억원 이상인 경우에는 이사를 3인 이상으로 하여야 한다.</div>
-    <div class="art-title" data-art="direlect">제22조 (이사의 선임)</div>
-    <div class="art-body">이사는 주주총회에서 선임한다. 이사의 선임은 출석한 주주의 의결권의 과반수로 하되, 발행주식총수의 4분의 1 이상의 수로 하여야 한다.</div>
-    <div class="art-title" data-art="dirterm">제23조 (이사의 임기)</div>
-    <div class="art-body">이사의 임기는 3년으로 한다. 다만, 그 임기가 최종 결산기 종료 후 당해 결산기에 관한 정기주주총회 전에 만료될 경우에는 그 총회의 종결 시까지 그 임기를 연장한다.</div>
-    <div class="art-title" data-art="dirduty">제24조 (이사의 직무)</div>
-    <div class="art-body">① 이사는 대표이사를 보좌하고, 이사회에서 정하는 바에 따라 회사의 업무를 분장 집행한다.<br>② 이사는 법령과 정관의 규정에 따라 회사를 위하여 그 직무를 충실하게 수행하여야 한다.<br>③ 이사는 재임 중뿐만 아니라 퇴임 후에도 직무상 지득한 회사의 영업상 비밀을 누설하여서는 아니 된다.</div>
-    <div class="art-title" data-art="ceo">제25조 (대표이사)</div>
-    <div class="art-body">① 이사가 1인인 경우에는 그 이사가 대표이사가 된다.<br>② 이사가 2인 이상인 경우에는 이사회의 결의로 이사 중에서 대표이사를 선임한다. 다만, 이사가 2인이고 이사회 구성이 안 되는 경우에는 주주총회에서 대표이사를 선임한다.<br>③ 대표이사가 수명인 때에는 이사회 결의로 각자 또는 공동으로 회사를 대표할 것을 정한다.<br>④ 대표이사가 유고시에는 미리 이사회에서 정한 순서에 따라 다른 이사가 그 직무를 대행한다.</div>
-    <div id="board-section">
-      <div class="art-title" data-art="board1">제26조 (이사회의 구성)</div>
-      <div class="art-body">이사회는 이사로써 구성하며, 이사가 3인 이상인 경우에 구성된다.</div>
-      <div class="art-title" data-art="board2">제27조 (이사회의 소집)</div>
-      <div class="art-body">① 이사회는 대표이사 또는 이사회에서 따로 정한 이사가 있을 때에는 그 이사가 회일 3일 전에 각 이사 및 감사에게 통지하여 소집한다. 그러나 이사 및 감사 전원의 동의가 있을 때에는 소집절차를 생략할 수 있다.<br>② 이사회의 의장은 제1항의 이사회 소집권자로 한다.</div>
-      <div class="art-title" data-art="board3">제28조 (이사회의 결의)</div>
-      <div class="art-body">① 이사회의 결의는 이사 과반수의 출석과 출석이사의 과반수로 한다.<br>② 이사회의 결의에 관하여 특별한 이해관계가 있는 자는 의결권을 행사하지 못한다.</div>
-      <div class="art-title clause-boardvideo" data-art="boardvideo">제29조 (이사회 화상회의)</div>
-      <div class="art-body clause-boardvideo">① 이사회는 이사가 동영상 및 음성을 동시에 송수신하는 통신수단에 의하여 결의할 수 있다. 이 경우 이사는 이사회에 직접 출석한 것으로 본다.<br>② 화상회의로 진행된 이사회의 의사록에는 참석 이사 전원이 기명날인 또는 서명한다.</div>
-      <div class="art-title" data-art="board5">제30조 (이사회의 의사록)</div>
-      <div class="art-body">이사회의 의사에 관하여는 의사록을 작성하여야 한다. 의사록에는 의사의 안건, 경과요령, 그 결과, 반대하는 자와 그 반대이유를 기재하고 출석한 이사 및 감사가 기명날인 또는 서명하여 본점에 비치한다.</div>
-=======
       <div class="ch-title">제 2 장 &nbsp; 주식과 주권</div>
       <div class="art-title">제6조 (회사가 발행할 주식의 총수)</div>
       <div class="art-body">본 회사가 발행할 주식의 총수는 <span class="editable" contenteditable id="d2-maxshares" data-ph="예) 1,000,000주"></span>로서 보통주식으로 한다.</div>
@@ -646,70 +474,11 @@ textarea{resize:vertical;min-height:70px;}
       <p style="text-align:center;margin-top:8px;"><span class="editable" contenteditable id="d2-date2" data-ph="예) 2025년 3월 15일"></span></p><br>
       <p style="text-align:center;font-size:15px;font-weight:700;"><span id="d2-company3"></span></p><br>
       <div id="d2-sign-wrap"></div>
->>>>>>> 34bccd5578e12d19c36aeb8b54c43a45b21ef6ee
     </div>
+  </div>
+</div>
 
-    <div class="ch-title">제 5 장 &nbsp; 감 사</div>
-    <div class="art-title" data-art="aud1">제31조 (감사의 수)</div>
-    <div class="art-body">본 회사는 1인 이상의 감사를 둔다. 다만, 자본금 총액이 10억원 미만인 경우에는 감사를 두지 않을 수 있다.</div>
-    <div class="art-title" data-art="aud2">제32조 (감사의 선임)</div>
-    <div class="art-body">감사는 주주총회에서 선임한다. 감사의 선임을 위한 의결권 행사에는 의결권 있는 발행주식총수의 100분의 3을 초과하는 수의 주식을 가진 주주는 그 초과하는 주식에 관하여 의결권을 행사하지 못한다.</div>
-    <div class="art-title" data-art="aud3">제33조 (감사의 임기)</div>
-    <div class="art-body">감사의 임기는 취임 후 3년 내의 최종 결산기에 관한 정기주주총회의 종결 시까지로 한다.</div>
-    <div class="art-title" data-art="aud4">제34조 (감사의 직무)</div>
-    <div class="art-body">① 감사는 회사의 회계와 업무를 감사한다.<br>② 감사는 이사회에 출석하여 의견을 진술할 수 있고, 의사의 목적사항과 소집이유를 기재한 서면을 이사회에 제출하여 임시주주총회의 소집을 청구할 수 있다.<br>③ 감사는 그 직무를 수행하기 위하여 필요한 때에는 자회사에 대하여 영업의 보고를 요구할 수 있다.</div>
-
-    <div class="ch-title">제 6 장 &nbsp; 임원 보수·퇴직금·유족보상금</div>
-    <div class="art-title" data-art="pay">제35조 (임원의 보수, 상여금, 퇴직금, 유족보상금)</div>
-    <div class="art-body">① 임원의 보수 및 상여금은 주주총회의 결의를 거친 별도의 임원보수지급규정에 의한다.<br>② 임원에 대한 퇴직금의 지급은 주주총회의 결의를 거친 별도의 임원퇴직금지급규정에 의한다.<br>③ 임원 사망 시 유족에게 지급하는 유족보상금은 주주총회의 결의를 거친 별도의 유족보상금지급규정에 의한다.<br>④ 각 지급규정은 주주총회의 일반결의로 제정·변경하며, 개별 임원에 대한 실제 지급액은 이사회 결의로 확정한다.</div>
-
-    <div class="ch-title">제 7 장 &nbsp; 계 산</div>
-    <div class="art-title" data-art="fiscal">제36조 (영업연도)</div>
-    <div class="art-body">본 회사의 영업연도는 매년 <span class="editable" contenteditable id="d2-fiscal-start" data-ph="1월 1일">1월 1일</span>부터 매년 <span class="editable" contenteditable id="d2-fiscal-end" data-ph="12월 31일">12월 31일</span>까지로 한다.</div>
-    <div class="art-title" data-art="fs">제37조 (재무제표의 작성 및 승인)</div>
-    <div class="art-body">① 대표이사는 상법 제447조 및 제447조의2의 각 서류를 작성하여 이사회의 승인을 얻어야 한다.<br>② 대표이사는 정기주주총회 회일의 6주 전에 제1항의 서류를 감사에게 제출하여야 한다.<br>③ 감사는 정기주주총회 회일의 1주 전까지 감사보고서를 대표이사에게 제출하여야 한다.</div>
-    <div class="art-title" data-art="profit">제38조 (이익금의 처분)</div>
-    <div class="art-body">회사는 매사업연도 말의 처분 전 이익잉여금을 다음과 같이 처분한다.<br>&nbsp;&nbsp;1. 이익준비금 &nbsp;&nbsp; 2. 기타 법정준비금 &nbsp;&nbsp; 3. 배당금 &nbsp;&nbsp; 4. 임의적립금 &nbsp;&nbsp; 5. 기타 이익잉여금 처분액</div>
-    <div class="art-title" data-art="div">제39조 (이익배당)</div>
-    <div class="art-body">① 이익의 배당은 금전 및 주식으로 할 수 있다.<br>② 이익의 배당을 주식으로 하는 경우 회사가 수종의 주식을 발행한 때에는 주주총회의 결의로 그와 다른 종류의 주식으로도 할 수 있다.<br>③ 제1항의 배당은 매 결산기 말 현재의 주주명부에 기재된 주주 또는 등록된 질권자에게 지급한다.</div>
-    <div class="art-title clause-interimDiv" data-art="interimDiv">제40조 (중간배당)</div>
-    <div class="art-body clause-interimDiv">① 회사는 이사회의 결의로 사업연도 중 1회에 한하여 일정한 날을 기준일로 정하여 그 날의 주주에 대하여 금전으로 이익을 배당할 수 있다.<br>② 제1항의 중간배당은 직전 결산기의 대차대조표상 순자산액에서 직전 결산기에 적립된 준비금과 그 사업연도 중의 손실 예상액 등을 공제한 금액을 초과하지 못한다.</div>
-    <div class="art-title clause-diffDiv" data-art="diffDiv">제41조 (차등배당 및 현물배당)</div>
-    <div class="art-body clause-diffDiv">① 회사는 상법 제464조의2에 따라 현물배당을 할 수 있다.<br>② 회사는 주주총회 결의로 일부 주주에게 다른 주주보다 높거나 낮은 배당률을 적용하는 차등배당을 할 수 있다.</div>
-    <div class="art-title clause-treasury" data-art="treasury">제42조 (자기주식의 취득 및 처분)</div>
-    <div class="art-body clause-treasury">① 회사는 이사회의 결의로 자기주식을 취득할 수 있다.<br>② 취득한 자기주식은 취득일로부터 1년 이내에 소각함을 원칙으로 한다.<br>③ 회사는 소각 목적 외에도 이사회 결의로 자기주식을 처분할 수 있다.</div>
-
-    <div class="ch-title clause-bond" id="ch-bond">제 8 장 &nbsp; 사 채</div>
-    <div class="art-title clause-bond" data-art="bond1">제43조 (사채의 발행)</div>
-    <div class="art-body clause-bond">① 회사는 이사회의 결의로 사채를 모집할 수 있다.<br>② 이사회는 대표이사에게 사채의 금액 및 종류를 정하여 1년을 초과하지 아니하는 기간 내에 사채를 발행할 것을 위임할 수 있다.</div>
-    <div class="art-title clause-bond" data-art="bond2">제44조 (전환사채의 발행)</div>
-    <div class="art-body clause-bond">① 회사는 이사회결의로 전환사채를 발행할 수 있으며, 다음 각 호의 경우 이사회의 결의로 주주 외의 자에게 전환사채를 발행할 수 있다.<br>&nbsp;&nbsp;1. 전환사채를 일반공모의 방법으로 발행하는 경우<br>&nbsp;&nbsp;2. 경영상 필요로 외국인투자촉진법에 의한 외국인투자를 위하여 발행하는 경우<br>&nbsp;&nbsp;3. 기타 회사의 경영목적 달성을 위하여 필요한 경우<br>② 이사회결의에 의하여 발행하는 전환사채의 전환청구기간, 전환 조건, 전환으로 인하여 발행할 주식의 종류 등을 이사회결의로 정한다.</div>
-    <div class="art-title clause-newstockright" data-art="newstockright">제45조 (신주인수권부사채의 발행)</div>
-    <div class="art-body clause-newstockright">① 회사는 이사회 결의로 신주인수권부사채를 발행할 수 있다.<br>② 신주인수권부사채에 부여된 신주인수권의 행사로 발행할 주식의 발행가액의 합계액은 당해 사채의 발행가액을 초과하지 못한다.</div>
-
-    <div class="ch-title clause-prefshare" id="ch-prefshare">제 <span id="ch-prefshare-num">9</span> 장 &nbsp; 종류주식</div>
-    <div class="art-title clause-prefshare" data-art="pref1">제46조 (우선주식)</div>
-    <div class="art-body clause-prefshare">① 회사는 우선주식을 발행할 수 있으며, 우선주식에 대하여는 보통주식에 대한 배당 외에 일정한 비율 또는 일정 금액을 추가로 배당할 수 있다.<br>② 우선주식의 배당은 이사회가 각 사업연도 개시 전에 정하는 배당률에 따른다.<br>③ 우선주식에는 의결권을 부여하지 아니할 수 있다.</div>
-    <div class="art-title clause-prefshare" data-art="pref2">제47조 (상환주식 및 전환주식)</div>
-    <div class="art-body clause-prefshare">① 회사는 이익으로써 소각할 수 있는 상환주식을 발행할 수 있다.<br>② 회사는 주주의 청구 또는 이사회 결의로 다른 종류 주식으로 전환할 수 있는 전환주식을 발행할 수 있다.<br>③ 상환주식 및 전환주식의 구체적인 조건은 이사회 결의로 정한다.</div>
-
-    <div class="ch-title">제 <span id="ch-appendix-num">10</span> 장 &nbsp; 보 칙</div>
-    <div class="art-title" data-art="reg">제48조 (내부규정)</div>
-    <div class="art-body">본 회사는 필요에 따라 이사회의 결의로 업무수행 및 경영상 필요한 세칙 등 내규를 정할 수 있다.</div>
-    <div class="art-title" data-art="general">제49조 (준용)</div>
-    <div class="art-body">이 정관에 정하지 아니한 사항은 주주총회의 결의 및 상법 기타 관계법령이 정하는 바에 의한다.</div>
-
-    <div style="margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;">
-      <div style="text-align:center;margin-bottom:12px;font-weight:700;">부 &nbsp;&nbsp; 칙</div>
-      <div class="art-body">이 정관은 <span class="editable" contenteditable id="d2-date" data-ph="예) 2025년 3월 15일"></span> 주주총회 결의일부터 시행한다.</div>
-    </div>
-    <br><br>
-    <p style="text-align:center;">위 정관은 본 회사의 정관임이 틀림 없음.</p>
-    <p style="text-align:center;margin-top:8px;"><span class="editable" contenteditable id="d2-date2" data-ph="예) 2025년 3월 15일"></span></p><br>
-    <p style="text-align:center;font-size:15px;font-weight:700;"><span id="d2-company3"></span></p><br>
-    <div id="d2-sign-wrap"></div>
-  </div></div>
-</div><!-- ══ DOC3: 임원보수지급규정 ══ -->
+<!-- ══ DOC3: 임원보수지급규정 ══ -->
 <div id="page-doc3" class="page">
   <div class="topbar">
     <div><h1>임원보수지급규정</h1><div class="topbar-sub">파란 밑줄 항목을 클릭하여 직접 수정하세요</div></div>
@@ -786,7 +555,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-body">① 퇴직금이 소득세법 §22·법인세법 시행령 §44의 손금 인정 한도를 초과하는 경우, 초과분은 손금불산입 처리된다.<br>② 손금 인정 한도: 퇴임일 직전 3년 연평균 총급여 × 10% × 근속연수 × 2배<br>③ 퇴직금 지급 전 담당 세무사와 반드시 협의한다.</div>
       <div class="ch-title">제 3 장 &nbsp; 중간정산 및 지급 절차</div>
       <div class="art-title">제7조 (중간정산)</div>
-      <div class="art-item">1. 무주택 임원이 본인 명의 주택 구입 시<br>2. 임원 또는 부양가족의 질병·부상 치료 시 (6개월 이상 요양 필요)<br>3. 근로자퇴직급여 보장법 제8조 제2항에 따라 임원 보수 감액에 따른 퇴직금 기준 이원화가 필요한 경우</div>
+      <div class="art-item">1. 무주택 임원이 본인 명의 주택 구입 시<br>2. 임원 또는 부양가족의 질병·부상 치료 시 (6개월 이상 요양 필요)<br>3. 임원 보수 감액에 따른 퇴직금 기준 이원화가 필요한 경우</div>
       <div class="art-title">제8조 (지급 절차)</div>
       <div class="art-body">① 퇴임일로부터 14일 이내에 이사회 결의를 거쳐 퇴직금을 지급함을 원칙으로 한다.<br>② 이사회 결의서에는 지급 대상자, 산정 한도액, 실제 지급액, 감액 사유, 지급 방법을 명시하여야 한다.<br>③ IRP(개인형 퇴직연금) 계좌 이체를 원하는 경우 이를 허용한다.</div>
       <div class="ch-title">제 4 장 &nbsp; 경과조치 및 보칙</div>
@@ -1120,240 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshSignTables();
   // 공고방법 초기값: 기존 동일 → 정관에 미리 채워두기
   set('d2-notice', '대구광역시에서 발행하는 일간 매일신문');
-});
-</script>
-
-<script>
-/* ── 인쇄 ── */
-function doPrint() {
-  const origTitle = document.title;
-  document.title = '';
-  window.print();
-  setTimeout(() => { document.title = origTitle; }, 500);
-}
-/* ── 공통 유틸 ── */
-function set(id, val) {
-  if(!val) return;
-  const el = document.getElementById(id);
-  if(el) el.textContent = val;
-}
-/* ── 페이지 전환 ── */
-function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  if(el) el.classList.add('active');
-  window.scrollTo(0,0);
-}
-/* ── 포맷 ── */
-function fmtComma(el) {
-  const raw = el.value.replace(/[^0-9]/g, '');
-  if(raw === '') { el.value = ''; return; }
-  el.value = Number(raw).toLocaleString('ko-KR');
-}
-function fmtCommaWon(el) { fmtComma(el); }
-/* ── 공고방법 ── */
-function handleNoticeSelect() {
-  const sel = document.getElementById('i-notice-sel');
-  const custom = document.getElementById('i-notice-custom');
-  const hint = document.getElementById('i-notice-hint');
-  if(sel.value === 'same') {
-    custom.style.display = 'none';
-    hint.textContent = '기존 공고방법 그대로 적용됩니다 — 대구광역시에서 발행하는 일간 매일신문';
-    set('d2-notice', '대구광역시에서 발행하는 일간 매일신문');
-  } else {
-    custom.style.display = '';
-    hint.textContent = '새 언론사 이름을 정확히 입력하세요';
-    custom.focus();
-  }
-}
-function syncNotice() {
-  const val = document.getElementById('i-notice-custom').value.trim();
-  set('d2-notice', val);
-}
-/* ── 임원 직위 행 ── */
-function updateOfficerRows() {
-  const dirCount = parseInt(document.getElementById('i-dir-count').value);
-  const audCount = parseInt(document.getElementById('i-aud-count').value);
-  const wrap = document.getElementById('officer-rows');
-  wrap.innerHTML = '';
-  const rows = [];
-  for(let i = 0; i < dirCount; i++) {
-    rows.push({ key: 'dir'+i, default: i===0?'대표이사':'이 사', label: '이사 '+(i+1) });
-  }
-  for(let i = 0; i < audCount; i++) {
-    rows.push({ key: 'aud'+i, default: '감 사', label: '감사 '+(i+1) });
-  }
-  rows.forEach(r => {
-    const div = document.createElement('div');
-    div.className = 'officer-row';
-    div.innerHTML = '<label>'+r.label+' 직위명</label><input type="text" id="off-'+r.key+'" value="'+r.default+'" placeholder="예) 대표이사">';
-    wrap.appendChild(div);
-  });
-}
-/* ── 서명 테이블 ── */
-function buildSignTable(docSuffix) {
-  const dirCount = parseInt(document.getElementById('i-dir-count').value);
-  const audCount = parseInt(document.getElementById('i-aud-count').value);
-  let rows = '';
-  for(let i = 0; i < dirCount; i++) {
-    const el = document.getElementById('off-dir'+i);
-    const title = el ? el.value||'이 사' : (i===0?'대표이사':'이 사');
-    const suffix = (i===0 && dirCount>0) ? ' (의장)' : '';
-    rows += '<tr><td>'+title+suffix+'</td><td></td><td>(인)</td></tr>';
-  }
-  for(let i = 0; i < audCount; i++) {
-    const el = document.getElementById('off-aud'+i);
-    const title = el ? el.value||'감 사' : '감 사';
-    const suffix = docSuffix === 'd6' ? ' (참관)' : '';
-    rows += '<tr><td>'+title+suffix+'</td><td></td><td>(인)</td></tr>';
-  }
-  return '<table class="sign-table"><tr><th style="width:140px;">직위</th><th>성 명</th><th style="width:80px;">날 인</th></tr>'+rows+'</table>';
-}
-function refreshSignTables() {
-  ['d1','d2','d6'].forEach(id => {
-    const wrap = document.getElementById(id+'-sign-wrap');
-    if(wrap) wrap.innerHTML = buildSignTable(id);
-  });
-}
-/* ── 이사회 섹션 표시/숨김 ── */
-function updateBoardSection() {
-  const dirCount = parseInt(document.getElementById('i-dir-count').value);
-  const bs = document.getElementById('board-section');
-  if(bs) bs.style.display = dirCount >= 3 ? '' : 'none';
-}
-/* ── 조항 표시/숨김 ── */
-function updateClauses() {
-  const checked = id => { const el = document.getElementById(id); return el ? el.checked : false; };
-  const clsMap = {
-    'clause-branch': checked('clause-branch'),
-    'clause-evote': checked('clause-evote'),
-    'clause-boardvideo': checked('clause-boardvideo'),
-    'clause-interimDiv': checked('clause-interimDiv'),
-    'clause-diffDiv': checked('clause-diffDiv'),
-    'clause-treasury': checked('clause-treasury'),
-    'clause-prefshare': checked('clause-prefshare'),
-    'clause-bond': checked('clause-bond'),
-    'clause-newstockright': checked('clause-newstockright'),
-  };
-  Object.entries(clsMap).forEach(([cls, show]) => {
-    document.querySelectorAll('.'+cls).forEach(el => { el.style.display = show ? '' : 'none'; });
-  });
-  renumberArticles();
-}
-/* ── 조문 번호 재계산 ── */
-function renumberArticles() {
-  const body = document.getElementById('jeonggwan-body');
-  if(!body) return;
-  const titles = Array.from(body.querySelectorAll('.art-title')).filter(el => el.offsetParent !== null);
-  titles.forEach((el, i) => {
-    el.textContent = el.textContent.replace(/^제d+조/, '제'+(i+1)+'조');
-  });
-  // 장 번호 재계산
-  const bondOn = checked_g('clause-bond');
-  const prefOn = checked_g('clause-prefshare');
-  let chNum = 8;
-  if(bondOn) chNum++;
-  if(prefOn) chNum++;
-  const appendixNum = bondOn ? (prefOn ? 10 : 9) : (prefOn ? 9 : 8);
-  const prefNum = bondOn ? 9 : 8;
-  const bondNum = 8;
-  const bondCh = document.getElementById('ch-bond');
-  if(bondCh) bondCh.innerHTML = '제 '+bondNum+' 장 &nbsp; 사 채';
-  const prefCh = document.getElementById('ch-prefshare');
-  if(prefCh) prefCh.innerHTML = '제 '+prefNum+' 장 &nbsp; 종류주식';
-  const appendEl = document.getElementById('ch-appendix-num');
-  if(appendEl) appendEl.textContent = appendixNum;
-}
-function checked_g(id) { const el = document.getElementById(id); return el ? el.checked : false; }
-/* ── 프리셋 ── */
-function applyPreset(type) {
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.style.borderColor='#d0d5dd'; btn.style.background='#fff'; btn.style.color='#374151';
-  });
-  const ab = document.getElementById('preset-'+type);
-  if(ab) { ab.style.borderColor='#1d4ed8'; ab.style.background='#eff6ff'; ab.style.color='#1d4ed8'; }
-  const s = (id,v) => { const el=document.getElementById(id); if(el) el.checked=v; };
-  if(type==='small') {
-    s('clause-branch',true); s('clause-evote',false); s('clause-boardvideo',false);
-    s('clause-interimDiv',false); s('clause-diffDiv',false); s('clause-treasury',false);
-    s('clause-prefshare',false); s('clause-bond',false); s('clause-newstockright',false);
-  } else if(type==='standard') {
-    s('clause-branch',true); s('clause-evote',true); s('clause-boardvideo',true);
-    s('clause-interimDiv',true); s('clause-diffDiv',false); s('clause-treasury',true);
-    s('clause-prefshare',false); s('clause-bond',false); s('clause-newstockright',false);
-  } else if(type==='full') {
-    s('clause-branch',true); s('clause-evote',true); s('clause-boardvideo',true);
-    s('clause-interimDiv',true); s('clause-diffDiv',true); s('clause-treasury',true);
-    s('clause-prefshare',true); s('clause-bond',true); s('clause-newstockright',true);
-  }
-  updateClauses();
-}
-/* ── 모든 문서에 적용 ── */
-function applyAll() {
-  const g = id => { const el=document.getElementById(id); return el ? el.value.trim() : ''; };
-  const v = {
-    company: g('i-company'), ceo: g('i-ceo'), addr: g('i-addr'),
-    shares: g('i-shares'), parval: g('i-parval'), purpose: g('i-purpose'),
-    date: g('i-date'), time: g('i-time'), place: g('i-place'),
-    attend: g('i-attend'), approvedate: g('i-approvedate'),
-    salary: (g('i-salarylimit')||'500,000,000').replace(/[^0-9]/g,'')
-      ? Number((g('i-salarylimit')||'500000000').replace(/[^0-9]/g,'')).toLocaleString('ko-KR')+'원'
-      : '500,000,000원',
-    ceomult: g('i-ceomult')||'3', othermult: g('i-othermult')||'1.5',
-    bereavement: g('i-bereavement')||'36',
-    fiscalStart: g('i-fiscal-start')||'1월 1일',
-    fiscalEnd: g('i-fiscal-end')||'12월 31일',
-  };
-  ['d1-company','d2-company','d2-company2','d2-company3',
-   'd3-company','d3-company2','d4-company','d4-company2',
-   'd5-company','d5-company2','d6-company','d6-company2'].forEach(id => set(id, v.company));
-  if(v.company) document.querySelector('.sidebar-logo').innerHTML =
-    v.company+'<span>정관·의사록·지급규정</span>';
-  const purposeEl = document.getElementById('d2-purpose');
-  if(purposeEl && v.purpose) purposeEl.textContent = v.purpose;
-  set('d2-addr', v.addr);
-  set('d1-shares', v.shares);
-  const maxshares = g('i-maxshares');
-  set('d2-maxshares', maxshares || v.shares);
-  set('d2-issued', v.shares);
-  set('d2-parval', v.parval);
-  set('d1-date', v.date); set('d1-sign-date', v.date);
-  set('d1-time', v.time);
-  if(v.place) set('d1-place', v.place+' (본점 회의실)');
-  set('d1-attend', v.attend);
-  set('d1-company2', v.company);
-  set('d2-date', v.approvedate); set('d2-date2', v.approvedate);
-  set('d3-date', v.approvedate); set('d4-date', v.approvedate); set('d5-date', v.approvedate);
-  set('d6-date', v.date); set('d6-sign-date', v.date);
-  set('d6-time', v.time);
-  if(v.place) set('d6-place', v.place+' (본점 회의실)');
-  set('d1-ceo', v.ceo); set('d6-ceo', v.ceo);
-  const noticeSel = document.getElementById('i-notice-sel');
-  const noticeCustom = document.getElementById('i-notice-custom');
-  const noticeText = noticeSel && noticeSel.value==='same'
-    ? '대구광역시에서 발행하는 일간 매일신문'
-    : (noticeCustom ? noticeCustom.value.trim() : '');
-  set('d2-notice', noticeText);
-  set('d1-salary', v.salary); set('d3-limit', v.salary);
-  set('d1-ceomult', v.ceomult); set('d1-othermult', v.othermult);
-  set('d4-ceomult', v.ceomult);
-  ['d4-othermult1','d4-othermult2','d4-othermult3','d4-othermult4'].forEach(id => set(id, v.othermult));
-  set('d1-bereave', v.bereavement); set('d5-months', v.bereavement);
-  // 영업연도 반영
-  set('d2-fiscal-start', v.fiscalStart);
-  set('d2-fiscal-end', v.fiscalEnd);
-  refreshSignTables();
-  alert('모든 문서에 적용되었습니다.\n각 문서에서 파란 밑줄 항목을 클릭하여 추가 수정할 수 있습니다.');
-}
-/* ── 초기화 ── */
-document.addEventListener('DOMContentLoaded', () => {
-  updateOfficerRows();
-  refreshSignTables();
-  set('d2-notice', '대구광역시에서 발행하는 일간 매일신문');
-  // 기본 프리셋: 소규모 기본형
-  applyPreset('small');
-  updateBoardSection();
 });
 </script>
 </body>
