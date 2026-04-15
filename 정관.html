@@ -108,6 +108,17 @@ textarea{resize:vertical;min-height:70px;}
   padding:0 3px;cursor:text;color:inherit;background:transparent;}
 .editable:focus{outline:none;border-bottom-color:#1d4ed8;background:#eff6ff;border-radius:2px;}
 .editable:empty::before{content:attr(data-ph);color:#9ca3af;font-style:italic;}
+/* 변경표 */
+.chg-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+.chg-table th{background:#f3f4f6;padding:6px 8px;border:1px solid #d1d5db;text-align:center;font-size:11px;font-weight:600;}
+.chg-table td{padding:3px 5px;border:1px solid #e5e7eb;vertical-align:middle;}
+.chg-table input[type=text]{width:100%;border:none;background:transparent;font-size:12px;padding:3px 4px;font-family:inherit;}
+.chg-table input[type=text]:focus{outline:none;background:#eff6ff;border-radius:2px;}
+.chg-table select{width:100%;border:none;background:transparent;font-size:12px;padding:3px 2px;font-family:inherit;cursor:pointer;}
+.chg-table select:focus{outline:none;background:#eff6ff;}
+.chg-table .del-btn{background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:2px 4px;line-height:1;}
+.chg-table .del-btn:hover{color:#b91c1c;}
+.chg-row-bulk td{background:#f9fafb;font-size:11px;color:#6b7280;font-style:italic;}
 /* 정관 유형 선택 */
 .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
 .type-card{border:2px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;
@@ -191,26 +202,52 @@ textarea{resize:vertical;min-height:70px;}
       <div class="form-field"><label class="lbl">대표이사 성명 <span class="req">*</span></label>
         <input type="text" id="i-ceo" placeholder="예) 김대한"></div>
       <div class="form-field"><label class="lbl">본점 소재지 <span class="req">*</span></label>
-        <input type="text" id="i-addr" placeholder="예) 서울특별시 서초구 ○○동 ○○번지"></div>
-      <div class="form-field"><label class="lbl">자본금</label>
-        <input type="text" id="i-capital" placeholder="예) 710,000,000" oninput="fmtCommaWon(this)" style="text-align:right;"></div>
+        <input type="text" id="i-addr" placeholder="예) 서울특별시 서초구 OO동"></div>
       <div class="form-field"><label class="lbl">발행(된)주식 총수</label>
-        <input type="text" id="i-shares" placeholder="예) 10,000주"></div>
+        <input type="text" id="i-shares" placeholder="예) 10,000주" oninput="calcCapital()"></div>
       <div class="form-field"><label class="lbl">발행 가능 주식 총수 (정관 제6조)</label>
         <input type="text" id="i-maxshares" placeholder="예) 100,000주"></div>
       <div class="form-field"><label class="lbl">1주의 금액</label>
-        <input type="text" id="i-parval" placeholder="예) 10,000원"></div>
+        <input type="text" id="i-parval" placeholder="예) 10,000원" oninput="calcCapital()"></div>
+      <div class="form-field full" style="margin-top:2px;">
+        <div id="capital-badge" style="display:none;padding:8px 14px;border-radius:8px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"></div>
+      </div>
       <div class="form-field full" style="margin-top:4px;">
-        <label class="lbl">공고방법 (공고 게재 언론사)</label>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <select id="i-notice-sel" onchange="handleNoticeSelect()" style="width:auto;min-width:200px;">
-            <option value="same">서울특별시 조선일보 (기본값)</option>
-            <option value="custom">직접 입력</option>
-          </select>
-          <input type="text" id="i-notice-custom" placeholder="예) 부산광역시에서 발행하는 일간 국제신문"
-            style="flex:1;display:none;" oninput="syncNotice()">
+        <label class="lbl">공고방법</label>
+        <select id="i-notice-sel" onchange="handleNoticeSelect()">
+          <option value="paper">신문 공고 — 서울특별시 조선일보 (기본값)</option>
+          <option value="paper-custom">신문 공고 — 직접 입력</option>
+          <option value="elec">전자공고(홈페이지) + 예비신문</option>
+        </select>
+        <!-- 신문 직접 입력 -->
+        <input type="text" id="i-notice-paper" placeholder="예) 부산광역시에서 발행하는 일간 국제신문"
+          style="display:none;margin-top:6px;" oninput="syncNotice()">
+        <!-- 전자공고 옵션 -->
+        <div id="i-notice-elec-wrap" style="display:none;margin-top:8px;
+          background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="form-field">
+              <label class="lbl" style="color:#1e40af;">홈페이지 URL <span class="req">*</span></label>
+              <input type="text" id="i-notice-url" placeholder="예) www.example.com" oninput="syncNotice()">
+            </div>
+            <div class="form-field">
+              <label class="lbl" style="color:#1e40af;">예비 공고 신문 (사고 시 대체 수단)</label>
+              <select id="i-notice-backup" onchange="syncNotice()">
+                <option value="조선일보">서울특별시 — 조선일보</option>
+                <option value="중앙일보">서울특별시 — 중앙일보</option>
+                <option value="동아일보">서울특별시 — 동아일보</option>
+                <option value="custom">직접 입력</option>
+              </select>
+              <input type="text" id="i-notice-backup-custom" placeholder="예) 부산광역시에서 발행하는 일간 국제신문"
+                style="display:none;margin-top:4px;" oninput="syncNotice()">
+            </div>
+            <div style="font-size:11px;color:#1e40af;line-height:1.6;padding-top:2px;">
+              ※ 상법 §289의2: 전자공고 채택 시 예비 공고수단(신문) 병기 의무<br>
+              ※ 전자공고는 게시 시작일부터 1개월 이상 홈페이지에 유지해야 합니다
+            </div>
+          </div>
         </div>
-        <span class="hint" id="i-notice-hint">기본값 적용 — 서울특별시에서 발행하는 일간 조선일보</span>
+        <span class="hint" id="i-notice-hint" style="margin-top:6px;display:block;"></span>
       </div>
     </div>
   </div>
@@ -283,6 +320,30 @@ textarea{resize:vertical;min-height:70px;}
     <div class="opt-section" style="margin-top:10px;">
       <div class="opt-section-title">임의적 기재사항 (선택 포함)</div>
       <div class="opt-list" id="opt-arb"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">정관 변경표 입력 <span style="font-size:11px;color:#9ca3af;font-weight:400;">— 의사록 변경 내용 자동 생성</span></div>
+    <div class="hint" style="margin-bottom:10px;">신설·분리·내용변경 조항만 행으로 입력하세요. 번호만 밀린 나머지 조항은 아래 체크박스로 자동 처리됩니다. 정관 유형 변경 시 신설 조항은 자동으로 제안됩니다.</div>
+    <table class="chg-table">
+      <thead>
+        <tr>
+          <th style="width:22%">변경 전 조항</th>
+          <th style="width:22%">변경 후 조항</th>
+          <th style="width:13%">구분</th>
+          <th>변경 내용 설명</th>
+          <th style="width:32px"></th>
+        </tr>
+      </thead>
+      <tbody id="chg-body"></tbody>
+    </table>
+    <div style="margin-top:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <button class="btn btn-sm" onclick="addChgRow()">+ 행 추가</button>
+      <label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="checkbox" id="chg-bulk" checked>
+        <span>나머지 번호만 변경된 조항 일괄처리 행 포함</span>
+      </label>
     </div>
   </div>
 
@@ -369,17 +430,13 @@ textarea{resize:vertical;min-height:70px;}
       <p style="margin-left:24px;">제4호 안건 : 유족보상금지급규정 제정의 건</p><br><br>
 
       <div class="agenda-head">제1호 안건 &nbsp; <u>정관 일부 변경의 건</u></div>
-      <p style="margin-left:18px;">의장은 임원 보수·퇴직금·유족보상금 지급 근거를 별도 지급규정으로 위임하여 법인세법상 손금 인정 요건을 충족하고, 전자투표·이사회 화상회의 등 상법 개정사항을 반영하기 위하여 정관 일부를 변경하고자 함을 설명하였다.</p><br>
+      <p style="margin-left:18px;" id="d1-chg-reason"><span class="editable" contenteditable data-ph="정관 변경 이유를 입력하세요">의장은 상법 개정사항을 반영하고 임원 보수·퇴직금·유족보상금 지급 근거를 별도 지급규정으로 위임하여 법인세법상 손금 인정 요건을 충족하기 위하여 정관 일부를 변경하고자 함을 설명하였다.</span></p><br>
       <p style="margin-left:18px;"><strong>【 주요 변경 내용 】</strong></p>
-      <table class="doc-table">
-        <tr><th>조항</th><th>구분</th><th>변경 전</th><th>변경 후</th></tr>
-        <tr><td class="c">제9조</td><td class="c">종류주식</td><td class="l">보통주만 규정</td><td class="l">종류주식 발행 근거 추가</td></tr>
-        <tr><td class="c">제21조(신설)</td><td class="c">전자투표</td><td class="l">규정 없음</td><td class="l">전자투표 도입, 감사 선임 의결정족수 완화</td></tr>
-        <tr><td class="c">제32조(신설)</td><td class="c">이사회 화상</td><td class="l">규정 없음</td><td class="l">화상회의 방식 이사회 허용</td></tr>
-        <tr><td class="c">제37조</td><td class="c">보수·퇴직금</td><td class="l">주총 결의로 정한다</td><td class="l">별도 지급규정으로 위임</td></tr>
-        <tr><td class="c">제44~45조(신설)</td><td class="c">배당</td><td class="l">이익배당만 규정</td><td class="l">중간배당·현물배당 신설</td></tr>
-        <tr><td class="c">제47조(신설)</td><td class="c">자기주식</td><td class="l">규정 없음</td><td class="l">취득·소각 근거 신설</td></tr>
-        <tr><td class="c">제48조(신설)</td><td class="c">종류주식</td><td class="l">규정 없음</td><td class="l">우선주·상환주·전환주 발행 절차</td></tr>
+      <table class="doc-table" id="d1-chg-table">
+        <tr><th>변경 전 조항</th><th>변경 후 조항</th><th>구분</th><th>변경 내용 설명</th></tr>
+        <tbody id="d1-chg-body">
+          <tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:12px;">기본 정보 입력 후 <strong>모든 문서에 적용</strong> 버튼을 눌러주세요.</td></tr>
+        </tbody>
       </table>
       <p style="margin-left:18px;">의장은 이의 없음을 확인하고 표결에 부쳤다.<br>
       <small style="color:#666;">※ 정관 변경은 상법 제434조 특별결의 사항 (출석 주주 의결권 2/3 이상 + 발행주식총수 1/3 이상)</small></p>
@@ -534,7 +591,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-body">① 퇴직금이 소득세법 §22·법인세법 시행령 §44의 손금 인정 한도를 초과하는 경우, 초과분은 손금불산입 처리된다.<br>② 손금 인정 한도: 퇴임일 직전 3년 연평균 총급여 × 10% × 근속연수 × 2배<br>③ 퇴직금 지급 전 담당 세무사와 반드시 협의한다.</div>
       <div class="ch-title">제 3 장 &nbsp; 중간정산 및 지급 절차</div>
       <div class="art-title">제7조 (중간정산)</div>
-      <div class="art-item">1. 무주택 임원이 본인 명의 주택 구입 시<br>2. 임원 또는 부양가족의 질병·부상 치료 시 (6개월 이상 요양 필요)<br>3. 임원 보수 감액에 따른 퇴직금 기준 이원화가 필요한 경우</div>
+      <div class="art-item">1. 무주택 임원이 본인 명의 주택 구입 시<br>2. 임원 또는 부양가족의 질병·부상 치료 시 (6개월 이상 요양 필요)<br>3. 보수 감액으로 퇴직금 산정 기준 분리가 필요한 경우 (근퇴법 §8②)</div>
       <div class="art-title">제8조 (지급 절차)</div>
       <div class="art-body">① 퇴임일로부터 14일 이내에 이사회 결의를 거쳐 퇴직금을 지급함을 원칙으로 한다.<br>② 이사회 결의서에는 지급 대상자, 산정 한도액, 실제 지급액, 감액 사유, 지급 방법을 명시하여야 한다.<br>③ IRP(개인형 퇴직연금) 계좌 이체를 원하는 경우 이를 허용한다.</div>
       <div class="ch-title">제 4 장 &nbsp; 경과조치 및 보칙</div>
@@ -699,22 +756,113 @@ function fmtCommaWon(el) {
 
 /* ── 공고방법 선택 처리 ── */
 function handleNoticeSelect() {
+  const sel   = document.getElementById('i-notice-sel');
+  const paper = document.getElementById('i-notice-paper');
+  const elec  = document.getElementById('i-notice-elec-wrap');
+  const hint  = document.getElementById('i-notice-hint');
+
+  paper.style.display = 'none';
+  elec.style.display  = 'none';
+
+  if(sel.value === 'paper') {
+    hint.textContent = '정관 문구: "서울특별시에서 발행하는 일간 조선일보에 게재한다"';
+  } else if(sel.value === 'paper-custom') {
+    paper.style.display = '';
+    hint.textContent = '언론사명을 정확히 입력하세요 (예: 경기도에서 발행하는 일간 경기일보)';
+    paper.focus();
+  } else if(sel.value === 'elec') {
+    elec.style.display = '';
+    hint.textContent = '정관 문구: "회사 인터넷 홈페이지에 게재하고, 불가능한 경우 ○○신문에 게재한다"';
+  }
+  syncNotice();
+}
+
+function handleBackupSelect() {
+  const backup = document.getElementById('i-notice-backup');
+  const custom = document.getElementById('i-notice-backup-custom');
+  custom.style.display = backup.value === 'custom' ? '' : 'none';
+  syncNotice();
+}
+
+/* 공고방법 정관 문구 생성 */
+function getNoticeText() {
   const sel = document.getElementById('i-notice-sel');
-  const custom = document.getElementById('i-notice-custom');
-  const hint = document.getElementById('i-notice-hint');
-  if(sel.value === 'same') {
-    custom.style.display = 'none';
-    hint.textContent = '기본값 적용 — 서울특별시에서 발행하는 일간 조선일보';
-    set('d2-notice', '서울특별시에서 발행하는 일간 조선일보');
-  } else {
-    custom.style.display = '';
-    hint.textContent = '언론사 이름을 정확히 입력하세요 (정관에 그대로 기재됩니다)';
-    custom.focus();
+  if(!sel) return '';
+  if(sel.value === 'paper') {
+    return '서울특별시에서 발행하는 일간 조선일보';
+  } else if(sel.value === 'paper-custom') {
+    return document.getElementById('i-notice-paper').value.trim();
+  } else if(sel.value === 'elec') {
+    const url    = document.getElementById('i-notice-url').value.trim() || 'www.example.com';
+    const backup = document.getElementById('i-notice-backup');
+    let backupName = '';
+    if(backup.value === 'custom') {
+      backupName = document.getElementById('i-notice-backup-custom').value.trim() || '○○신문';
+    } else {
+      const backupMap = {
+        '조선일보':'서울특별시에서 발행하는 일간 조선일보',
+        '중앙일보':'서울특별시에서 발행하는 일간 중앙일보',
+        '동아일보':'서울특별시에서 발행하는 일간 동아일보',
+      };
+      backupName = backupMap[backup.value] || backup.value;
+    }
+    // 전자공고 전용 정관 문구 (두 문장)
+    return `회사의 인터넷 홈페이지(${url})에 게재한다. 다만, 전산장애 또는 그 밖의 부득이한 사유로 전자공고를 할 수 없는 때에는 ${backupName}에 게재한다`;
+  }
+  return '';
+}
+
+function syncNotice() {
+  // 백업 신문 custom 표시 제어
+  const backup = document.getElementById('i-notice-backup');
+  const backupCustom = document.getElementById('i-notice-backup-custom');
+  if(backup && backupCustom) {
+    backupCustom.style.display = backup.value === 'custom' ? '' : 'none';
   }
 }
-function syncNotice() {
-  const val = document.getElementById('i-notice-custom').value.trim();
-  set('d2-notice', val);
+
+/* ── 자본금 자동 계산 & 소규모 판단 ── */
+function calcCapital() {
+  const sharesRaw = document.getElementById('i-shares').value.replace(/[^0-9]/g,'');
+  const parvalRaw = document.getElementById('i-parval').value.replace(/[^0-9]/g,'');
+  const badge = document.getElementById('capital-badge');
+  if(!badge) return;
+
+  if(!sharesRaw || !parvalRaw) {
+    badge.style.display = 'none';
+    return;
+  }
+
+  const shares = parseInt(sharesRaw);
+  const parval = parseInt(parvalRaw);
+  const capital = shares * parval;
+  const isSmall = capital < 1_000_000_000; // 10억 미만
+
+  // 자본금 표시
+  const capitalStr = capital.toLocaleString('ko-KR') + '원';
+  const typeLabel = isSmall ? '소규모 기본형 해당' : '일반형 이상 해당';
+  const badgeBg   = isSmall ? '#d1fae5' : '#dbeafe';
+  const badgeColor= isSmall ? '#065f46'  : '#1e40af';
+  const icon      = isSmall ? '✅' : 'ℹ️';
+
+  badge.style.display = 'flex';
+  badge.style.background = badgeBg;
+  badge.style.border = `1px solid ${isSmall ? '#6ee7b7' : '#93c5fd'}`;
+  badge.innerHTML = `
+    <span style="font-weight:700;color:${badgeColor};">${icon} 자본금 ${capitalStr}</span>
+    <span style="color:${badgeColor};">→ <strong>${typeLabel}</strong>
+      ${isSmall
+        ? '(이사 1~2명 가능, 감사 면제, 소집통지 10일)'
+        : '(이사 3인 이상, 이사회 운영, 감사 선임 필요)'}</span>
+    <button onclick="applyCapitalType(${isSmall})" style="margin-left:auto;padding:3px 10px;
+      border-radius:5px;border:1px solid ${badgeColor};background:${badgeColor};color:#fff;
+      font-size:11px;cursor:pointer;font-family:inherit;">정관 유형 적용</button>`;
+}
+
+function applyCapitalType(isSmall) {
+  selectType(isSmall ? 'sm' : 'no');
+  const d2body = document.getElementById('d2-body');
+  if(d2body) d2body.innerHTML = buildJeongGwan({});
 }
 
 /* ── 임원 직위 입력 행 생성 ── */
@@ -779,12 +927,8 @@ function refreshSignTables() {
 function applyAll() {
   const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
 
-  // 공고방법 계산 (buildJeongGwan에 전달하기 위해 미리 계산)
-  const noticeSel = document.getElementById('i-notice-sel');
-  const noticeCustom = document.getElementById('i-notice-custom');
-  const noticeText = noticeSel && noticeSel.value === 'same'
-    ? '서울특별시에서 발행하는 일간 조선일보'
-    : (noticeCustom ? noticeCustom.value.trim() : '');
+  // 공고방법 문구 생성
+  const noticeText = getNoticeText();
 
   const v = {
     company:     g('i-company'),
@@ -810,6 +954,14 @@ function applyAll() {
   // 정관 동적 생성
   const d2body = document.getElementById('d2-body');
   if(d2body) d2body.innerHTML = buildJeongGwan(v);
+
+  // 의사록 변경표 동적 생성
+  const d1chg = document.getElementById('d1-chg-body');
+  if(d1chg) {
+    const rows = buildChgTableHTML();
+    d1chg.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;color:#9ca3af;padding:10px;">변경 내용 없음</td></tr>';
+  }
+
   refreshSignTables();
 
   // 회사명 (d2-* 는 buildJeongGwan이 렌더링하므로 제외)
@@ -882,12 +1034,138 @@ const OPT_LIST = [
   {k:'a50', label:'해산',                         cat:'arb', def:['no','ex']},
 ];
 
+/* ── 변경표 JS ── */
+
+// 구분 선택지
+const CHG_TYPES = ['신설','변경','번호변경','분리·변경','삭제'];
+
+// 행 추가 예시 (순환)
+const CHG_EXAMPLES = [
+  { before:'제3조 (본점의 소재지 및 지점)',  after:'제3조 (본점의 소재지)',          type:'분리·변경', desc:'본점 소재지 조항 분리' },
+  { before:'—',                              after:'제4조 (지점)',                   type:'신설',    desc:'지점 설치 조항 별도 분리 신설' },
+  { before:'제4조 (공고방법)',                after:'제5조 (공고방법)',               type:'번호변경', desc:'내용 동일, 번호만 변경' },
+  { before:'제5조 (주식의 종류)',             after:'제6조 (주식 및 주권의 종류)',    type:'변경',    desc:'주권 관련 내용 추가' },
+  { before:'—',                              after:'제21조 (전자투표)',              type:'신설',    desc:'전자투표 도입 근거 신설' },
+  { before:'제20조 (이사와 감사의 수)',       after:'제25조 (이사와 감사의 수)',      type:'번호변경', desc:'내용 동일, 번호만 변경' },
+];
+let _chgExIdx = 0;
+
+// 행 추가 (값이 없으면 순환 예시를 placeholder로 표시)
+function addChgRow(before='', after='', type='신설', desc='') {
+  const tbody = document.getElementById('chg-body');
+  const tr = document.createElement('tr');
+  const typeOpts = CHG_TYPES.map(t =>
+    `<option value="${t}"${t===type?' selected':''}>${t}</option>`).join('');
+
+  // 직접 값이 전달되지 않은 경우 순환 예시를 placeholder로 사용
+  const ex = CHG_EXAMPLES[_chgExIdx % CHG_EXAMPLES.length];
+  _chgExIdx++;
+  const phBefore = before ? '' : ex.before;
+  const phAfter  = before ? '' : ex.after;
+  const phDesc   = before ? '' : ex.desc;
+  // type은 예시 type으로 preset (직접 값 있으면 그것 사용)
+  const selType  = before ? type : ex.type;
+  const typeOptsDyn = CHG_TYPES.map(t =>
+    `<option value="${t}"${t===selType?' selected':''}>${t}</option>`).join('');
+
+  tr.innerHTML = `
+    <td><input type="text" placeholder="${phBefore}" value="${before}"></td>
+    <td><input type="text" placeholder="${phAfter}" value="${after}"></td>
+    <td><select>${typeOptsDyn}</select></td>
+    <td><input type="text" placeholder="${phDesc}" value="${desc}"></td>
+    <td><button class="del-btn" onclick="removeChgRow(this)" title="삭제">✕</button></td>`;
+  tbody.appendChild(tr);
+}
+
+// 행 삭제
+function removeChgRow(btn) {
+  btn.closest('tr').remove();
+}
+
+// 정관 유형에 따라 신설 조항 자동 제안
+const CHG_SUGGEST = {
+  a11:  { after:'신주인수권', type:'신설', desc:'신주인수권 근거 조항 신설' },
+  a18:  { after:'주식매수선택권', type:'신설', desc:'주식매수선택권 근거 조항 신설' },
+  a21:  { after:'전자투표', type:'신설', desc:'전자투표 도입, 감사 선임 의결정족수 완화' },
+  a32:  { after:'이사회 화상회의', type:'신설', desc:'화상회의 방식 이사회 허용' },
+  a43:  { after:'주식배당', type:'신설', desc:'주식배당 근거 조항 신설' },
+  a44:  { after:'중간배당', type:'신설', desc:'중간배당 근거 조항 신설' },
+  a45:  { after:'현물배당', type:'신설', desc:'현물배당 근거 조항 신설' },
+  a47:  { after:'자기주식의 취득 및 소각', type:'신설', desc:'자기주식 취득·소각 근거 신설' },
+  a48:  { after:'종류주식의 발행', type:'신설', desc:'우선주·상환주·전환주 발행 절차 신설' },
+  atsb: { after:'전환사채의 발행', type:'신설', desc:'전환사채 발행 근거 신설' },
+  awsb: { after:'신주인수권부사채의 발행', type:'신설', desc:'신주인수권부사채 발행 근거 신설' },
+};
+
+function initChgTable(tp) {
+  const tbody = document.getElementById('chg-body');
+  if(!tbody) return;
+  // 기존 자동제안 행(data-auto)만 제거, 사용자 수동 행은 유지
+  tbody.querySelectorAll('tr[data-auto]').forEach(r => r.remove());
+
+  // 체크된 선택 조항 중 신설 가능한 것만 상단에 제안
+  OPT_LIST.forEach(o => {
+    const el = document.getElementById('opt-' + o.k);
+    if(!el || !el.checked) return;
+    const sug = CHG_SUGGEST[o.k];
+    if(!sug) return;
+    const typeOpts = CHG_TYPES.map(t =>
+      `<option value="${t}"${t===sug.type?' selected':''}>${t}</option>`).join('');
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-auto', '1');
+    tr.innerHTML = `
+      <td><input type="text" placeholder="없음 (신설)" value=""></td>
+      <td><input type="text" value="${sug.after}"></td>
+      <td><select>${typeOpts}</select></td>
+      <td><input type="text" value="${sug.desc}"></td>
+      <td><button class="del-btn" onclick="removeChgRow(this)" title="삭제">✕</button></td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+  });
+}
+
+// 의사록 변경표 HTML 생성
+function buildChgTableHTML() {
+  const tbody = document.getElementById('chg-body');
+  if(!tbody) return '';
+  const rows = [...tbody.querySelectorAll('tr')];
+  let html = '';
+  rows.forEach(tr => {
+    const inputs = tr.querySelectorAll('input[type=text]');
+    const sel    = tr.querySelector('select');
+    const before = inputs[0]?.value.trim() || '—';
+    const after  = inputs[1]?.value.trim() || '—';
+    const type   = sel?.value || '';
+    const desc   = inputs[2]?.value.trim() || '';
+
+    // 구분별 스타일
+    const typeColor = type==='신설' ? '#065f46' : type==='삭제' ? '#991b1b' : '#1e40af';
+    html += `<tr>
+      <td class="c">${before}</td>
+      <td class="c">${after}</td>
+      <td class="c" style="color:${typeColor};font-weight:600;">${type}</td>
+      <td class="l">${desc}</td>
+    </tr>`;
+  });
+
+  // 일괄처리 행
+  const bulk = document.getElementById('chg-bulk');
+  if(bulk && bulk.checked) {
+    html += `<tr class="chg-row-bulk">
+      <td colspan="4" class="l" style="padding:6px 10px;">
+        ※ 위 조항 외 나머지는 조항 번호만 변경되고 내용은 동일함
+      </td>
+    </tr>`;
+  }
+  return html;
+}
+
 /* 유형 선택 */
 function selectType(tp) {
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
   const card = document.querySelector(`.type-card input[value="${tp}"]`);
   if(card) { card.checked = true; card.closest('.type-card').classList.add('selected'); }
   initOptUI(tp);
+  initChgTable(tp);
 }
 
 /* 체크박스 UI 초기화 */
@@ -1127,7 +1405,11 @@ document.addEventListener('DOMContentLoaded', () => {
   updateOfficerRows();
   refreshSignTables();
 
+  // 공고방법 초기 hint 표시
+  handleNoticeSelect();
+
   // 페이지 로드 시 소규모 기본형 선택 후 정관 미리 표시 (빈칸)
+  // selectType() 안에서 initOptUI + initChgTable 동시 처리됨
   selectType('sm');
 
   const d2body = document.getElementById('d2-body');
