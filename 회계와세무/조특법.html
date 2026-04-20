@@ -30,6 +30,36 @@
         .law-link { display: inline-flex; align-items: center; gap: 3px; color: #4f46e5; font-size: 10px; font-weight: 800; text-decoration: underline; }
         .consult-box { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-radius: 20px; padding: 20px; color: white; }
 
+        /* 공제명 클릭 가능 표시 */
+        .title-link { cursor: pointer; transition: color .15s; }
+        .title-link:hover { color: #4f46e5; text-decoration: underline; }
+
+        /* 상세 모달 */
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.55); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .modal-backdrop.open { display: flex; }
+        .modal-panel { background: #fff; border-radius: 20px; width: 100%; max-width: 720px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.25); }
+        .modal-header { position: sticky; top: 0; background: #fff; padding: 20px 24px 14px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .modal-header h2 { font-size: 18px; font-weight: 900; color: #0f172a; line-height: 1.35; }
+        .modal-close { background: #f1f5f9; border: 0; border-radius: 8px; width: 32px; height: 32px; font-size: 16px; font-weight: 800; cursor: pointer; color: #64748b; flex-shrink: 0; }
+        .modal-close:hover { background: #e2e8f0; color: #0f172a; }
+        .modal-body { padding: 18px 24px 24px; }
+        .modal-section { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #e2e8f0; }
+        .modal-section:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+        .modal-section h3 { font-size: 11px; font-weight: 900; color: #4f46e5; text-transform: uppercase; letter-spacing: -0.3px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .modal-section .kv { display: grid; grid-template-columns: 92px 1fr; gap: 6px 12px; font-size: 13px; color: #334155; line-height: 1.55; }
+        .modal-section .kv dt { font-weight: 800; color: #64748b; }
+        .modal-section .kv dd { margin: 0; }
+        .modal-section .muted { color: #94a3b8; font-size: 12px; font-style: italic; }
+        .modal-section ul.clean { list-style: none; padding: 0; margin: 0; }
+        .modal-section ul.clean li { padding: 4px 0 4px 16px; position: relative; font-size: 13px; color: #334155; line-height: 1.5; }
+        .modal-section ul.clean li::before { content: "•"; position: absolute; left: 4px; color: #6366f1; font-weight: 900; }
+        .pill { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; margin-right: 4px; border: 1px solid; }
+        .pill-green { background: #f0fdf4; color: #16a34a; border-color: #dcfce7; }
+        .pill-red   { background: #fef2f2; color: #dc2626; border-color: #fee2e2; }
+        .pill-amber { background: #fffbeb; color: #d97706; border-color: #fde68a; }
+        .pill-blue  { background: #eff6ff; color: #2563eb; border-color: #dbeafe; }
+        .pill-slate { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+
         /* 인쇄 설정 */
         @media print {
             @page { size: A4; margin: 15mm; }
@@ -41,6 +71,7 @@
             .info-list { font-size: 9pt !important; }
             .spec-box { background: #eee !important; margin-top: 8px !important; }
             #expert-advice { font-size: 9pt !important; page-break-inside: avoid; }
+            .modal-backdrop { display: none !important; }
         }
     </style>
 </head>
@@ -139,37 +170,87 @@
     </div>
 </div>
 
-<script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxosuJSvfkc-RwP1V8gYTTwTDrugOINAsJ-P43auIP2d8yFnkhdEC7yxx_Xh5YHFpevqg/exec";
-    
-    const groupMap = {
-        'G2': '제127조 제2항 (투자세액공제 중복배제)',
-        'G3': '제127조 제3항 (세액감면 vs 세액공제)',
-        'G4': '제127조 제4항 (수도권외 이전 등 중복배제)',
-        'G5': '제127조 제5항 (세액감면 간 중복배제)',
-        'COMMON': '중복 적용 가능 항목'
-    };
+<!-- 공제 상세 모달 -->
+<div id="detail-modal" class="modal-backdrop no-print" onclick="if(event.target===this) closeDetail()">
+    <div class="modal-panel">
+        <div class="modal-header">
+            <div>
+                <div id="detail-article" class="text-[10px] font-black text-slate-400 uppercase mb-1">&nbsp;</div>
+                <h2 id="detail-title">공제명</h2>
+            </div>
+            <button class="modal-close" onclick="closeDetail()" aria-label="닫기">×</button>
+        </div>
+        <div id="detail-body" class="modal-body"></div>
+    </div>
+</div>
 
-    let taxDB = [];
+<script>
+    // === 설정 ======================================================
+    // 상담 접수는 기존 구글 Apps Script 엔드포인트를 그대로 사용
+    const CONSULT_URL = "https://script.google.com/macros/s/AKfycbxosuJSvfkc-RwP1V8gYTTwTDrugOINAsJ-P43auIP2d8yFnkhdEC7yxx_Xh5YHFpevqg/exec";
+
+    // 로컬 JSON 경로 (GitHub Actions 가 엑셀 변경 시 자동 생성)
+    const DATA_BASE = "../data/";
+    const DATA_LIST   = DATA_BASE + "조특법_공제목록.json";
+    const DATA_DETAIL = DATA_BASE + "조특법_조문상세.json";
+    const DATA_MATRIX = DATA_BASE + "조특법_중복배제매트릭스.json";
+    const DATA_META   = DATA_BASE + "조특법_메타.json";
+
+    // === 상태 ======================================================
+    let taxDB = [];            // 공제목록
+    let articleDetail = {};    // 조문상세 { "6": {...} }
+    let matrix127 = [];        // 중복배제 페어
+    let structure127 = [];     // 제127조 항별 설명
+    let groupMap = {};         // G2..G5 라벨
     let selectedTags = new Set();
 
-    async function loadData() {
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            taxDB = data.map(item => ({
-                ...item,
-                tags: item.tags ? item.tags.toString().split(',').map(t => t.trim()) : [],
-                exclusion_codes: item.exclusion_codes ? item.exclusion_codes.toString().split(',').map(c => c.trim()) : ['NONE']
-            }));
-            renderTags();
-        } catch (e) { document.getElementById('loading').innerText = "데이터 로딩 실패"; }
+    // === HTML 이스케이프 ===========================================
+    function esc(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
+    // === 라벨/배지 헬퍼 ============================================
+    function pillForStatus(val) {
+        const v = String(val || "").trim();
+        if (!v || v === '-') return '<span class="pill pill-slate">-</span>';
+        if (v.includes('해당없음') || v.includes('비과세') || v.includes('배제') || v.includes('면제') || v.includes('안됨'))
+            return `<span class="pill pill-green">${esc(v)}</span>`;
+        if (v === '해당' || v.includes('과세') || v.includes('적용'))
+            return `<span class="pill pill-red">${esc(v)}</span>`;
+        return `<span class="pill pill-blue">${esc(v)}</span>`;
+    }
+
+    // === 데이터 로딩 ================================================
+    async function loadData() {
+        try {
+            const [list, detail, matrix, meta] = await Promise.all([
+                fetch(DATA_LIST).then(r => r.json()),
+                fetch(DATA_DETAIL).then(r => r.json()),
+                fetch(DATA_MATRIX).then(r => r.json()),
+                fetch(DATA_META).then(r => r.json()).catch(()=>({})),
+            ]);
+            taxDB = list;
+            articleDetail = detail || {};
+            matrix127 = (matrix && matrix.pairs) || [];
+            structure127 = (matrix && matrix.structure) || [];
+            groupMap = (meta && meta.group_map) || {
+                G2: '제127조 제2항', G3: '제127조 제3항',
+                G4: '제127조 제4항', G5: '제127조 제5항'
+            };
+            renderTags();
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loading').innerText = "데이터 로딩 실패 — 로컬 서버에서 실행하셨는지 확인해 주세요.";
+        }
+    }
+
+    // === 좌측 태그 사이드바 ========================================
     function renderTags() {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('main-content').classList.remove('hidden');
-        const allTags = [...new Set(taxDB.flatMap(d => d.tags))].filter(t => t).sort();
+        const allTags = [...new Set(taxDB.flatMap(d => d.tags || []))].filter(Boolean).sort();
         const container = document.getElementById('tag-container');
         container.innerHTML = "";
         allTags.forEach(tag => {
@@ -185,18 +266,12 @@
         });
     }
 
-    function textToList(text) {
-        if (!text) return "<li>내용 없음</li>";
-        return text.toString().split('\n').filter(line => line.trim()).map(line => `<li>${line}</li>`).join('');
-    }
-
+    // === 결과 카드 렌더링 ==========================================
     function updateUI() {
         const resultArea = document.getElementById('result-area');
-        const coverDate = document.getElementById('cover-date');
-        const coverTags = document.getElementById('cover-tags');
-        
-        coverDate.innerText = `분석 일시: ${new Date().toLocaleString()}`;
-        coverTags.innerHTML = Array.from(selectedTags).map(t => `<li class="bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100"># ${t}</li>`).join('');
+        document.getElementById('cover-date').innerText = `분석 일시: ${new Date().toLocaleString()}`;
+        document.getElementById('cover-tags').innerHTML = Array.from(selectedTags)
+            .map(t => `<li class="bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100"># ${esc(t)}</li>`).join('');
 
         if (selectedTags.size === 0) {
             resultArea.innerHTML = `<div class="bg-white p-20 rounded-3xl text-center border-2 border-dashed border-slate-200 text-slate-300 font-bold italic text-sm no-print">좌측 필터를 선택해 주세요.</div>`;
@@ -204,85 +279,211 @@
             return;
         }
 
-        // 지능형 랭킹 배열 로직 (Rank: 0=최우선, 1=우선, 2=일반)
-        let matched = taxDB.map(item => {
-            const score = item.tags.filter(t => selectedTags.has(t)).length;
+        // 랭킹: 최저한세 해당없음(배제) 우선 → 이월공제 불가 우선 → 일반
+        const matched = taxDB.map(item => {
+            const score = (item.tags || []).filter(t => selectedTags.has(t)).length;
+            const mt = String(item.min_tax || "");
+            const co = String(item.carry_over || "");
             let rank = 2;
-            const minTaxStr = String(item.min_tax || "");
-            const carryStr = String(item.carry_over || "");
-
-            if (minTaxStr.includes("배제") || minTaxStr.includes("면제")) rank = 0;
-            else if (carryStr.includes("해당없음") || carryStr.includes("NONE")) rank = 1;
-            
+            if (mt.includes("해당없음") || mt.includes("배제") || mt.includes("면제")) rank = 0;
+            else if (co.includes("안됨") || co.includes("해당없음")) rank = 1;
             return { ...item, score, rank };
         })
         .filter(item => item.score > 0)
         .sort((a, b) => a.rank - b.rank || b.score - a.score);
 
         document.getElementById('match-count').innerText = matched.length;
-
-        resultArea.innerHTML = "";
-        matched.forEach(item => {
-            const isMinTaxFree = item.min_tax && (item.min_tax.includes("배제") || item.min_tax.includes("면제"));
-            const conflictBadges = item.exclusion_codes.filter(c => c !== 'NONE').map(c => `<span class="conflict-tag">중복배제: ${groupMap[c] || c}</span>`).join('');
-
-            const card = `
-            <div class="benefit-card">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                             <span class="px-2 py-0.5 bg-slate-100 text-slate-500 text-[8px] font-black rounded uppercase">${item.article}</span>
-                             ${item.law_url ? `<a href="${item.law_url}" target="_blank" class="law-link">상세조문 →</a>` : ''}
-                        </div>
-                        <h3 class="text-lg font-black text-slate-900 tracking-tight">${item.title}</h3>
-                    </div>
-                </div>
-                <div class="reqs-main-box">
-                    <div class="flex flex-wrap items-center gap-1.5 mb-2 pb-2 border-b border-slate-100">
-                        <h4 class="text-[10px] font-black text-indigo-600 uppercase tracking-tighter mr-1">🔎 적용 요건</h4>
-                        ${conflictBadges}
-                    </div>
-                    <ul class="info-list">${textToList(item.reqs)}</ul>
-                </div>
-                <div class="spec-box">
-                    <div class="spec-item"><p class="spec-label">최저한세</p><p class="spec-value ${isMinTaxFree ? 'text-emerald-600 font-black' : ''}">${item.min_tax || '-'}</p></div>
-                    <div class="spec-item"><p class="spec-label">농특세</p><p class="spec-value">${item.agri_tax || '-'}</p></div>
-                    <div class="spec-item"><p class="spec-label">감가상각의제</p><p class="spec-value">${item.deemed_depr || '-'}</p></div>
-                    <div class="spec-item"><p class="spec-label">이월공제</p><p class="spec-value">${item.carry_over || '-'}</p></div>
-                    <div class="spec-item" style="background:#f8fafc;"><p class="spec-label text-indigo-500 font-black">사후관리</p><p class="spec-value text-indigo-800 font-bold">${item.management || '없음'}</p></div>
-                </div>
-            </div>`;
-            resultArea.insertAdjacentHTML('beforeend', card);
-        });
+        resultArea.innerHTML = matched.map(renderCard).join('');
     }
 
-   async function sendConsultRequest() {
-    const phone = document.getElementById('userPhone').value;
-    const tags = Array.from(selectedTags).join(', '); // 현재 선택된 태그들
-    
-    if(!phone) return alert("전화번호를 입력해 주세요.");
-    if(!confirm("입력하신 번호로 상담을 신청하시겠습니까?")) return;
-
-    const btn = document.getElementById('sendBtn');
-    btn.innerText = "전송 중...";
-    btn.disabled = true;
-
-    try {
-        // fetch를 이용해 구글 서버로 전송
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ phone: phone, tags: tags })
-        });
-        
-        alert("신청이 완료되었습니다. 대한세무법인 담당자가 연락드리겠습니다.!");
-        document.getElementById('userPhone').value = "";
-    } catch (e) {
-        alert("연결 오류가 발생했습니다.");
-    } finally {
-        btn.innerText = "상담 신청하기";
-        btn.disabled = false;
+    function renderCard(item) {
+        const isMinTaxFree = /해당없음|배제|면제/.test(item.min_tax || "");
+        const conflictBadges = (item.exclusion_codes || [])
+            .filter(c => c && c !== 'NONE')
+            .map(c => `<span class="conflict-tag">중복배제: ${esc(groupMap[c] || c)}</span>`).join('');
+        const reqsHtml = (item.reqs || []).length
+            ? (item.reqs || []).map(line => `<li>${esc(line)}</li>`).join('')
+            : '<li>내용 없음</li>';
+        return `
+        <div class="benefit-card">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2 py-0.5 bg-slate-100 text-slate-500 text-[8px] font-black rounded uppercase">${esc(item.article)}</span>
+                    </div>
+                    <h3 class="title-link text-lg font-black text-slate-900 tracking-tight" onclick="openDetail('${esc(item.id)}')" title="클릭하면 상세 설명을 볼 수 있습니다">
+                        ${esc(item.title)}
+                    </h3>
+                </div>
+            </div>
+            <div class="reqs-main-box">
+                <div class="flex flex-wrap items-center gap-1.5 mb-2 pb-2 border-b border-slate-100">
+                    <h4 class="text-[10px] font-black text-indigo-600 uppercase tracking-tighter mr-1">🔎 적용 요건</h4>
+                    ${conflictBadges}
+                </div>
+                <ul class="info-list">${reqsHtml}</ul>
+            </div>
+            <div class="spec-box">
+                <div class="spec-item"><p class="spec-label">최저한세</p><p class="spec-value ${isMinTaxFree ? 'text-emerald-600 font-black' : ''}">${esc(item.min_tax || '-')}</p></div>
+                <div class="spec-item"><p class="spec-label">농특세</p><p class="spec-value">${esc(item.agri_tax || '-')}</p></div>
+                <div class="spec-item"><p class="spec-label">감가상각의제</p><p class="spec-value">${esc(item.deemed_depr || '-')}</p></div>
+                <div class="spec-item"><p class="spec-label">이월공제</p><p class="spec-value">${esc(item.carry_over || '-')}</p></div>
+                <div class="spec-item" style="background:#f8fafc;"><p class="spec-label text-indigo-500 font-black">사후관리</p><p class="spec-value text-indigo-800 font-bold">${esc(item.management || '없음')}</p></div>
+            </div>
+        </div>`;
     }
-}
+
+    // === 상세 모달 ================================================
+    function openDetail(id) {
+        const item = taxDB.find(d => d.id === id);
+        if (!item) return;
+        const detail = articleDetail[item.article_key] || {};
+
+        document.getElementById('detail-article').textContent = item.article || '';
+        document.getElementById('detail-title').textContent   = item.title || '';
+
+        // § 표기를 article_key 로 정규화
+        const normKey = (s) => {
+            if (!s) return '';
+            const circled = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
+            let t = String(s);
+            for (let i = 0; i < circled.length; i++) t = t.split(circled[i]).join("(" + (i+1) + ")");
+            t = t.replace(/조특법|제|§/g,'').trim();
+            let hang = '';
+            const m1 = t.match(/\((\d+)\)/);
+            if (m1) { hang = '.' + m1[1]; t = t.replace(m1[0], ''); }
+            const m2 = t.match(/(\d+)\s*[~\-]\s*\d+\s*항/);
+            if (m2 && !hang) { hang = '.' + m2[1]; t = t.replace(m2[0], ''); }
+            const m3 = t.match(/(\d+)\s*항/);
+            if (m3 && !hang) { hang = '.' + m3[1]; t = t.replace(m3[0], ''); }
+            t = t.replace(/조/g,'').replace(/의/g,'-').replace(/\s+/g,'');
+            return t + hang;
+        };
+
+        // 본 공제 기준 key (항 단위) + 조 단위 둘 다 매칭 대상
+        const keyFull = item.article_key;              // 예: "8-3.1"
+        const keyArticle = keyFull.split('.')[0];      // 예: "8-3"
+
+        // 127 중복배제 페어: a/b 중 어느 쪽이든 본 공제 키와 일치하면 수집
+        const pairs = matrix127.filter(p => {
+            return p.a_key === keyFull || p.b_key === keyFull
+                || p.a_key.startsWith(keyArticle + '.') || p.b_key.startsWith(keyArticle + '.')
+                || p.a_key === keyArticle || p.b_key === keyArticle;
+        }).map(p => {
+            const mineIsA = p.a_key === keyFull || p.a_key === keyArticle || p.a_key.startsWith(keyArticle + '.');
+            return {
+                other_article: mineIsA ? p.b_article : p.a_article,
+                other_name:    mineIsA ? p.b_name    : p.a_name,
+                relation: p.relation,
+                basis: p.basis,
+            };
+        });
+
+        const body = document.getElementById('detail-body');
+        const sections = [];
+
+        // 적용 요건
+        sections.push(`
+        <div class="modal-section">
+            <h3>📋 적용 요건</h3>
+            ${(item.reqs || []).length
+                ? `<ul class="clean">${(item.reqs||[]).map(l => `<li>${esc(l)}</li>`).join('')}</ul>`
+                : `<p class="muted">요건 정보 없음</p>`}
+        </div>`);
+
+        // 농특세
+        const at = (detail.agri_tax) || {};
+        const atStatus = at.status || item.agri_tax || '';
+        sections.push(`
+        <div class="modal-section">
+            <h3>🌾 농특세 과세여부</h3>
+            <dl class="kv">
+                <dt>과세여부</dt><dd>${pillForStatus(atStatus)}</dd>
+                ${at.basis ? `<dt>근거</dt><dd>${esc(at.basis)}</dd>` : ''}
+                ${at.rate && at.rate !== '-' ? `<dt>세율</dt><dd>${esc(at.rate)}</dd>` : ''}
+            </dl>
+            ${!at.status ? `<p class="muted" style="margin-top:6px;">본 조문은 농특세 통합DB에 등재되어 있지 않습니다. 공제목록의 '${esc(item.agri_tax || '-')}' 표기를 참고하세요.</p>` : ''}
+        </div>`);
+
+        // 127조 중복배제
+        sections.push(`
+        <div class="modal-section">
+            <h3>⚠️ 127조 중복지원 배제</h3>
+            ${(item.exclusion_codes||[]).length
+                ? `<p style="margin-bottom:6px;font-size:12px;color:#475569;">해당 그룹: ${(item.exclusion_codes||[]).map(c => `<span class="pill pill-amber">${esc(groupMap[c] || c)}</span>`).join(' ')}</p>`
+                : ''}
+            ${pairs.length
+                ? `<p style="font-size:12px;color:#475569;margin-bottom:6px;">다음 항목과 <b>병행 적용 불가</b>:</p>
+                   <ul class="clean">${pairs.map(p => `<li><b>${esc(p.other_article)}</b> ${esc(p.other_name)} — <span class="pill pill-red">${esc(p.relation)}</span> <span class="muted">(근거: ${esc(p.basis)})</span></li>`).join('')}</ul>`
+                : `<p class="muted">매트릭스에 등록된 페어 없음</p>`}
+        </div>`);
+
+        // 128조 추계과세 감면배제
+        const est = detail.estimation_128 || {};
+        const estPara = est.paragraphs || [];
+        sections.push(`
+        <div class="modal-section">
+            <h3>📉 128조 추계과세 감면배제</h3>
+            <dl class="kv">
+                <dt>배제대상</dt><dd>${pillForStatus(est.flag === 'O' ? '해당' : (est.flag || '-'))}</dd>
+                ${estPara.length ? `<dt>적용항</dt><dd>${estPara.map(p => `<span class="pill pill-amber">${esc(p.para)}</span>`).join(' ')} <span class="muted">${estPara.map(p => esc(p.note)).filter(Boolean).join(' · ')}</span></dd>` : ''}
+            </dl>
+        </div>`);
+
+        // 132조 최저한세
+        const mt = detail.min_tax_132 || {};
+        const mtList = mt.applies || [];
+        sections.push(`
+        <div class="modal-section">
+            <h3>💰 132조 최저한세</h3>
+            <dl class="kv">
+                <dt>공제목록 표기</dt><dd>${pillForStatus(item.min_tax)}</dd>
+                ${mt.flag ? `<dt>132조 DB</dt><dd><span class="pill pill-blue">${esc(mt.flag)}</span></dd>` : ''}
+                ${mtList.length ? `<dt>적용 세목</dt><dd>${mtList.map(a => `<span class="pill pill-slate">${esc(a.kind)}</span>`).filter((v,i,self)=>self.indexOf(v)===i).join(' ')}</dd>` : ''}
+            </dl>
+            ${mtList.length ? `<ul class="clean" style="margin-top:6px;">${mtList.map(a => `<li>[${esc(a.kind)}] ${esc(a.name)} ${a.note ? `<span class="muted">— ${esc(a.note)}</span>` : ''}</li>`).join('')}</ul>` : ''}
+        </div>`);
+
+        // 감가상각의제 / 이월공제 / 사후관리
+        sections.push(`
+        <div class="modal-section">
+            <h3>📆 감가상각의제 · 이월공제 · 사후관리</h3>
+            <dl class="kv">
+                <dt>감가상각의제</dt><dd>${pillForStatus(item.deemed_depr)}</dd>
+                <dt>이월공제</dt><dd>${pillForStatus(item.carry_over)}</dd>
+                <dt>사후관리</dt><dd>${item.management ? esc(item.management) : '<span class="muted">없음</span>'}</dd>
+            </dl>
+        </div>`);
+
+        body.innerHTML = sections.join('');
+        document.getElementById('detail-modal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetail() {
+        document.getElementById('detail-modal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+    // === 상담신청 ==================================================
+    async function sendConsultRequest() {
+        const phone = document.getElementById('userPhone').value;
+        const tags = Array.from(selectedTags).join(', ');
+        if (!phone) return alert("전화번호를 입력해 주세요.");
+        if (!confirm("입력하신 번호로 상담을 신청하시겠습니까?")) return;
+        const btn = document.getElementById('sendBtn');
+        btn.innerText = "전송 중..."; btn.disabled = true;
+        try {
+            await fetch(CONSULT_URL, { method: "POST", body: JSON.stringify({ phone, tags }) });
+            alert("신청이 완료되었습니다. 대한세무법인 담당자가 연락드리겠습니다.");
+            document.getElementById('userPhone').value = "";
+        } catch (e) {
+            alert("연결 오류가 발생했습니다.");
+        } finally {
+            btn.innerText = "개인정보동의 / 상담신청"; btn.disabled = false;
+        }
+    }
 
     function resetTags() {
         selectedTags.clear();

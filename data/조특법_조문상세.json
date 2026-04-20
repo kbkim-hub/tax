@@ -1,0 +1,2722 @@
+{
+  "6": {
+    "article_display": "제6조",
+    "title": "창업중소기업 세액감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 3호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "창업중소기업 등에 대한 세액감면",
+          "note": "★ 창업감면"
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "창업중소기업 등 세액감면",
+          "note": "※ §6①⑥⑦ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "창업중소기업 세액감면",
+          "note": "※ 100% 감면연도 제외"
+        }
+      ]
+    }
+  },
+  "7": {
+    "article_display": "제7조",
+    "title": "중소기업 특별세액감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 3호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "중소기업에 대한 특별세액감면",
+          "note": "★ 중특감면"
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업특별세액감면",
+          "note": "★ 주요"
+        },
+        {
+          "kind": "소득세",
+          "name": "중소기업특별세액감면",
+          "note": "★ 주요"
+        }
+      ]
+    }
+  },
+  "7-2": {
+    "article_display": "제7조의2",
+    "title": "어음제도개선 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "기업의 어음제도개선을 위한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "어음제도개선 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "어음제도개선 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "7-4": {
+    "article_display": "제7조의4",
+    "title": "상생결제 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "상생결제 지급금액에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "상생결제 지급금액 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "상생결제 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "8-3": {
+    "article_display": "제8조의3",
+    "title": "상생협력 출연 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "상생협력 출연 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "10": {
+    "article_display": "제10조",
+    "title": "R&D 세액공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "연구·인력개발비에 대한 세액공제 (R&D)",
+          "note": "★ 주요 항목"
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O(중소기업 제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "R&D 세액공제",
+          "note": "★ 중소기업은 최저한세 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "R&D 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "10-2": {
+    "article_display": "제10조의2",
+    "title": "연구개발 출연금 과세특례",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "연구개발관련 출연금 등의 과세특례",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "연구개발관련 출연금 과세특례",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "12.2": {
+    "article_display": "제12조 제2항",
+    "title": "기술취득 세액공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "기술이전 및 기술취득 등에 대한 과세특례 (기술취득)",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "기술취득 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "기술취득 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "121·3항": {
+    "article_display": "제12조 제1·3항",
+    "title": "기술이전·대여 소득감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O"
+    }
+  },
+  "12-2": {
+    "article_display": "제12조의2",
+    "title": "연구개발특구 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-",
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "연구개발특구 입주기업 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "연구개발특구 입주기업 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "연구개발특구 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "연구개발특구 입주기업"
+        }
+      ]
+    }
+  },
+  "13": {
+    "article_display": "제13조",
+    "title": "창업자 출자 과세특례",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "창업자등에의 출자에 대한 과세특례",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "14": {
+    "article_display": "제14조",
+    "title": "중소기업창투사 출자 특례",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업창업투자회사 등에의 출자에 대한 과세특례",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "16": {
+    "article_display": "제16조",
+    "title": "벤처투자 소득공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 3의3호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-",
+      "applies": [
+        {
+          "kind": "소득세",
+          "name": "부동산임대업 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "18": {
+    "article_display": "제18조",
+    "title": "외국인기술자 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "18-2": {
+    "article_display": "제18조의2",
+    "title": "외국인근로자 단일세율",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "19.1": {
+    "article_display": "제19조 제1항",
+    "title": "경영성과급 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "성과공유 중소기업의 경영성과급에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "경영성과급 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "경영성과급 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "19.2": {
+    "article_display": "제19조 제2항",
+    "title": "경영성과급 관련(§19②)",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "21": {
+    "article_display": "제21조",
+    "title": "국제금융거래 이자소득 면제",
+    "agri_tax": {
+      "status": "과세(일부)",
+      "basis": "법§4 5호(비거주자 제외)",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "국제금융거래 이자소득 면제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "국제금융거래 이자소득 면제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "24": {
+    "article_display": "제24조",
+    "title": "통합투자세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "통합투자세액공제",
+          "note": "★ 거주자는 증빙 제출시 적용"
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "통합투자세액공제",
+          "note": "★ 주요"
+        },
+        {
+          "kind": "소득세",
+          "name": "통합투자세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "26": {
+    "article_display": "제26조",
+    "title": "고용창출투자세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "고용창출투자세액공제",
+          "note": "★ 거주자는 증빙 제출시 적용"
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "고용창출투자세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "고용창출투자세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "29-2": {
+    "article_display": "제29조의2",
+    "title": "고용증대 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "고용을 증대시킨 기업에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "고용증대 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "고용증대 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "29-3": {
+    "article_display": "제29조의3",
+    "title": "중소기업 사회보험료",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "중소기업 사회보험료 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 사회보험료 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "중소기업 사회보험료 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "29-4": {
+    "article_display": "제29조의4",
+    "title": "정규직 전환 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "정규직 근로자 전환에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "정규직 전환 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "정규직 전환 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "29-5": {
+    "article_display": "제29조의5",
+    "title": "경력단절여성 고용",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "경력단절 여성 고용 기업 등에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "경력단절여성 고용 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "경력단절여성 고용 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "29-6": {
+    "article_display": "제29조의6",
+    "title": "중소기업 취업자(청년) 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "29-7": {
+    "article_display": "제29조의7",
+    "title": "통합고용세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "통합고용세액공제",
+          "note": "★ 주요 항목"
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "통합고용세액공제",
+          "note": "★ 주요"
+        },
+        {
+          "kind": "소득세",
+          "name": "통합고용세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "29-8": {
+    "article_display": "제29조의8",
+    "title": "통합고용세액공제(추가)",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "통합고용세액공제(추가공제)",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "통합고용세액공제(추가)",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "통합고용세액공제(추가)",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "30": {
+    "article_display": "제30조",
+    "title": "근로자복지 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "30-2": {
+    "article_display": "제30조의2",
+    "title": "관련 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 11의3호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "30-3": {
+    "article_display": "제30조의3",
+    "title": "근로소득증대 세액공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "근로소득을 증대시킨 기업에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "근로소득증대 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "근로소득증대 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "30-4": {
+    "article_display": "제30조의4",
+    "title": "청년·핵심인력 성과보상기금",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "청년근로자 및 핵심인력 성과보상기금 수령액 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "청년·핵심인력 성과보상기금 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "청년·핵심인력 성과보상기금 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "40": {
+    "article_display": "제40조",
+    "title": "양도소득세 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 3의2호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "63": {
+    "article_display": "제63조",
+    "title": "중소기업 지방이전",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(수도권외 제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 지방이전 세액감면",
+          "note": "※ 수도권 밖 이전은 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "중소기업 지방이전 세액감면",
+          "note": "※ 수도권 밖 이전은 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "수도권 밖 이전",
+          "note": "수도권 밖 이전 법인 감면"
+        }
+      ]
+    }
+  },
+  "63-2": {
+    "article_display": "제63조의2",
+    "title": "수도권 밖 이전 법인",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "64": {
+    "article_display": "제64조",
+    "title": "농공단지입주기업",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-",
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "농공단지입주기업 등에 대한 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "농공단지입주기업 세액감면",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "농공단지입주기업 감면",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "66~70": {
+    "article_display": "제66조~70조",
+    "title": "영농·영어조합·농업회사법인",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4①1호 (농어업인)",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O"
+    }
+  },
+  "96": {
+    "article_display": "제96조",
+    "title": "소형주택 임대",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-",
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "소형주택 임대사업자 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "소형주택 임대사업자 세액감면",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "소형주택 임대사업자 감면",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "99-9": {
+    "article_display": "제99조의9",
+    "title": "제주첨단과학기술단지",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "제주첨단과학기술단지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "제주첨단과학기술단지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "제주첨단과학기술단지"
+        }
+      ]
+    }
+  },
+  "99-11": {
+    "article_display": "제99조의11",
+    "title": "제주투자진흥지구",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "99-12": {
+    "article_display": "제99조의12",
+    "title": "선결제 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "선결제 금액에 대한 세액공제",
+          "note": ""
+        },
+        {
+          "para": "제2~4항",
+          "name": "선결제 금액 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "선결제 금액 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "선결제 금액 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-8": {
+    "article_display": "제104조의8",
+    "title": "전자신고 세액공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "전자신고 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "전자신고 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-14": {
+    "article_display": "제104조의14",
+    "title": "해외자원개발투자",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "해외자원개발투자에 대한 과세특례",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "해외자원개발투자 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "해외자원개발투자 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-15": {
+    "article_display": "제104조의15",
+    "title": "해외자원개발배당소득",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "해외자원개발투자배당소득에 대한 법인세 과세특례",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "해외자원개발배당소득 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "해외자원개발배당소득 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-21": {
+    "article_display": "제104조의21",
+    "title": "한국토지주택공사 관련",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "104-24": {
+    "article_display": "제104조의24",
+    "title": "해저광물자원개발",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "104-25": {
+    "article_display": "제104조의25",
+    "title": "석유제품 전자상거래",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "석유제품 전자상거래에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "석유제품 전자상거래 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "석유제품 전자상거래 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-28": {
+    "article_display": "제104조의28",
+    "title": "석유제품 전자상거래",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "104-30": {
+    "article_display": "제104조의30",
+    "title": "산업수요맞춤형고교 졸업자",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "산업수요맞춤형고등학교 등 졸업자 복직 중소기업 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "-",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "산업수요맞춤형고교 졸업자 복직 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "산업수요맞춤형고교 졸업자 복직 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-31": {
+    "article_display": "제104조의31",
+    "title": "PFV 소득공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "104-35": {
+    "article_display": "제104조의35",
+    "title": "금 현물시장",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "금 현물시장 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "-",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "금 현물시장 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "117": {
+    "article_display": "제117조",
+    "title": "특정 감면(§117①②)",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 7의2호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "118-2": {
+    "article_display": "제118조의2",
+    "title": "관세 관련",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "121-2~4": {
+    "article_display": "제121조의2~4",
+    "title": "외국인투자 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "121-8": {
+    "article_display": "제121조의8",
+    "title": "제주첨단과학기술단지",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-",
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "제주첨단과학기술단지 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "제주첨단과학기술단지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "제주첨단과학기술단지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "제주첨단과학기술단지"
+        }
+      ]
+    }
+  },
+  "121-9": {
+    "article_display": "제121조의9",
+    "title": "제주투자진흥지구",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "제주투자진흥지구 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "제주투자진흥지구 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "제주투자진흥지구"
+        }
+      ]
+    }
+  },
+  "121-17": {
+    "article_display": "제121조의17",
+    "title": "기업도시개발구역",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "기업도시개발구역 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "기업도시개발구역 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "기업도시개발구역"
+        }
+      ]
+    }
+  },
+  "121-20": {
+    "article_display": "제121조의20",
+    "title": "아시아문화중심도시",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "아시아문화중심도시 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "아시아문화중심도시 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "아시아문화중심도시"
+        }
+      ]
+    }
+  },
+  "121-21": {
+    "article_display": "제121조의21",
+    "title": "금융중심지",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "금융중심지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "금융중심지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "금융중심지"
+        }
+      ]
+    }
+  },
+  "121-22": {
+    "article_display": "제121조의22",
+    "title": "첨단의료복합단지",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "첨단의료복합단지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "첨단의료복합단지 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "첨단의료복합단지"
+        }
+      ]
+    }
+  },
+  "121-24": {
+    "article_display": "제121조의24",
+    "title": "관련 감면",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "법§4 11의4호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "121-33": {
+    "article_display": "제121조의33",
+    "title": "기회발전특구",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(100%연도제외)",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "기회발전특구 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "소득세",
+          "name": "기회발전특구 감면",
+          "note": "※ 100% 감면연도 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "기회발전특구"
+        }
+      ]
+    }
+  },
+  "122-4.1": {
+    "article_display": "제122조의4 제1항",
+    "title": "성실신고 확인비용",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "성실신고 확인비용 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "성실신고 확인비용 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "성실신고 확인비용 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "126-2": {
+    "article_display": "제126조의2",
+    "title": "근로자 신용카드 공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "126-3.2": {
+    "article_display": "제126조의3 제2항",
+    "title": "월세액 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "O(소득세)",
+      "applies": [
+        {
+          "kind": "소득세",
+          "name": "월세액 세액공제",
+          "note": "★ 소득세만"
+        }
+      ]
+    }
+  },
+  "126-6": {
+    "article_display": "제126조의6",
+    "title": "현금영수증 공제",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "126-7.8": {
+    "article_display": "제126조의7 제8항",
+    "title": "전자계산서 세액공제",
+    "agri_tax": {
+      "status": "과세",
+      "basis": "원칙",
+      "rate": "20%"
+    },
+    "estimation_128": {
+      "flag": "O",
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "전자계산서 발급 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "flag": "O",
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "전자계산서 발급 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "전자계산서 발급 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "126-7.9": {
+    "article_display": "제126조의7 제9항",
+    "title": "전자계산서 관련",
+    "agri_tax": {
+      "status": "비과세",
+      "basis": "령§4⑦1호",
+      "rate": "-"
+    },
+    "estimation_128": {
+      "flag": "-"
+    },
+    "min_tax_132": {
+      "flag": "-"
+    }
+  },
+  "8-3.3": {
+    "article_display": "제8조의3 제3항",
+    "title": "상생협력을 위한 기금 출연 등에 대한 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "상생협력을 위한 기금 출연 등에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "소득세",
+          "name": "상생협력 출연 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "12-3": {
+    "article_display": "제12조의3",
+    "title": "내국법인의 벤처기업등 출자에 대한 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "내국법인의 벤처기업등 출자에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "벤처기업 출자 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "12-4": {
+    "article_display": "제12조의4",
+    "title": "기술혁신형 합병에 대한 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "기술혁신형 합병에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "기술혁신형 합병 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "13-2": {
+    "article_display": "제13조의2",
+    "title": "기술혁신형 주식취득에 대한 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "기술혁신형 주식취득에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "기술혁신형 주식취득 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "13-3": {
+    "article_display": "제13조의3",
+    "title": "내국법인의 벤처기업 등에의 출자에 대한 과세특례",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "내국법인의 벤처기업 등에의 출자에 대한 과세특례",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "벤처기업 출자 과세특례",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "25-6": {
+    "article_display": "제25조의6",
+    "title": "영상콘텐츠 제작비용에 대한 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "영상콘텐츠 제작비용에 대한 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "영상콘텐츠 제작비 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "영상콘텐츠 제작비 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "25-8": {
+    "article_display": "제25조의8",
+    "title": "초연결 네트워크 구축을 위한 시설투자 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "초연결 네트워크 구축을 위한 시설투자 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "초연결 네트워크 시설투자 세액공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "초연결 네트워크 시설투자 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "96-3": {
+    "article_display": "제96조의3",
+    "title": "소형주택 임대사업자에 대한 세액감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제1항",
+          "name": "소형주택 임대사업자에 대한 세액감면",
+          "note": "간편장부대상자는 제외"
+        },
+        {
+          "para": "제2~4항",
+          "name": "소형주택 임대사업자 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "12·3항.1": {
+    "article_display": "제12조 제1항·제3항",
+    "title": "기술이전 및 기술대여 소득에 대한 과세특례",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "기술이전 및 기술대여 소득에 대한 과세특례",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "기술이전·기술대여 소득 감면",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "기술이전·기술대여 소득 감면",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "31·5항.4": {
+    "article_display": "제31조 제4항·제5항",
+    "title": "중소기업간 통합에 대한 양도소득세 이월과세 등",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "중소기업간 통합에 대한 양도소득세 이월과세 등",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 통합 양도소득 이월과세",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "중소기업 통합 양도소득 이월과세",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "32.4": {
+    "article_display": "제32조 제4항",
+    "title": "법인전환에 대한 양도소득세 이월과세",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "법인전환에 대한 양도소득세 이월과세",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "법인전환 시 세액공제 승계",
+          "note": ""
+        },
+        {
+          "kind": "법인세",
+          "name": "법인전환 양도소득 이월과세",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "법인전환 시 세액공제 승계",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "법인전환 양도소득 이월과세",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "62.4": {
+    "article_display": "제62조 제4항",
+    "title": "성실사업자에 대한 의료비 등 세액공제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "성실사업자에 대한 의료비 등 세액공제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "성실사업자 의료비 세액공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "63.1": {
+    "article_display": "제63조 제1항",
+    "title": "중소기업의 지방이전에 대한 세액감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "중소기업의 지방이전에 대한 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "63-2.1": {
+    "article_display": "제63조의2 제1항",
+    "title": "수도권 밖으로 이전하는 법인에 대한 세액감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "수도권 밖으로 이전하는 법인에 대한 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "66": {
+    "article_display": "제66조",
+    "title": "영농조합법인 등에 대한 법인세 면제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "영농조합법인 등에 대한 법인세 면제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "67": {
+    "article_display": "제67조",
+    "title": "영어조합법인 등에 대한 법인세 면제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "영어조합법인 등에 대한 법인세 면제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "68": {
+    "article_display": "제68조",
+    "title": "농업회사법인에 대한 법인세 면제",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "농업회사법인에 대한 법인세 면제",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "농업회사법인 감면",
+          "note": "※ 작물재배업 소득은 제외"
+        },
+        {
+          "kind": "제외",
+          "name": "작물재배업 소득",
+          "note": "농업회사법인 (법인세만)"
+        }
+      ]
+    }
+  },
+  "85-6·2항.1": {
+    "article_display": "제85조의6 제1항·제2항",
+    "title": "사회적기업 및 장애인 표준사업장 세액감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "사회적기업 및 장애인 표준사업장 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "96-2": {
+    "article_display": "제96조의2",
+    "title": "주택임대사업자에 대한 소득·법인세 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "주택임대사업자에 대한 소득·법인세 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "주택임대사업자 세액감면",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "주택임대사업자 감면",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "99-9.2": {
+    "article_display": "제99조의9 제2항",
+    "title": "제주첨단과학기술단지 입주기업 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "제주첨단과학기술단지 입주기업 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "99-11.1": {
+    "article_display": "제99조의11 제1항",
+    "title": "제주투자진흥지구 등 입주기업 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "제주투자진흥지구 등 입주기업 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "102": {
+    "article_display": "제102조",
+    "title": "산림개발소득 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "산림개발소득 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "산림개발소득 감면",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "산림개발소득 감면",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-24.1": {
+    "article_display": "제104조의24 제1항",
+    "title": "해저광물자원개발 세액감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "해저광물자원개발 세액감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "121-9.2": {
+    "article_display": "제121조의9 제2항",
+    "title": "제주투자진흥지구 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "제주투자진흥지구 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "121-17.2": {
+    "article_display": "제121조의17 제2항",
+    "title": "기업도시개발구역 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "기업도시개발구역 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "121-20.2": {
+    "article_display": "제121조의20 제2항",
+    "title": "아시아문화중심도시 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "아시아문화중심도시 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "121-21.2": {
+    "article_display": "제121조의21 제2항",
+    "title": "금융중심지 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "금융중심지 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "121-22.2": {
+    "article_display": "제121조의22 제2항",
+    "title": "첨단의료복합단지 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "첨단의료복합단지 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "121-33.2": {
+    "article_display": "제121조의33 제2항",
+    "title": "기회발전특구 감면",
+    "agri_tax": {},
+    "estimation_128": {
+      "paragraphs": [
+        {
+          "para": "제2~4항",
+          "name": "기회발전특구 감면",
+          "note": ""
+        }
+      ]
+    },
+    "min_tax_132": {}
+  },
+  "8": {
+    "article_display": "제8조",
+    "title": "중소기업 지원설비에 대한 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 지원설비에 대한 손금산입",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "중소기업 지원설비 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "8-2": {
+    "article_display": "제8조의2",
+    "title": "중소기업 투자손실준비금 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 투자손실준비금 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "28": {
+    "article_display": "제28조",
+    "title": "투자회사 등에 대한 과세특례",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "투자회사 등에 대한 과세특례",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "투자회사 등 과세특례",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "28-2": {
+    "article_display": "제28조의2",
+    "title": "유동화전문회사 등에 대한 소득공제",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "유동화전문회사 등에 대한 소득공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "유동화전문회사 소득공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "28-3": {
+    "article_display": "제28조의3",
+    "title": "프로젝트금융투자회사에 대한 소득공제",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "프로젝트금융투자회사에 대한 소득공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "프로젝트금융투자회사 소득공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "28-5": {
+    "article_display": "제28조의5",
+    "title": "부동산투자회사 등에 대한 소득공제",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "부동산투자회사 등에 대한 소득공제",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "부동산투자회사 소득공제",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "55-2.4": {
+    "article_display": "제55조의2 제4항",
+    "title": "비사업용 토지 등 양도소득 중과",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "비사업용 토지 등 양도소득 중과",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "60.2": {
+    "article_display": "제60조 제2항",
+    "title": "중소기업간 통합 시 양도차익 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업간 통합 시 양도차익 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "61.3": {
+    "article_display": "제61조 제3항",
+    "title": "법인전환 시 양도차익 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "법인전환 시 양도차익 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "62.1": {
+    "article_display": "제62조 제1항",
+    "title": "법인의 정리계획에 따른 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "법인의 정리계획에 따른 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "63.4": {
+    "article_display": "제63조 제4항",
+    "title": "중소기업 지방이전 시 양도차익 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 지방이전 시 양도차익 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "63-2.4": {
+    "article_display": "제63조의2 제4항",
+    "title": "수도권 밖 이전 법인 양도차익 손금산입",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "수도권 밖 이전 법인 양도차익 손금산입",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "100-32(참고)": {
+    "article_display": "제100조의32 (참고)",
+    "title": "투자·배당·상생협력 과세특례 - 최저한세 계산 대상 아님",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "투자·배당·상생협력 과세특례 - 최저한세 계산 대상 아님",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "25-7": {
+    "article_display": "제25조의7",
+    "title": "(삭제)",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "(삭제)",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "31.6": {
+    "article_display": "제31조 제6항",
+    "title": "중소기업 통합 시 세액공제 승계",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "중소기업 통합 시 세액공제 승계",
+          "note": ""
+        },
+        {
+          "kind": "소득세",
+          "name": "중소기업 통합 시 세액공제 승계",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "104-22": {
+    "article_display": "제104조의22",
+    "title": "법인현물출자 이월과세",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "법인세",
+          "name": "법인현물출자 이월과세",
+          "note": ""
+        }
+      ]
+    }
+  },
+  "86-3": {
+    "article_display": "제86조의3",
+    "title": "소기업·소상공인 공제부금 소득공제",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "소득세",
+          "name": "소기업·소상공인 공제부금 소득공제",
+          "note": "★ 노란우산공제"
+        }
+      ]
+    }
+  },
+  "132-2": {
+    "article_display": "제132조의2",
+    "title": "소득공제 종합한도",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "소득세",
+          "name": "소득공제 종합한도",
+          "note": "★ 연관 조문"
+        }
+      ]
+    }
+  },
+  "122-3": {
+    "article_display": "제122조의3",
+    "title": "성실사업자 교육비·의료비 세액공제",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "소득세",
+          "name": "성실사업자 교육비·의료비 세액공제",
+          "note": "★ 소득세만"
+        }
+      ]
+    }
+  },
+  "6·6항.1": {
+    "article_display": "제6조 제1항·제6항",
+    "title": "100% 감면연도",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "제외",
+          "name": "100% 감면연도",
+          "note": "창업중소기업 최초 감면기간"
+        }
+      ]
+    }
+  },
+  "6.7": {
+    "article_display": "제6조 제7항",
+    "title": "추가 감면분",
+    "agri_tax": {},
+    "estimation_128": {},
+    "min_tax_132": {
+      "applies": [
+        {
+          "kind": "제외",
+          "name": "추가 감면분",
+          "note": "창업중소기업 추가감면 (법인세만)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+name: 조특법 엑셀 → JSON 자동 변환
+
+# data/ 폴더의 xlsx 가 바뀔 때마다 JSON 을 자동으로 재생성해 같은 브랜치에 커밋
+on:
+  push:
+    paths:
+      - "data/**.xlsx"
+      - "scripts/convert_xlsx_to_json.py"
+  workflow_dispatch:  # Actions 탭에서 수동 실행 가능
+
+permissions:
+  contents: write     # 생성된 JSON 을 레포에 커밋하기 위해 필요
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 레포 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 3.12 세팅
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 의존성 설치
+        run: pip install openpyxl==3.1.5
+
+      - name: 엑셀 → JSON 변환
+        run: python scripts/convert_xlsx_to_json.py
+
+      - name: 변경분 자동 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain data/*.json)" ]; then
+            git add data/*.json
+            git commit -m "chore(data): 엑셀 변경에 따른 JSON 자동 재생성"
+            git push
+          else
+            echo "JSON 변화 없음. 스킵."
+          fi

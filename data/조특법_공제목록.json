@@ -1,0 +1,1409 @@
+[
+  {
+    "id": "ART_006_00",
+    "article": "조특법6조",
+    "article_key": "6",
+    "title": "창업중소·벤처세액감면(2025년이전 창업)",
+    "tags": [
+      "25년말 이전 창업"
+    ],
+    "reqs": [
+      "대상업종을 (나이-병역 )34세이하",
+      "과밀억제외일반창업 : 50%",
+      "과밀억제권역내 청년창업 : 50%",
+      "벤처,에너지신기술.보육센타 : 50%",
+      "과밀억제권외청년창업 : 100%"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "해당없음",
+    "min_tax": "해당",
+    "deemed_depr": "해당",
+    "carry_over": "안됨",
+    "conflict_pairs": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      37,
+      38
+    ]
+  },
+  {
+    "id": "ART_006_01",
+    "article": "조특법6조",
+    "article_key": "6",
+    "title": "창업중소·벤처세액감면(2026년이후 창업)",
+    "tags": [
+      "26년이후 창업"
+    ],
+    "reqs": [
+      "대상업종+(나이-병역)34세이하",
+      "과밀억제권역내 청년.벤처.",
+      "에너지신기술.보육센터 : 50%",
+      "수도권중 과밀억제권외 청년 75% 일반 25%",
+      "수도권외지방 : 청년100%, 청년외 50%"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "해당없음",
+    "min_tax": "해당",
+    "deemed_depr": "해당",
+    "carry_over": "안됨",
+    "conflict_pairs": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      37,
+      38
+    ]
+  },
+  {
+    "id": "ART_007_00",
+    "article": "조특법7조",
+    "article_key": "7",
+    "title": "중소특별세액감면",
+    "tags": [
+      "중소기업에 해당"
+    ],
+    "reqs": [
+      "수도권 소기업 (도.소.의료) : 10% 그외 : 20% ",
+      "수도권외 소기업 (도.소.의료) :10%  그외 : 30%",
+      "수도권외 중기업( 도.소.의료) : 5% 그외 :15%"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "해당없음",
+    "min_tax": "해당",
+    "deemed_depr": "해당",
+    "carry_over": "안됨",
+    "conflict_pairs": [
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44
+    ]
+  },
+  {
+    "id": "ART_007_04",
+    "article": "조특법7조의4",
+    "article_key": "7-4",
+    "title": "상생결제 지급금액에 대한 세액공제",
+    "tags": [
+      "중소중견의 상생결제지급금액이 있는 경우"
+    ],
+    "reqs": [
+      "중소중견기업이 대금을 지급기한내 지급시 지급액의 0.1%~0.5% 소.법인세공제",
+      "상생결제제도:구매기업(대기업·공공기관)의 신용을 활용해, 공급기업(협력사)에 지급해야 할 납품 대금을 금융기관이 지급 보증을 통해 현금화 해주는 제도”"
+    ],
+    "management": "소득세 법인세의\n10%한도",
+    "exclusion_codes": [],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "10년이월공제",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_008_03_01",
+    "article": "조특법8조의3 1항",
+    "article_key": "8-3.1",
+    "title": "상생협력 기금출연등에 대한 세액공제",
+    "tags": [
+      "대중소기업  ·  농어업협력재단  ·  농어촌상생협력기금출연",
+      "신보 · 기보에 출연",
+      "협력중소기업의 사내근로복지금에 출연"
+    ],
+    "reqs": [
+      "법인이 다음에 출연시 산출법인세 *10% 공제",
+      "대중소기업  ·  농어업협력재단  ·  농어촌상생협력기금출연",
+      "신보 · 기보에 출연",
+      "협력중소기업의 사내근로복지금에 출연"
+    ],
+    "management": "특수관계인 지원 배제",
+    "exclusion_codes": [],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "10년이월공제",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_008_03_05",
+    "article": "조특법8조의3 5항",
+    "article_key": "8-3.5",
+    "title": "상생협력 기금출연등에 대한 세액공제",
+    "tags": [
+      "무역보험기금 출연"
+    ],
+    "reqs": [
+      "중소기업 지원 목적 출연금 10% 공제"
+    ],
+    "management": "특수관계인 지원 배제",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_008_03_02",
+    "article": "조특법8조의3 2항",
+    "article_key": "8-3.2",
+    "title": "상생협력 기금출연등에 대한 세액공제",
+    "tags": [
+      "협력중소기업(창업기업 등)에 연구·시험용 유형고정자산을무상 임대."
+    ],
+    "reqs": [
+      "협력중소기업(창업기업 등)에 연구·시험용 유형고정자산을 5년 이상 계속하여 무상 임대",
+      "유형고정자산 장부가액        3%"
+    ],
+    "management": "특수관계인 지원 배제,\n5년이내 임대 종료추징",
+    "exclusion_codes": [],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당",
+    "carry_over": "10년이월공제",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_008_03_03",
+    "article": "조특법8조의3 3항",
+    "article_key": "8-3.3",
+    "title": "상생협력 기금출연등에 대한 세액공제",
+    "tags": [
+      "수탁기업에 설치하는 검사대 또는 연구시설에 투자"
+    ],
+    "reqs": [
+      "수탁기업에 설치하는 검사대 또는 연구시설에 투자(중고품 및 리스 투자 제외)",
+      "기업규모별로 투자금액의 1%,3%,7%"
+    ],
+    "management": "특수관계인 지원 배제",
+    "exclusion_codes": [],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당",
+    "carry_over": "10년이월공제",
+    "conflict_pairs": [
+      0,
+      1
+    ]
+  },
+  {
+    "id": "ART_010_01",
+    "article": "조특법10조",
+    "article_key": "10",
+    "title": "연구인력개발비 세액공제",
+    "tags": [
+      "기업부설연구소 · 전담부서가 있음",
+      "위탁 · 공동연구개발이 있었음",
+      "위탁훈련비",
+      "직업능력개발훈련 비용이 있었음"
+    ],
+    "reqs": [
+      "일반연구개발비 : [  25%세액공제  ·  증가한 금액 * 50% ]중 선택",
+      "신성장 · 원천기술 연구개발비 : 30%~40%",
+      "국가전략기술 연구개발비 :40% ~50%"
+    ],
+    "management": "국가등으로부터 받은 출연금의 연구비는 배제,\n허위등록등 원천하자시 과거분도 추징.\n연구노트등 5년간 보관.",
+    "exclusion_codes": [],
+    "agri_tax": "해당없음",
+    "min_tax": "해당없음",
+    "deemed_depr": "해당없음",
+    "carry_over": "10년이월공제",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_012_00",
+    "article": "조특법12조",
+    "article_key": "12",
+    "title": "기술이전 및 기술취득 등에 대한 과세특례",
+    "tags": [
+      "자체 연구 개발한 특허권",
+      "실용신안권",
+      "기술비법을 이전하거나 대여한 경우"
+    ],
+    "reqs": [
+      "중소기업이 자체 연구 개발한 특허권,실용신안권 기술비법,기술을",
+      "내국인에게 이전시 이전액*50%세액감면",
+      "특허권,실용신안권 기술비법(기술제외) 대여시 대여소득의 25% 세액감면"
+    ],
+    "management": "26.12.31까지 이전대여",
+    "exclusion_codes": [],
+    "agri_tax": "해당없음",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당없음",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_012_02",
+    "article": "조특법12조의2",
+    "article_key": "12-2",
+    "title": "연구개발특구에 입주하는 첨단기술기업 등에 대한 법인세 등의 감면",
+    "tags": [
+      "연구개발특구 입주기업3년 100%",
+      "그후 2년 50% 감면"
+    ],
+    "reqs": [
+      "연구개발특구 입주기업3년 100% 그후 2년 50% 감면.",
+      "입주요건 :",
+      "첨단기술 및 제품의 범위'에 속하는 기술을 보유.",
+      "직전4분기 첨단기술 매출액 20% 이상. 연구비 3~5% 이상."
+    ],
+    "management": "투자누계액*50% 한도\n고용유지",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_012_04",
+    "article": "조특법12조의4",
+    "article_key": "12-4",
+    "title": "벤처기업 등에의 출자에 대한 과세특례",
+    "tags": [
+      "벤처기업.",
+      "이노비즈인증기업.",
+      "매출액의5%이상인 중소기업 인수한 경우"
+    ],
+    "reqs": [
+      "해당기업주식 50%초과를 현금 인수시 (요건충족시 30%)",
+      "세액공제액=[주식취득가액-( 순자산시가 * 130%) *10%"
+    ],
+    "management": "3년간 지분유지해야 \n사업폐지하면 안됨.",
+    "exclusion_codes": [],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_013_02",
+    "article": "조특법13조의2",
+    "article_key": "13-2",
+    "title": "벤처기업 등에의 출자에 대한 과세특례",
+    "tags": [
+      "벤처기업의 신주를 인수한 경우"
+    ],
+    "reqs": [
+      "벤처기업의 신주, 벤처투자조합.신기술사업투자조합. 코스닥소부장투자조합등",
+      "에 투자하는 경우 출자금액* 5% 세액공제"
+    ],
+    "management": "구주는 제외\n2년내양도시 추징.",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      12,
+      27
+    ]
+  },
+  {
+    "id": "ART_019_01",
+    "article": "조특법19조 1항",
+    "article_key": "19.1",
+    "title": "성과공유중소기업 세액공제",
+    "tags": [
+      "중소기업성과공유확산 지원시스템에 통하여",
+      "확인서를 받은 경우"
+    ],
+    "reqs": [
+      "중소기업성과공유확산 지원시스템에 통하여 확인서를 받은 경우",
+      "기업의 경우 15%",
+      "근로자 해당성과급 소득에 대한 소득세 50%"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G2"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      3
+    ]
+  },
+  {
+    "id": "ART_024_00",
+    "article": "조특법24조",
+    "article_key": "24",
+    "title": "통합투자세액공제",
+    "tags": [
+      "신성장사업화시설 투자한 경우",
+      "국가전략 기술사업화 시설에 투자한 경우",
+      "반도체 시설투자에 투자한 경우",
+      "기계장치등사업용 유형자산(음식점인테리어.피시방피시)에 투자한 경우(토지건물제외)",
+      "연구시험 및 직업훈련시설.에너지절약형 시설투자 및기자재에 투자한 경우",
+      "중수도시설에 투자한 경우",
+      "무주택종업원 임대 위한 국민주택규모 주택. 종업원기숙사에 투자한 경우",
+      "휴게실. 체력단련실. 샤워 목욕시설 .직장어린이집. 안전시설 에 투자한 경우"
+    ],
+    "reqs": [
+      "공제금액 ( 기본 +추가공제)",
+      "기본:신성장사업화 시설 * 12%. 국가전략 기술사업화 * 25% , 반도체*30%. 그외10%",
+      "추가: 직전3개년평균 초과금액*10% (기본공제 2배 한도)"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G3",
+      "G4"
+    ],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당",
+    "conflict_pairs": [
+      0,
+      2,
+      6,
+      22
+    ]
+  },
+  {
+    "id": "ART_025_06",
+    "article": "조특법25조의6",
+    "article_key": "25-6",
+    "title": "영상콘텐츠 제작비용에 대한 세액공제",
+    "tags": [
+      "영화. 방송프로그램. 비디오 제작자 해당."
+    ],
+    "reqs": [
+      "제작비용의 15%+ 국내제작의 경우 추가 15% 세액공제"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      10,
+      28
+    ]
+  },
+  {
+    "id": "ART_025_07",
+    "article": "조특법25조의7",
+    "article_key": "25-7",
+    "title": "내국법인의 문화산업전문회사에의  출자 세액공제",
+    "tags": [
+      "문화산업전문회사에 출자한 경우"
+    ],
+    "reqs": [
+      "출자금액 *3% 세액공제"
+    ],
+    "management": "28.12.31까지",
+    "exclusion_codes": [],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_025_08",
+    "article": "조특법25조의8",
+    "article_key": "25-8",
+    "title": "웹툰제작비용에 대한 세액공제",
+    "tags": [
+      "웹툰제작회사에 해당하는 경우"
+    ],
+    "reqs": [
+      "국내발생 웹툰제작비용 *10% (중소 15%) 세액공제"
+    ],
+    "management": "28.12.31까지",
+    "exclusion_codes": [],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      11,
+      29
+    ]
+  },
+  {
+    "id": "ART_026_00",
+    "article": "조특법26조",
+    "article_key": "26",
+    "title": "고용창출투자 세액공제",
+    "tags": [
+      "사업용자산에 투자하고 상시고용인원수가 증가한 경우"
+    ],
+    "reqs": [
+      "내국인이 사업용자산에 투자하고 해당사업에 사용하는 경우 투자금액의 3% 세액공제",
+      "추가공제 : 과밀권역외 수도권지역 6% 밖7% , 서비스업 각 1% 추가",
+      "한도 : 고용인원에 따른 한도가 있음."
+    ],
+    "management": "27.12.31까지",
+    "exclusion_codes": [
+      "G2",
+      "G3",
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      1,
+      2,
+      4,
+      5,
+      7,
+      23
+    ]
+  },
+  {
+    "id": "ART_028_05",
+    "article": "조특법28조5",
+    "article_key": "285",
+    "title": "중소기업스마크공장 사업용자산 손금산입",
+    "tags": [
+      "데이터 중심 스마트제조 사업용자산 및 소프트웹어 구입",
+      "스마트공장수준확인서에 따른 스마트제조유형자산 구입"
+    ],
+    "reqs": [
+      "기준내용년수 50% 내로 가속상각",
+      "신고조정방법에 따른 감가상각비 손금산입"
+    ],
+    "management": "28.12.31까지",
+    "exclusion_codes": [],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_029_04",
+    "article": "조특법29조의4",
+    "article_key": "29-4",
+    "title": "근로소득증대 세액공제",
+    "tags": [
+      "직전년도보다 상시근로자가 감소하지 않은 상태에서 근로소득이 증가한경우"
+    ],
+    "reqs": [
+      "28년까지 상시근로자가 직전년도 보다 감소하지 않고 평균임금이 직전 3년 평균증가율보다 큰 경우  직전 3년 평균임금보다 증가한 금액 *20% 세액공제",
+      "28년까지 정규직근로자가 있고  직전년도보다 상시근로자가  감소하지 않은 경우  전환근로자 임금증가분 합계 *20% 세액공제."
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G2"
+    ],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당",
+    "conflict_pairs": [
+      3
+    ]
+  },
+  {
+    "id": "ART_029_05",
+    "article": "조특법29조의5",
+    "article_key": "29-5",
+    "title": "청년고용증대 세액공제",
+    "tags": [],
+    "reqs": [
+      "통합고용세액공제 참조"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G2",
+      "G3"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      4
+    ]
+  },
+  {
+    "id": "ART_029_07",
+    "article": "조특법29조의7",
+    "article_key": "29-7",
+    "title": "고용증대 세액공제",
+    "tags": [],
+    "reqs": [
+      "고용증대 세액공제 ( 통합고용세액공제 참조)"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G3"
+    ],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당",
+    "conflict_pairs": [
+      8,
+      24,
+      46
+    ]
+  },
+  {
+    "id": "ART_029_08",
+    "article": "조특법29조의8",
+    "article_key": "29-8",
+    "title": "통합고용세액공제",
+    "tags": [
+      "상시근로자가 특히 청년등이 증가한 경우"
+    ],
+    "reqs": [
+      "소비성 유흥업등 일부업종 제외 모든기업(개인사업자 포함)",
+      "34세이하청년(병역기간제외), 60세이상 , 경력단절 여성(해당 기업 퇴직 후 1년 이상 경과 후 3년 내 재취업) : 1인당 수도권 1,450만, 지방 1550만 세액공제",
+      "그외 : 수도권 850만원, 비수도권 950만원 세액공제",
+      "증가인원 유지시 3년간공제"
+    ],
+    "management": "공제를 받은 과세연도의 종료일로부터 2년 고용유지",
+    "exclusion_codes": [
+      "G3"
+    ],
+    "agri_tax": "해당",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당",
+    "conflict_pairs": [
+      9,
+      25
+    ]
+  },
+  {
+    "id": "ART_029_08_03",
+    "article": "조특법29조의8 3항",
+    "article_key": "29-8.3",
+    "title": "중소기업 비정규직 정규직 전환 \n(25년부터 폐지후 )",
+    "tags": [
+      "중소기업이 비정규직을 정규직화"
+    ],
+    "reqs": [
+      "23.06.30 현재 비정규직을 2024년중 정규직화"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G3"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_030_00",
+    "article": "조특법 30조",
+    "article_key": "30",
+    "title": "특정중소기업 취업청년등에 대한 감면",
+    "tags": [
+      "중소기업에 취업한 청년",
+      "중소기업에 취업한 60세이상",
+      "장애인",
+      "경력단절여성이 재취업 한 경우"
+    ],
+    "reqs": [
+      "중소기업취업 청년(나이-군대 34세이하)의 5년간 소득세 90% 감면",
+      "중소기업에 취업한 60세이상,장애인,경단녀의 3년간 소득세 70%감면"
+    ],
+    "management": "",
+    "exclusion_codes": [],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_030_04",
+    "article": "조특법30조의4",
+    "article_key": "30-4",
+    "title": "사회보험료 세액공제",
+    "tags": [],
+    "reqs": [
+      "통합세액공제로 통합"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G2",
+      "G3",
+      "G4"
+    ],
+    "agri_tax": "해당없음",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당",
+    "conflict_pairs": [
+      5,
+      14,
+      26,
+      47
+    ]
+  },
+  {
+    "id": "ART_031_04~05",
+    "article": "조특법31조 4~5항",
+    "article_key": "31.4",
+    "title": "중소기업간의 통합에 대한 소득세의 이월감면",
+    "tags": [
+      "중소기업 통합 합병",
+      "물적분할",
+      "현물출자등이 있었던 경우"
+    ],
+    "reqs": [
+      "이월과세",
+      "통합전 받았던 공제 이월"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_032_04",
+    "article": "조특법32조 4항",
+    "article_key": "32.4",
+    "title": "법인전환시 세액감면 승계",
+    "tags": [
+      "사업용고정자산을 가지고 있는 개인이 법인으로 전환한 경우"
+    ],
+    "reqs": [
+      "양도차익에 대한 이월과세"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_060_00",
+    "article": "조특법 60조",
+    "article_key": "60",
+    "title": "법인공장 대도시 밖 이전 공장양도차익특례",
+    "tags": [
+      "대도시 밖으로 법인공장을 양도후 이전"
+    ],
+    "reqs": [
+      "공장양도차익에서 이월결손금을 차감한 양도사익을 익굼불산입 하고 5년이후 5년간 균등액 익금산입"
+    ],
+    "management": "해당없음",
+    "exclusion_codes": [],
+    "agri_tax": "해당없음",
+    "min_tax": "해당없음",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당없음",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_061_00",
+    "article": "조특법 61조",
+    "article_key": "61",
+    "title": "법인본사 수도권과밀억제권 박 이전 양도차익 과세특례",
+    "tags": [
+      "수도권 밖으로 법인본사건물 양도후 이전"
+    ],
+    "reqs": [
+      "본점 주사무소 건물양도차익을 5년이후 5년간 균등 익금산입"
+    ],
+    "management": "",
+    "exclusion_codes": [],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_062_04",
+    "article": "조특법62조 4항",
+    "article_key": "62.4",
+    "title": "공공기관이 혁신도시로 이전에 대한 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_063_00",
+    "article": "조특법63조",
+    "article_key": "63",
+    "title": "공장 이전 사업소득 감면",
+    "tags": [
+      "중소기업 이 공장을 수도권 밖 또는  수도권중 인구감소지역으로  이전"
+    ],
+    "reqs": [
+      "이전 전 상태: 수도권 과밀억제권역에서 3년(중소기업은 2년) 이상 계속하여 공장시설을 갖추고 사업을 영위했을 것.",
+      "이전 방식: 수도권 밖으로 공장시설을 전부 이전하여 사업을 개시해야 함. (중소기업은 수도권 내 인구감소지역으로의 이전도 포함)",
+      "위기지역·성장촉진지역·인구감소지역: 최초 소득 발생 과세연도부터 10년간 100%, 이후 2년간 50% 감면.",
+      "기타 지역: 지역에 따라 7~10년간 감면 혜택이 차등 적용"
+    ],
+    "management": "이전일로부터 1년 이내에 구공장 시설을 전부 철거하거나 폐쇄해야 함",
+    "exclusion_codes": [],
+    "agri_tax": "해당없음",
+    "min_tax": "해당안됨",
+    "deemed_depr": "해당",
+    "carry_over": "안됨",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_063_01",
+    "article": "조특법63조 1항",
+    "article_key": "63.1",
+    "title": "수도권과밀억제권역 외 지역이전 중소기업에 대한 세액감면",
+    "tags": [
+      "수도권 과밀억제권역 외로 공장을 이전한 경우"
+    ],
+    "reqs": [
+      "소득세 법인세 100% 세액감면"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      38,
+      39
+    ]
+  },
+  {
+    "id": "ART_063_02",
+    "article": "조특법63조의2",
+    "article_key": "63-2",
+    "title": "법인본사이전기업감면",
+    "tags": [
+      "법인본사를 수도권 밖으로 이전하는 경우"
+    ],
+    "reqs": [
+      "법인세 100% 감면"
+    ],
+    "management": "",
+    "exclusion_codes": [],
+    "agri_tax": "해당없음",
+    "min_tax": "해당안됨",
+    "deemed_depr": "해당",
+    "carry_over": "안됨",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_063_02_01",
+    "article": "조특법63조의2 1항",
+    "article_key": "63-2.1",
+    "title": "공장 및 본사 수도권외지역이전에 대한 임시특별세액감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_063_02_02",
+    "article": "조특법63조의2 2항",
+    "article_key": "63-2.2",
+    "title": "공장 및 본사 수도권외지역이전에 대한 임시특별세액감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_064_00",
+    "article": "조특법64조",
+    "article_key": "64",
+    "title": "농공지구입주기업 등에 대한 세액감면",
+    "tags": [
+      "논공단지에 입주하는 기업"
+    ],
+    "reqs": [
+      "법인세 소득세 100% 감면"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      40
+    ]
+  },
+  {
+    "id": "ART_066_00",
+    "article": "조특법66조",
+    "article_key": "66",
+    "title": "영농조합법인 법인세 면제",
+    "tags": [
+      "영농조합법인에 해당하는 경우"
+    ],
+    "reqs": [
+      "식량 작물 재배업 소득  100% 면제.  식량작물 재배업 외 소득 6억 * 조합원수 등 소득제외등"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_067_00",
+    "article": "조특법67조",
+    "article_key": "67",
+    "title": "영어조합법인 법인세 면제",
+    "tags": [
+      "영업조합에 해당하는 경우"
+    ],
+    "reqs": [
+      "연근해 내수면 양식업 : 조합원 수 * 3천만원",
+      "어업소득제외 : 조합원 수 * 1200만원"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_068_00",
+    "article": "조특법68조",
+    "article_key": "68",
+    "title": "농업회사법인 법인세 면제",
+    "tags": [
+      "농업회사법인에 해당하는 경우"
+    ],
+    "reqs": [
+      "식량작물재배업 100% 면제",
+      "그외 일정금액"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_085_06_01~02",
+    "article": "조특법85조의6 1~2항",
+    "article_key": "85-6.1",
+    "title": "사회적기업에 대한 법인세 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_099_09_02",
+    "article": "조특법99조의9 2항",
+    "article_key": "99-9.2",
+    "title": "위기지역 창업기업에 대한 법인세 등의 감면",
+    "tags": [
+      "위기지역에 창업. 사업장 신설 하는 경우"
+    ],
+    "reqs": [
+      "소득세 100% 감면 , 법인세 100% 감면"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_099_11_01",
+    "article": "조특법99조의11 1항",
+    "article_key": "99-11.1",
+    "title": "감염병 피해에 따른 특별재난지역의 중소기업 법인세 등의 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_104_08",
+    "article": "조특법104조의8",
+    "article_key": "104-8",
+    "title": "전자신고 세액공제",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [],
+    "agri_tax": "해당없음",
+    "min_tax": "해당",
+    "deemed_depr": "해당없음",
+    "carry_over": "해당",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_104_14",
+    "article": "조특법104조의14",
+    "article_key": "104-14",
+    "title": "제3자 물류비용에 대한 세액공제",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G3",
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "ART_104_15",
+    "article": "조특법104조의15",
+    "article_key": "104-15",
+    "title": "해외자원개발 투자에 대한 과세특례",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G3",
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      16,
+      31
+    ]
+  },
+  {
+    "id": "ART_104_22",
+    "article": "조특법104조의22",
+    "article_key": "104-22",
+    "title": "기업의 운동경기부 설치/운영에 대한 과세특례",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      17,
+      32
+    ]
+  },
+  {
+    "id": "ART_104_24_01",
+    "article": "조특법104조의24 1항",
+    "article_key": "104-24.1",
+    "title": "해외진출기업의 국내복귀에 대한 세액감면",
+    "tags": [
+      "국외에서 2년이상 경영하던 사업장을 국내로 복귀한 경우"
+    ],
+    "reqs": [
+      "소득세 및 법인세 100% 감면"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_104_25",
+    "article": "조특법104조의25",
+    "article_key": "104-25",
+    "title": "석유제품 전자상거래에 대한 세액공제",
+    "tags": [
+      "한국거래소에서 운영하는 석유제품 전자결제망을 이용한 경우"
+    ],
+    "reqs": [
+      "결제금액 에 일정율 공제"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      18,
+      33
+    ]
+  },
+  {
+    "id": "ART_121_02",
+    "article": "조특법121조의2",
+    "article_key": "121-2",
+    "title": "외국인투자에 대한 세액감면",
+    "tags": [
+      "고도화된 기술을 이용 국내에 투자하는 경우"
+    ],
+    "reqs": [
+      "소득세 법인세 100% 감면"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      45
+    ]
+  },
+  {
+    "id": "ART_121_04",
+    "article": "조특법121조의4",
+    "article_key": "121-4",
+    "title": "외국인투자기업 증자에 대한 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      45
+    ]
+  },
+  {
+    "id": "ART_121_08",
+    "article": "조특법121조의8",
+    "article_key": "121-8",
+    "title": "제주첨단과학기술단지 입주기업에 대한 소득세의 감면",
+    "tags": [
+      "제주첨단 과학기술단지에 입주한 경우"
+    ],
+    "reqs": [
+      "5년 동안 100% , 이후 3년동안 50% 감면"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      41
+    ]
+  },
+  {
+    "id": "ART_121_09_02",
+    "article": "조특법121조의9 2항",
+    "article_key": "121-9.2",
+    "title": "제주투자진흥지구 또는 제주자유무역지역 입주기업 소득세 감면",
+    "tags": [
+      "제주투자진흥지구 제주자유무역지역 입주기업 인 경우"
+    ],
+    "reqs": [
+      "5년동안 100%, 이후 3년동안 50%"
+    ],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      42
+    ]
+  },
+  {
+    "id": "ART_121_17_02",
+    "article": "조특법121조의17 2항",
+    "article_key": "121-17.2",
+    "title": "기업도시개발구역입주기업 등에 대한 소득세 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      43
+    ]
+  },
+  {
+    "id": "ART_121_20_02",
+    "article": "조특법121조의20 2항",
+    "article_key": "121-20.2",
+    "title": "아시아문화중심도시 투자진흥지구 입주기업등에 대한 법인세등의 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_121_21_02",
+    "article": "조특법121조의21 2항",
+    "article_key": "121-21.2",
+    "title": "금융중심지 창업기업 등에 대한 법인세 등의 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_121_22_02",
+    "article": "조특법121조의22 2항",
+    "article_key": "121-22.2",
+    "title": "첨단의료복합단지 입주기업 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": []
+  },
+  {
+    "id": "ART_121_33_02",
+    "article": "조특법121조의33 2항",
+    "article_key": "121-33.2",
+    "title": "기회발전특구의 창업기업 등에 대한 법인세 등의 감면",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4",
+      "G5"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      44
+    ]
+  },
+  {
+    "id": "ART_122_04_01",
+    "article": "조특법122조의4 1항",
+    "article_key": "122-4.1",
+    "title": "금사업자와 스크랩등사업자의 수입금액의 증가 등에 대한 세액공제",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      20,
+      35
+    ]
+  },
+  {
+    "id": "ART_126_07_08",
+    "article": "조특법126조의7 8항",
+    "article_key": "126-7.8",
+    "title": "금 현물시장에서 거래되는 금지금에 대한 과세특례",
+    "tags": [],
+    "reqs": [],
+    "management": "",
+    "exclusion_codes": [
+      "G4"
+    ],
+    "agri_tax": "",
+    "min_tax": "",
+    "deemed_depr": "",
+    "carry_over": "",
+    "conflict_pairs": [
+      21,
+      36
+    ]
+  }
+]
