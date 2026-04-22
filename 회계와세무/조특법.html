@@ -392,12 +392,16 @@
         const reqsHtml = (item.reqs || []).length
             ? (item.reqs || []).map(line => `<li>${esc(line)}</li>`).join('')
             : '<li>내용 없음</li>';
+        const extraLinks = (item.article_key || '').startsWith('121-33')
+            ? `<a href="기회발전특구.html" class="law-link ml-2" title="기회발전특구 지정 현황 보기">📍 지정 현황 보기</a>`
+            : '';
         return `
         <div class="benefit-card">
             <div class="flex justify-between items-start mb-3">
                 <div>
                     <div class="flex items-center gap-2 mb-1">
                         <span class="px-2 py-0.5 bg-slate-100 text-slate-500 text-[8px] font-black rounded uppercase">${esc(item.article)}</span>
+                        ${extraLinks}
                     </div>
                     <h3 class="title-link text-lg font-black text-slate-900 tracking-tight" onclick="openDetail('${esc(item.id)}')" title="클릭하면 상세 설명을 볼 수 있습니다">
                         ${esc(item.title)}
