@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>임원 퇴직소득 한도 계산기</title>
+<title>임원 퇴직소득 한도 계산</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -14,26 +14,22 @@
 }
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.65;}
 
-/* ── 헤더 ── */
 .hdr{background:#ebebeb;border-top:3px solid var(--line-h);border-bottom:2px solid var(--line-h);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;}
 .hdr-title{font-size:18px;font-weight:700;color:var(--black);}
 .hdr-ref{font-size:12px;color:var(--mid);margin-top:2px;}
 .save-btns{display:flex;gap:8px;align-items:center;}
-.btn-save{background:var(--dark);color:var(--white);border:none;padding:8px 18px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;white-space:nowrap;}
+.btn-save{background:var(--dark);color:var(--white);border:none;padding:8px 18px;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
 .btn-save:hover{background:var(--black);}
 .btn-word{background:#1a4a7a;}
 .btn-word:hover{background:#122d58;}
 
-/* ── 본문 ── */
 .wrap{max-width:820px;margin:0 auto;padding:22px 18px 50px;}
 
-/* ── 탭 ── */
 .tabs{display:flex;border-bottom:2px solid var(--line-h);margin-bottom:18px;}
 .tab{padding:8px 22px;font-size:13px;font-weight:500;color:var(--light);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;user-select:none;}
 .tab.active{color:var(--black);border-bottom-color:var(--black);font-weight:700;}
 .tab:hover{color:var(--dark);}
 
-/* ── 입력 블록 ── */
 .blk{background:var(--white);border-top:2px solid var(--line-h);border-bottom:1px solid var(--line);border-left:1px solid var(--line);border-right:1px solid var(--line);margin-bottom:10px;}
 .blk-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:7px 14px;font-size:13px;font-weight:700;color:var(--dark);}
 .blk-body{padding:14px 18px;}
@@ -53,7 +49,6 @@ input[type="text"],input[type="number"]{border:1px solid var(--line);padding:8px
 input:focus{border-color:var(--dark);background:var(--white);}
 .preview{display:none;margin-top:8px;padding:7px 12px;background:#ebebeb;border-left:3px solid var(--line-h);font-size:13px;font-weight:600;color:var(--dark);}
 
-/* ── 정관 토글 ── */
 .toggle-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f7f7f7;border:1px solid var(--line);margin-bottom:8px;}
 .tgl-lbl{font-size:13px;font-weight:700;color:var(--dark);flex:1;}
 .tgl-lbl span{font-size:11px;font-weight:400;color:var(--light);margin-left:5px;}
@@ -62,40 +57,39 @@ input:focus{border-color:var(--dark);background:var(--white);}
 .tbtn:first-child{border-right:none;}
 .tbtn.on{background:var(--dark);color:var(--white);border-color:var(--dark);}
 
-/* ── 안내 ── */
-.note{font-size:12px;color:var(--mid);line-height:1.75;margin-top:8px;padding:7px 12px;border-left:2px solid var(--line);}
+.note{font-size:12px;color:var(--mid);line-height:1.75;margin-top:6px;padding:7px 12px;border-left:2px solid var(--line);}
 .note.hidden{display:none;}
-.warn-note{font-size:12px;color:var(--warn);line-height:1.75;margin-top:8px;padding:7px 12px;border-left:2px solid var(--warn);background:#fdf8f8;}
+.warn-note{font-size:12px;color:var(--warn);line-height:1.75;margin-top:6px;padding:7px 12px;border-left:2px solid var(--warn);background:#fdf8f8;}
 
-/* ── 계산 버튼 ── */
+.formula-box{margin:8px 0;padding:9px 14px;background:#f3f3f3;border-left:3px solid var(--line-h);font-size:13px;font-weight:700;color:var(--black);letter-spacing:.2px;}
+
 .btn-calc{width:100%;background:var(--dark);color:var(--white);border:none;padding:11px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;}
 .btn-calc:hover{background:var(--black);}
 
-/* ════ 결과 ════ */
+/* ── 결과 ── */
 .result-wrap{display:none;margin-top:8px;}
 .result-wrap.show{display:block;}
 
-/* 결과 합계 바 */
 .result-sum{border:2px solid var(--line-h);border-top:3px solid var(--black);background:var(--white);padding:14px 18px;margin-bottom:10px;}
 .rs-lbl{font-size:13px;color:var(--mid);}
 .rs-val{font-size:24px;font-weight:700;color:var(--black);letter-spacing:-.5px;}
 .rs-sub{font-size:12px;color:var(--mid);margin-top:4px;}
 
-/* 한도 비교 박스 (정관 없을 때 핵심) */
+/* 두 한도 비교 박스 */
 .limit-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
 .lc-box{border:1px solid var(--line);border-top:3px solid var(--line-h);padding:12px 14px;background:var(--white);}
-.lc-box.dominant{border-top-color:var(--ok);border-color:var(--ok);}
+.lc-box.active{border-top-color:var(--ok);border-color:var(--ok);}
 .lc-box.caution{border-top-color:var(--warn);border-color:var(--warn);}
-.lc-label{font-size:11px;font-weight:700;color:var(--mid);margin-bottom:4px;}
-.lc-val{font-size:18px;font-weight:700;color:var(--black);}
-.lc-sub{font-size:11px;color:var(--light);margin-top:4px;line-height:1.6;}
-.lc-badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;margin-bottom:4px;}
+.lc-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;margin-bottom:6px;}
 .lc-badge.ok{background:var(--ok);color:#fff;}
 .lc-badge.warn{background:var(--warn);color:#fff;}
-.lc-badge.blue{background:var(--blue);color:#fff;}
 .lc-badge.gray{background:var(--light);color:#fff;}
+.lc-badge.blue{background:var(--blue);color:#fff;}
+.lc-label{font-size:11px;font-weight:700;color:var(--mid);margin-bottom:3px;}
+.lc-val{font-size:18px;font-weight:700;color:var(--black);}
+.lc-formula{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.6;}
 
-/* 실제 vs 한도 비교 */
+/* 실제 퇴직금 비교 */
 .cmp-row{display:flex;gap:8px;margin-bottom:10px;}
 .cmp-box{flex:1;border:1px solid var(--line);border-top:2px solid var(--line-h);padding:10px 12px;background:var(--white);}
 .cmp-box.win{border-top-color:var(--ok);border-color:var(--ok);}
@@ -104,12 +98,10 @@ input:focus{border-color:var(--dark);background:var(--white);}
 .cmp-badge.lose{background:var(--light);color:#fff;}
 .cmp-name{font-size:11px;font-weight:700;color:var(--mid);}
 .cmp-val{font-size:16px;font-weight:700;color:var(--dark);margin-top:2px;}
-.cmp-sub{font-size:10px;color:var(--light);margin-top:2px;line-height:1.5;}
+.cmp-sub{font-size:10px;color:var(--light);margin-top:3px;line-height:1.5;}
 
-/* 섹션 타이틀 */
 .sec-title{font-size:12px;font-weight:700;color:var(--dark);border-bottom:2px solid var(--line-h);padding-bottom:4px;margin:14px 0 8px;}
 
-/* 구간별 테이블 */
 .rt{width:100%;border-collapse:collapse;font-size:13px;}
 .rt th{background:#ebebeb;border-top:2px solid var(--line-h);border-bottom:1px solid var(--line-h);padding:8px 11px;font-size:12px;font-weight:700;text-align:center;color:var(--dark);}
 .rt td{padding:8px 11px;border-bottom:1px solid var(--line);color:var(--dark);}
@@ -118,19 +110,16 @@ input:focus{border-color:var(--dark);background:var(--white);}
 .rt .ctr{text-align:center;}
 .rt .tot td{background:#ebebeb;font-weight:700;border-top:2px solid var(--line-h);border-bottom:2px solid var(--line-h);font-size:14px;}
 
-/* 판정 */
 .verdict{display:none;padding:9px 13px;font-size:13px;font-weight:500;margin-top:8px;border-left:3px solid;line-height:1.7;}
 .verdict.ok{background:#f2faf5;color:var(--ok);border-color:var(--ok);}
 .verdict.over{background:#fdf2f2;color:var(--warn);border-color:var(--warn);}
 .verdict.info{background:#f5f5f5;color:var(--dark);border-color:var(--line-h);}
 
-/* 계산 근거 */
 .basis-item{margin-bottom:7px;border:1px solid var(--line);border-top:2px solid var(--line-h);}
 .basis-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:6px 13px;font-size:12px;font-weight:700;color:var(--mid);}
 .basis-body{padding:8px 13px;font-size:12px;color:var(--dark);line-height:1.9;white-space:pre-wrap;background:var(--white);}
-.basis-body b{color:var(--black);}
 
-/* ── 2페이지 유의사항 ── */
+/* 2페이지 */
 .list-section{margin-bottom:28px;}
 .list-head{font-size:15px;font-weight:700;color:var(--black);border-bottom:2px solid var(--line-h);padding-bottom:5px;margin-bottom:10px;}
 .chk-list{list-style:none;padding:0;border-top:1px solid var(--line);}
@@ -141,23 +130,19 @@ input:focus{border-color:var(--dark);background:var(--white);}
 .chk-val b{color:var(--black);}
 .footnote{font-size:11px;color:var(--light);text-align:center;padding:8px 0;border-top:1px solid var(--line);margin-top:12px;}
 
-/* ── 인쇄 ── */
 @media print{
   .save-btns,.tabs,.input-wrap,.btn-calc{display:none!important;}
   body{background:#fff!important;font-size:12px;line-height:1.58;}
   .hdr{background:#ebebeb!important;padding:10px 20px;border-top:2px solid #555!important;border-bottom:1.5px solid #555!important;}
   .hdr-title{font-size:15px!important;}
-  .hdr-ref{font-size:11px!important;}
   .wrap{padding:6px 0 0;max-width:100%;}
   .result-wrap{display:block!important;}
-  .blk{margin-bottom:6px;}
   .result-sum{padding:10px 14px;margin-bottom:8px;}
   .rs-val{font-size:19px!important;}
   .limit-compare{gap:5px;margin-bottom:8px;}
   .lc-box{padding:8px 10px;}
   .lc-val{font-size:14px!important;}
   .cmp-row{gap:5px;margin-bottom:7px;}
-  .cmp-box{padding:7px 10px;}
   .cmp-val{font-size:13px!important;}
   .sec-title{font-size:11px!important;margin:8px 0 5px;}
   .rt th,.rt td{padding:5px 8px!important;font-size:11px!important;}
@@ -178,9 +163,10 @@ input:focus{border-color:var(--dark);background:var(--white);}
 </style>
 </head>
 <body>
+
 <div class="hdr">
   <div>
-    <div class="hdr-title">임원 퇴직소득 한도 계산기</div>
+    <div class="hdr-title">임원 퇴직소득 한도 계산</div>
     <div class="hdr-ref">소득세법 §22 · 법인세법 시행령 §44 · 납세자 유리 방식 자동 비교</div>
   </div>
   <div class="save-btns" id="saveBtns" style="display:none;">
@@ -190,13 +176,13 @@ input:focus{border-color:var(--dark);background:var(--white);}
 </div>
 
 <div class="wrap">
-  <!-- 탭 -->
   <div class="tabs">
     <div class="tab active" id="tab-cur" onclick="setMode('cur')">① 현재 시점 예상 한도</div>
     <div class="tab"        id="tab-act" onclick="setMode('act')">② 실제 퇴직 시 계산·비교</div>
   </div>
 
   <div class="input-wrap">
+
     <!-- ① 기본 정보 -->
     <div class="blk">
       <div class="blk-head">① 기본 정보</div>
@@ -227,7 +213,7 @@ input:focus{border-color:var(--dark);background:var(--white);}
       <div class="blk-body">
         <div class="toggle-row">
           <div class="tgl-lbl">정관 또는 주주총회 결의로 정한 임원 퇴직금 지급규정
-            <span>선택에 따라 한도 계산 방식이 달라집니다</span>
+            <span>선택에 따라 적용 한도와 입력 항목이 달라집니다</span>
           </div>
           <div class="tgl-btns">
             <button class="tbtn on" id="btn-has-no"  onclick="setJk(false)">없음</button>
@@ -238,16 +224,18 @@ input:focus{border-color:var(--dark);background:var(--white);}
         <!-- 정관 없음 안내 -->
         <div id="box-nojk">
           <div class="warn-note">
-            <b>정관 없을 때 두 가지 한도가 동시에 적용됩니다.</b><br>
-            · <b>소득세법 한도</b> (§22): 구간별 산식 → 초과분은 개인 근로소득 과세<br>
-            · <b>법인세법 한도</b> (시행령 §44): 퇴직 전 1년 총급여 × 근속연수 → 초과분은 법인 손금불산입
+            <b>정관 없을 때 두 가지 한도가 동시에 고려.</b><br>
+            · <b>소득세법 한도</b> (§22): 구간별 산식 합계 → 초과분은 개인 근로소득 과세<br>
+            · <b>법인세법 손금 한도</b> (시행령 §44): 퇴직 전 1년 총급여 × 1/10 × 근속연수 → 초과분은 법인 손금불산입
           </div>
+          <div class="formula-box">법인세법 손금 한도 = 퇴직 전 1년 총급여(비과세 제외) × 1/10 × 근속연수</div>
         </div>
 
-        <!-- 정관 있음: 2011 이전 구간만 추가 입력 -->
+        <!-- 정관 있음: 2011 이전 구간 추가 입력 -->
         <div id="box-jk" class="hidden">
           <div class="note" style="margin-bottom:8px;">
-            2011.12.31 이전 근속 구간이 있는 경우, 아래 정보를 입력하면 비례안분법과 정관규정법 중 유리한 방법을 자동 선택합니다.
+            정관·주총 결의 지급규정이 있으면 소득세법 §22 구간별 한도만 적용됩니다.<br>
+            2011.12.31 이전 근속 구간이 있는 경우 아래 정보를 입력하면 비례안분법과 정관규정법 중 유리한 방법을 자동 선택합니다.
           </div>
           <div id="card-pre-jk" style="display:none;">
             <div class="row">
@@ -273,24 +261,22 @@ input:focus{border-color:var(--dark);background:var(--white);}
                 </div>
               </div>
             </div>
-            <div class="note" style="margin-top:6px;">
-              정관규정액 = 월급여 × 근속연수 × 배수 &nbsp;|&nbsp; 비례안분법과 비교해 <b>납세자 유리한 금액 자동 선택</b>
-            </div>
+            <div class="note">정관규정액 = 월급여 × 근속연수 × 배수 &nbsp;|&nbsp; 비례안분법과 비교해 <b>납세자 유리한 금액 자동 선택</b></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ③ 급여 입력 -->
+    <!-- ③ 급여 정보 -->
     <div class="blk">
-      <div class="blk-head" id="sal-blk-head">③ 급여 정보</div>
+      <div class="blk-head">③ 급여 정보</div>
       <div class="blk-body">
 
-        <!-- 정관 없음: 퇴직 전 1년 총급여만 표시 (법인세법 한도용) -->
+        <!-- 정관 없음: 퇴직 전 1년 총급여 (법인세법 한도 + 소득세법 한도 공용) -->
         <div id="row-sal1y">
           <div class="row">
             <div class="col">
-              <label>퇴직 전 1년간 총급여 <span class="sub">비과세 제외 · 법인세법 §44 한도용</span></label>
+              <label>퇴직 전 1년간 총급여 <span class="sub">비과세 제외 · 법인세법 §44 손금 한도용</span></label>
               <div class="inp-wrap">
                 <input type="text" id="sal_1y" placeholder="예) 130,000,000" oninput="fmtNum(this)">
                 <span class="unit">원</span>
@@ -299,13 +285,13 @@ input:focus{border-color:var(--dark);background:var(--white);}
             <div class="col"></div>
           </div>
           <div class="note">
-            <b>법인세법 시행령 §44 손금 한도</b> = 퇴직 전 1년 총급여(비과세 제외) × 근속연수<br>
-            이 한도를 초과 지급한 금액은 <b>법인 비용 불인정</b> + 퇴직자에게 근로소득 과세됩니다.<br>
-            ※ 소득세법 한도(구간별 산식)도 함께 계산되어 두 한도를 비교합니다.
+            법인세법 손금 한도 = 퇴직 전 1년 총급여 × <b>1/10</b> × 근속연수<br>
+            소득세법 구간별 한도 계산에도 이 금액을 연평균 급여로 사용합니다.<br>
+            이 한도를 초과 지급한 금액은 <b>법인 비용 불인정</b> + 퇴직자에게 근로소득 과세됩니다.
           </div>
         </div>
 
-        <!-- 정관 있음: 퇴직 소급 3년 연평균만 표시 (소득세법 한도용) -->
+        <!-- 정관 있음: 퇴직 소급 3년 연평균 (소득세법 한도용) -->
         <div id="row-sal-avg" style="display:none;">
           <div class="row">
             <div class="col">
@@ -319,8 +305,7 @@ input:focus{border-color:var(--dark);background:var(--white);}
           </div>
           <div class="note">
             연평균 급여 = 퇴직일 소급 3년 총급여(상여 포함·비과세 제외) ÷ 36개월 × 12<br>
-            근속 3년 미만이면 실제 근속월수 기준으로 환산합니다.<br>
-            ※ 2012~2019 구간(3배)과 2020 이후 구간(2배)에 <b>동일 금액</b>을 적용합니다.
+            근속 3년 미만이면 실제 근속월수 기준 환산 / 2012~2019(3배)·2020이후(2배) 구간에 동일 금액 적용
           </div>
         </div>
 
@@ -341,7 +326,7 @@ input:focus{border-color:var(--dark);background:var(--white);}
           </div>
           <div class="col"></div>
         </div>
-        <div class="note">입력 금액과 소득세법·법인세법 한도를 동시에 비교하여 초과·여유 여부를 자동 판정합니다.</div>
+        <div class="note">소득세법·법인세법 한도와 동시에 비교하여 초과·여유 여부를 자동 판정합니다.</div>
       </div>
     </div>
 
@@ -354,18 +339,17 @@ input:focus{border-color:var(--dark);background:var(--white);}
       <div style="height:16px;"></div>
       <div class="sec-title">계산 결과</div>
 
-      <!-- 합계 바 -->
       <div class="result-sum">
         <div class="rs-lbl" id="rLbl">퇴직소득 한도액</div>
         <div class="rs-val" id="rVal">—</div>
         <div class="rs-sub" id="rSub"></div>
       </div>
 
-      <!-- 정관 없을 때: 두 한도 비교 박스 -->
+      <!-- 정관 없음: 두 한도 비교 -->
       <div id="limitCompareWrap" style="display:none;">
-        <div class="sec-title">소득세법 한도 vs 법인세법 한도 비교</div>
+        <div class="sec-title">소득세법 한도 vs 법인세법 손금 한도 비교</div>
         <div class="limit-compare" id="limitCompareBox"></div>
-        <div class="verdict" id="limitVerdict" style="display:block;"></div>
+        <div class="verdict info" id="limitVerdict" style="display:none;"></div>
       </div>
 
       <!-- 실제 퇴직금 vs 한도 비교 (모드2) -->
@@ -374,7 +358,7 @@ input:focus{border-color:var(--dark);background:var(--white);}
         <div class="cmp-row" id="cmpRow"></div>
       </div>
 
-      <!-- 구간별 표 -->
+      <!-- 구간별 소득세법 한도 표 -->
       <div class="sec-title">구간별 소득세법 한도 산출</div>
       <table class="rt">
         <thead>
@@ -384,7 +368,6 @@ input:focus{border-color:var(--dark);background:var(--white);}
       </table>
       <div class="verdict" id="verdictBox"></div>
 
-      <!-- 계산 근거 -->
       <div class="sec-title" style="margin-top:14px;">계산 근거</div>
       <div id="basisWrap"></div>
     </div>
@@ -394,12 +377,13 @@ input:focus{border-color:var(--dark);background:var(--white);}
       <div class="list-section">
         <div class="list-head">퇴직소득 한도 계산 시 반드시 유의할 사항</div>
         <ul class="chk-list">
-          <li><span class="chk-key">정관 없을 때</span><span class="chk-val"><b>소득세법 한도</b>와 <b>법인세법 한도(1년 총급여 × 근속연수)</b>를 동시에 확인하세요. 두 한도 중 작은 금액이 실질 인정 한도입니다.</span></li>
-          <li><span class="chk-key">한도 초과</span><span class="chk-val">소득세법 한도 초과분은 개인에게 <b>근로소득 과세</b>, 법인세법 한도 초과분은 법인의 <b>손금불산입</b>이 동시에 발생할 수 있습니다.</span></li>
+          <li><span class="chk-key">정관 없을 때</span><span class="chk-val"><b>소득세법 한도</b>와 <b>법인세법 손금 한도(1년 총급여 × 1/10 × 근속연수)</b>를 동시에 확인하세요. 두 한도 중 작은 금액이 실질 인정 한도입니다.</span></li>
+          <li><span class="chk-key">한도 초과</span><span class="chk-val">소득세법 한도 초과분 → <b>개인 근로소득 과세</b>, 법인세법 한도 초과분 → <b>법인 손금불산입</b>이 동시에 발생할 수 있습니다.</span></li>
+          <li><span class="chk-key">법인세법 §44</span><span class="chk-val">정관이 없어도 <b>퇴직 전 1년 총급여 × 1/10 × 근속연수</b> 범위 내 퇴직금은 손금 인정됩니다. 이 한도 초과분은 법인 비용으로 인정되지 않습니다.</span></li>
           <li><span class="chk-key">3년 평균급여</span><span class="chk-val"><b>연평균 급여 = 상여 포함·비과세 제외</b> 총급여 ÷ 36개월 × 12. 근속 3년 미만이면 실제 근속월수 기준으로 환산합니다.</span></li>
-          <li><span class="chk-key">연분연승법</span><span class="chk-val">퇴직소득세는 <b>연분연승법</b>(÷근속연수 → 세율 적용 → ×근속연수)으로 계산됩니다. 종합소득세율 단순 적용과 결과가 다릅니다.</span></li>
-          <li><span class="chk-key">임원 범위</span><span class="chk-val"><b>등기임원뿐 아니라 미등기임원도</b> 실질적 지배력이 있으면 한도 규정 적용 대상입니다.</span></li>
+          <li><span class="chk-key">연분연승법</span><span class="chk-val">퇴직소득세는 <b>연분연승법</b>(÷근속연수 → 세율 적용 → ×근속연수)으로 계산됩니다.</span></li>
           <li><span class="chk-key">2011년 이전</span><span class="chk-val">2011.12.31 이전 근속분은 <b>한도 없음</b>. 정관이 있으면 비례안분법·정관규정법 중 유리한 방법 선택 가능합니다.</span></li>
+          <li><span class="chk-key">임원 범위</span><span class="chk-val"><b>등기임원뿐 아니라 미등기임원도</b> 실질적 지배력이 있으면 한도 규정 적용 대상입니다.</span></li>
           <li><span class="chk-key">중간 정산</span><span class="chk-val">중간정산 이력이 있으면 <b>그 시점부터 근속연수 재기산</b>합니다.</span></li>
           <li><span class="chk-key">예상치 주의</span><span class="chk-val">현재 시점 한도는 <b>예상치</b>입니다. 실제 퇴직 시 급여 변동에 따라 달라질 수 있습니다.</span></li>
         </ul>
@@ -407,12 +391,12 @@ input:focus{border-color:var(--dark);background:var(--white);}
       <div class="list-section">
         <div class="list-head">퇴직급여 세무조정 핵심 체크리스트</div>
         <ul class="chk-list">
-          <li><span class="chk-key">손금불산입</span><span class="chk-val">임원 퇴직금 <b>한도 초과액은 법인세법상 손금불산입</b>됩니다. 정관이 없으면 1년 총급여 × 근속연수가 손금 한도입니다.</span></li>
+          <li><span class="chk-key">손금불산입</span><span class="chk-val">임원 퇴직금 <b>한도 초과액은 법인세법상 손금불산입</b>됩니다. 정관이 없으면 1년 총급여 × 1/10 × 근속연수가 손금 한도입니다.</span></li>
           <li><span class="chk-key">정관 정비</span><span class="chk-val">지급 전 <b>정관·이사회 의사록·지급규정 정비 및 주총 결의 확인</b> 필수. 서류 미비 시 비용 불인정 리스크가 있습니다.</span></li>
           <li><span class="chk-key">원천징수</span><span class="chk-val">퇴직소득세 원천징수는 <b>지급월 다음 달 10일까지 납부</b>합니다. 지연 시 가산세가 발생합니다.</span></li>
           <li><span class="chk-key">세무처리 일치</span><span class="chk-val">한도 초과분을 근로소득으로 처리 시 <b>법인(손금산입)과 개인(근로소득 신고) 처리를 반드시 일치</b>시켜야 합니다.</span></li>
           <li><span class="chk-key">퇴직연금</span><span class="chk-val">DC·DB형 퇴직연금은 <b>한도 계산방식이 일반 퇴직금과 상이</b>합니다.</span></li>
-          <li><span class="chk-key">귀속연도</span><span class="chk-val">퇴직금은 <b>실제 지급일 기준으로 귀속연도</b>가 결정됩니다.</span></li>
+          <li><span class="chk-key">귀속연도</span><span class="chk-val">퇴직금은 <b>실제 지급일 기준으로 귀속연도</b>가 결정됩니다. 지급 지연 시 가산세 발생 가능합니다.</span></li>
           <li><span class="chk-key">IRP 이체</span><span class="chk-val">IRP 이체 시 <b>과세이연</b> 가능. 실제 수령 시 퇴직소득세 분리과세가 적용되어 절세 효과가 있습니다.</span></li>
         </ul>
       </div>
@@ -456,26 +440,21 @@ function mDiff(s,e){
   return y*12+m+(e.getDate()>=s.getDate()?0:-1);
 }
 
-/* ── 날짜 변환 표시 ── */
 function onDate(){
   const sv=document.getElementById('startDate').value;
   const ev=document.getElementById('endDate').value;
   const sd=document.getElementById('sd-disp'), ed=document.getElementById('ed-disp');
   const s=parseDate(sv), e=parseDate(ev);
-
   sd.textContent = sv.length===0?'':s?dispDate(sv):'날짜 오류';
-  sd.className   = 'date-disp'+(s||sv.length===0?'':' err');
+  sd.className   = 'date-disp'+((!s&&sv.length>0)?' err':'');
   ed.textContent = ev.length===0?'':e?dispDate(ev):'날짜 오류';
-  ed.className   = 'date-disp'+(e||ev.length===0?'':' err');
-
+  ed.className   = 'date-disp'+((!e&&ev.length>0)?' err':'');
   const pv=document.getElementById('preview');
   const D0=new Date('1800-01-01'),D1=new Date('2011-12-31');
   const D2=new Date('2012-01-01'),D3=new Date('2019-12-31');
   const D4=new Date('2020-01-01'),D9=new Date('2999-12-31');
-
   if(!s||!e||s>=e){ pv.style.display='none'; updatePreJk(false); return; }
-
-  const y0=pY(s,e,D0,D1), y1=pY(s,e,D2,D3), y2=pY(s,e,D4,D9), yt=ybd(s,e);
+  const y0=pY(s,e,D0,D1),y1=pY(s,e,D2,D3),y2=pY(s,e,D4,D9),yt=ybd(s,e);
   let t='';
   if(y0>0) t+=`▪ 2011이전: ${fy(y0)}년  `;
   if(y1>0) t+=`▪ 2012~2019: ${fy(y1)}년  `;
@@ -509,21 +488,20 @@ function setJk(v){
   document.getElementById('btn-has-no').classList.toggle('on',!v);
   document.getElementById('box-jk').classList.toggle('hidden',!v);
   document.getElementById('box-nojk').style.display=v?'none':'block';
-  // 급여 입력란 전환: 정관 없음→1년 총급여, 정관 있음→3년 연평균
+  /* 급여 입력란 전환 */
   document.getElementById('row-sal1y').style.display=v?'none':'block';
   document.getElementById('row-sal-avg').style.display=v?'block':'none';
   onDate();
 }
 
-/* ── 핵심 계산 ── */
-function calcLimit(s, e, salAvg, retire, jkY, jkM, jkX){
-  const D0=new Date('1800-01-01'), D1=new Date('2011-12-31');
-  const D2=new Date('2012-01-01'), D3=new Date('2019-12-31');
-  const D4=new Date('2020-01-01'), D9=new Date('2999-12-31');
-
-  const yPre=pY(s,e,D0,D1), y12=pY(s,e,D2,D3), y20=pY(s,e,D4,D9);
+/* ── 소득세법 한도 계산 ── */
+function calcSodLimit(s, e, salAvg, retire, jkY, jkM, jkX){
+  const D0=new Date('1800-01-01'),D1=new Date('2011-12-31');
+  const D2=new Date('2012-01-01'),D3=new Date('2019-12-31');
+  const D4=new Date('2020-01-01'),D9=new Date('2999-12-31');
+  const yPre=pY(s,e,D0,D1),y12=pY(s,e,D2,D3),y20=pY(s,e,D4,D9);
   const yTot=ybd(s,e);
-  const mPre=mDiff(clamp(s,D0,D1), clamp(e,D0,D1));
+  const mPre=mDiff(clamp(s,D0,D1),clamp(e,D0,D1));
   const mTot=mDiff(s,e);
 
   /* 2011 이전 */
@@ -546,26 +524,22 @@ function calcLimit(s, e, salAvg, retire, jkY, jkM, jkX){
       +`\n→ 납세자 유리 선택 [${mth}] = ${won(lPre)}`;
   }
 
-  /* 2012~2019 (3배) */
-  let l12=0, b12='';
+  /* 2012~2019: 3배 */
+  let l12=0,b12='';
   if(y12>0&&salAvg>0){
     l12=Math.round(salAvg*0.1*y12*3);
     b12=`(${won(salAvg)} × 10%) × ${fy(y12)}년 × 3배\n= ${won(Math.round(salAvg*0.1))} × ${fy(y12)} × 3\n= ${won(l12)}`;
   }
 
-  /* 2020 이후 (2배) */
-  let l20=0, b20='';
+  /* 2020 이후: 2배 */
+  let l20=0,b20='';
   if(y20>0&&salAvg>0){
     l20=Math.round(salAvg*0.1*y20*2);
     b20=`(${won(salAvg)} × 10%) × ${fy(y20)}년 × 2배\n= ${won(Math.round(salAvg*0.1))} × ${fy(y20)} × 2\n= ${won(l20)}`;
   }
 
-  return {
-    yPre,y12,y20,yTot,mPre,mTot,
-    lPre,lR,lJ,mth,l12,l20,
-    so득Total: lPre+l12+l20,
-    bPre,b12,b20,salAvg
-  };
+  return {yPre,y12,y20,yTot,mPre,mTot,lPre,lR,lJ,mth,l12,l20,
+          total:lPre+l12+l20, bPre,b12,b20,salAvg};
 }
 
 /* ── 계산 실행 ── */
@@ -576,25 +550,30 @@ function calc(){
   if(!s||!e){ alert('취임일과 기준일을 YYYYMMDD 형식으로 입력해주세요.\n예) 20160703'); return; }
   if(s>=e){ alert('기준일이 취임일보다 이후여야 합니다.'); return; }
 
-  const sal1y  = pN('sal_1y');
-  // 정관 없음: sal_1y를 소득세법 한도 계산에도 사용 (퇴직 전 1년 총급여로 근사)
-  // 정관 있음: sal_avg (3년 연평균) 사용
-  const salAvg = hasJk ? pN('sal_avg') : sal1y;
-  const retire = mode==='act' ? pN('totalRetire') : 0;
+  const retire  = mode==='act' ? pN('totalRetire') : 0;
   const jkY=pN('jk_y'), jkM=pN('jk_m');
   const jkX=parseFloat(document.getElementById('jk_x').value)||3;
   const yTot=ybd(s,e);
 
-  const R = calcLimit(s,e,salAvg,retire,jkY,jkM,jkX);
-  const sodTotal = R.so득Total; // 소득세법 한도
+  /* 급여: 정관 있음→3년평균, 없음→1년총급여 */
+  const sal1y  = pN('sal_1y');
+  const salAvg = hasJk ? pN('sal_avg') : sal1y;
 
-  /* 법인세법 한도 (정관 없을 때) */
-  const corpLimit = !hasJk && sal1y>0 ? Math.round(sal1y * yTot) : null;
+  /* 소득세법 한도 */
+  const R = calcSodLimit(s,e,salAvg,retire,jkY,jkM,jkX);
+  const sodTotal = R.total;
+
+  /* 법인세법 손금 한도 (정관 없을 때만) */
+  /* 공식: 퇴직 전 1년 총급여 × 1/10 × 근속연수 */
+  const corpLimit = (!hasJk && sal1y>0)
+    ? Math.round(sal1y * 0.1 * yTot)
+    : null;
 
   /* ── 합계 바 ── */
   document.getElementById('rLbl').textContent =
-    mode==='cur' ? `현재 시점(${dispDate(ev)}) 기준 예상 소득세법 한도액`
-                 : `소득세법상 퇴직소득 한도액`;
+    mode==='cur'
+      ? `현재 시점(${dispDate(ev)}) 기준 예상 소득세법 한도액`
+      : `소득세법상 퇴직소득 한도액`;
   document.getElementById('rVal').textContent = won(sodTotal);
   document.getElementById('rSub').textContent =
     `취임: ${dispDate(sv)} ~ ${mode==='cur'?'기준일':'퇴직일'}: ${dispDate(ev)}  |  총 근속: 약 ${fy(yTot)}년`;
@@ -606,49 +585,54 @@ function calc(){
 
   if(!hasJk && sal1y>0){
     lcWrap.style.display='block';
-    const smaller = Math.min(sodTotal, corpLimit);
-    const sodWin  = sodTotal <= corpLimit;
-    const basisLimitCorp = `${won(sal1y)} × ${fy(yTot)}년 = ${won(corpLimit)}`;
+    const effLimit = Math.min(sodTotal, corpLimit);
+    const sodSmaller = sodTotal <= corpLimit;
+    const corpFormula = `${won(sal1y)} × 1/10 × ${fy(yTot)}년 = ${won(corpLimit)}`;
 
     lcBox.innerHTML = `
-      <div class="lc-box ${sodWin?'dominant':''}">
-        <span class="lc-badge ${sodWin?'ok':'gray'}">소득세법 (§22)</span>
+      <div class="lc-box ${sodSmaller?'active':''}">
+        <span class="lc-badge ${sodSmaller?'ok':'gray'}">소득세법 §22</span>
         <div class="lc-label">구간별 한도 합계</div>
         <div class="lc-val">${won(sodTotal)}</div>
-        <div class="lc-sub">초과분 → 개인 근로소득 과세</div>
+        <div class="lc-formula">초과분 → 개인 근로소득 과세</div>
       </div>
-      <div class="lc-box ${!sodWin?'dominant':''}">
-        <span class="lc-badge ${!sodWin?'ok':'gray'}">법인세법 시행령 §44</span>
-        <div class="lc-label">퇴직 전 1년 총급여 × 근속연수</div>
+      <div class="lc-box ${!sodSmaller?'active':''}">
+        <span class="lc-badge ${!sodSmaller?'ok':'gray'}">법인세법 시행령 §44</span>
+        <div class="lc-label">퇴직 전 1년 총급여 × 1/10 × 근속연수</div>
         <div class="lc-val">${won(corpLimit)}</div>
-        <div class="lc-sub">${basisLimitCorp}<br>초과분 → 법인 손금불산입</div>
+        <div class="lc-formula">${corpFormula}<br>초과분 → 법인 손금불산입</div>
       </div>`;
 
-    const eff = smaller;
-    lcVerd.className = 'verdict info';
-    lcVerd.style.display = 'block';
-    lcVerd.innerHTML =
-      `실질 인정 한도 (두 한도 중 작은 금액): <b>${won(eff)}</b><br>`
-      +(sodTotal>corpLimit
-        ? `소득세법 한도(${won(sodTotal)})가 법인세법 한도(${won(corpLimit)})보다 큽니다. <b>법인세법 한도 초과분 ${won(sodTotal-corpLimit)}은 법인 손금불산입됩니다.</b>`
-        : sodTotal<corpLimit
-          ? `법인세법 한도(${won(corpLimit)})가 소득세법 한도(${won(sodTotal)})보다 큽니다. <b>소득세법 한도를 기준으로 퇴직소득을 지급하면 두 한도 모두 충족됩니다.</b>`
-          : `두 한도가 동일합니다.`);
+    lcVerd.style.display='block';
+    if(sodTotal > corpLimit){
+      lcVerd.className='verdict over';
+      lcVerd.innerHTML=
+        `실질 인정 한도 (두 한도 중 작은 금액): <b>${won(corpLimit)}</b><br>`
+        +`소득세법 한도(${won(sodTotal)})가 법인세법 손금 한도(${won(corpLimit)})보다 큽니다. `
+        +`<b>법인세법 한도 초과분 ${won(sodTotal-corpLimit)}은 법인 손금불산입됩니다.</b>`;
+    } else if(sodTotal < corpLimit){
+      lcVerd.className='verdict ok';
+      lcVerd.innerHTML=
+        `실질 인정 한도 (두 한도 중 작은 금액): <b>${won(sodTotal)}</b><br>`
+        +`소득세법 한도 이내로 지급하면 법인세법 손금 한도(${won(corpLimit)})도 자동 충족됩니다.`;
+    } else {
+      lcVerd.className='verdict info';
+      lcVerd.innerHTML=`두 한도가 <b>${won(sodTotal)}</b>으로 동일합니다.`;
+    }
   } else {
-    lcWrap.style.display = 'none';
+    lcWrap.style.display='none';
   }
 
-  /* ── 실제 퇴직금 vs 한도 비교 (모드2) ── */
-  const cmpSection = document.getElementById('cmpSection');
-  const cmpRow     = document.getElementById('cmpRow');
-  if(mode==='act' && retire>0){
+  /* ── 실제 퇴직금 vs 한도 (모드2) ── */
+  const cmpSection=document.getElementById('cmpSection');
+  const cmpRow=document.getElementById('cmpRow');
+  if(mode==='act'&&retire>0){
     cmpSection.style.display='block';
-    const effLimit = (!hasJk && corpLimit!==null) ? Math.min(sodTotal, corpLimit) : sodTotal;
-    const ex = retire - effLimit;
-    const over = ex > 0;
-
-    if(hasJk && R.yPre>0 && R.lJ>0){
-      const wA = R.lR >= R.lJ;
+    const effLimit = (!hasJk&&corpLimit!==null) ? Math.min(sodTotal,corpLimit) : sodTotal;
+    const ex = retire-effLimit;
+    const over = ex>0;
+    if(hasJk&&R.yPre>0&&R.lJ>0){
+      const wA=R.lR>=R.lJ;
       cmpRow.innerHTML=`
         <div class="cmp-box ${wA?'win':''}">
           <span class="cmp-badge ${wA?'win':'lose'}">${wA?'✓ 유리':'불리'}</span>
@@ -663,13 +647,13 @@ function calc(){
           <div class="cmp-sub">월급여 × ${jkY}년 × ${jkX}배</div>
         </div>`;
     } else {
-      const effLabel = !hasJk && corpLimit!==null
-        ? `실질 인정 한도<br><small style="font-size:10px;">(소득세법·법인세법 중 작은값)</small>`
+      const effLabelHtml = !hasJk&&corpLimit!==null
+        ? `실질 인정 한도<br><span style="font-size:10px;">(소득세법·법인세법 중 작은 값)</span>`
         : '소득세법 한도';
       cmpRow.innerHTML=`
         <div class="cmp-box ${!over?'win':''}">
           <span class="cmp-badge ${!over?'win':'lose'}">${!over?'✓ 한도 이내':'한도 초과'}</span>
-          <div class="cmp-name">${effLabel}</div>
+          <div class="cmp-name">${effLabelHtml}</div>
           <div class="cmp-val">${won(effLimit)}</div>
           <div class="cmp-sub">인정 퇴직소득 최대금액</div>
         </div>
@@ -677,9 +661,7 @@ function calc(){
           <span class="cmp-badge ${over?'lose':'win'}">${over?'초과':'여유'}</span>
           <div class="cmp-name">실제 퇴직금</div>
           <div class="cmp-val">${won(retire)}</div>
-          <div class="cmp-sub">${over
-            ?'초과 '+won(ex)+' → 근로소득 과세'
-            :'여유 '+won(-ex)+' 추가지급 가능'}</div>
+          <div class="cmp-sub">${over?'초과 '+won(ex)+' → 근로소득 과세':'여유 '+won(-ex)+' 추가지급 가능'}</div>
         </div>`;
     }
   } else {
@@ -687,7 +669,7 @@ function calc(){
   }
 
   /* ── 구간별 표 ── */
-  const tb = document.getElementById('rtBody');
+  const tb=document.getElementById('rtBody');
   tb.innerHTML='';
   [
     {lbl:'2011.12.31 이전',          y:R.yPre, sal:'안분/정관', mul:R.mth||'—', lim:R.lPre, show:R.yPre>0},
@@ -704,17 +686,17 @@ function calc(){
   tot.innerHTML=`<td colspan="4"><b>합계 — 소득세법 퇴직소득 한도액</b></td><td class="num"><b>${won(sodTotal)}</b></td>`;
   tb.appendChild(tot);
 
-  /* ── 판정 박스 ── */
+  /* ── 판정 ── */
   const vb=document.getElementById('verdictBox');
-  if(mode==='act' && retire>0){
-    const effLimit = (!hasJk && corpLimit!==null) ? Math.min(sodTotal, corpLimit) : sodTotal;
-    const ex = retire - effLimit;
+  if(mode==='act'&&retire>0){
+    const effLimit=(!hasJk&&corpLimit!==null)?Math.min(sodTotal,corpLimit):sodTotal;
+    const ex=retire-effLimit;
     vb.style.display='block';
     if(ex>0){
       vb.className='verdict over';
       let msg=`실제 퇴직금 <b>${won(retire)}</b>이 실질 인정 한도를 <b>${won(ex)}</b> 초과합니다. 초과금액은 <b>근로소득으로 과세</b>됩니다.`;
-      if(!hasJk && corpLimit!==null && retire>corpLimit){
-        msg+=`<br>법인세법 한도(${won(corpLimit)}) 초과분 <b>${won(retire-corpLimit)}</b>은 <b>법인 손금불산입</b>됩니다.`;
+      if(!hasJk&&corpLimit!==null&&retire>corpLimit){
+        msg+=`<br>법인세법 손금 한도(${won(corpLimit)}) 초과분 <b>${won(retire-corpLimit)}</b>은 <b>법인 손금불산입</b>됩니다.`;
       }
       vb.innerHTML=msg;
     } else {
@@ -734,8 +716,8 @@ function calc(){
   bw.innerHTML='';
   [
     {h:'① 2011.12.31 이전 (한도 없음 — 납세자 유리 방식 선택)', t:R.bPre, show:R.yPre>0},
-    {h:'② 2012.01.01 ~ 2019.12.31 (소득세법·3배수)',             t:R.b12,  show:R.y12>0},
-    {h:'③ 2020.01.01 이후 (소득세법·2배수)',                     t:R.b20,  show:R.y20>0},
+    {h:'② 2012.01.01 ~ 2019.12.31 (소득세법 · 3배수)',          t:R.b12,  show:R.y12>0},
+    {h:'③ 2020.01.01 이후 (소득세법 · 2배수)',                  t:R.b20,  show:R.y20>0},
   ].forEach(b=>{
     if(!b.show||!b.t) return;
     const d=document.createElement('div');
@@ -753,10 +735,11 @@ function calc(){
   sm.innerHTML=`<div class="basis-head">④ 소득세법 한도 합계</div><div class="basis-body"><b>${parts.join(' + ')} = ${won(sodTotal)}</b></div>`;
   bw.appendChild(sm);
 
-  if(!hasJk && sal1y>0){
+  if(!hasJk&&sal1y>0){
     const cb=document.createElement('div');
     cb.className='basis-item';
-    cb.innerHTML=`<div class="basis-head">⑤ 법인세법 한도 (시행령 §44)</div><div class="basis-body">퇴직 전 1년 총급여 × 총 근속연수\n${won(sal1y)} × ${fy(yTot)}년 = <b>${won(corpLimit)}</b>\n\n실질 인정 한도(두 한도 중 작은값) = <b>${won(Math.min(sodTotal,corpLimit))}</b></div>`;
+    cb.innerHTML=`<div class="basis-head">⑤ 법인세법 손금 한도 (시행령 §44)</div>`
+      +`<div class="basis-body">퇴직 전 1년 총급여 × 1/10 × 총 근속연수\n${won(sal1y)} × 1/10 × ${fy(yTot)}년 = <b>${won(corpLimit)}</b>\n\n실질 인정 한도 (두 한도 중 작은 금액) = <b>${won(Math.min(sodTotal,corpLimit))}</b></div>`;
     bw.appendChild(cb);
   }
 
@@ -767,10 +750,9 @@ function calc(){
 
 /* ── 인쇄 ── */
 function doPrint(){
-  const t=document.title;
-  document.title='';
+  const t=document.title; document.title='';
   window.print();
-  setTimeout(()=>{ document.title=t; }, 500);
+  setTimeout(()=>{ document.title=t; },500);
 }
 
 /* ── 초기화 ── */
@@ -779,10 +761,8 @@ window.onload=()=>{
   const str=`${t.getFullYear()}${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}`;
   const ed=document.getElementById('endDate');
   ed.value=str;
-  const disp=document.getElementById('ed-disp');
-  disp.textContent=dispDate(str);
-  disp.className='date-disp';
-  // 초기값: 정관 없음 → 1년 총급여 표시, 3년 평균 숨김
+  document.getElementById('ed-disp').textContent=dispDate(str);
+  /* 초기: 정관 없음 → 1년 총급여 표시, 3년 평균 숨김 */
   document.getElementById('row-sal1y').style.display='block';
   document.getElementById('row-sal-avg').style.display='none';
 };
@@ -791,20 +771,19 @@ window.onload=()=>{
 async function saveWord(){
   if(!window.docx){
     await new Promise((res,rej)=>{
-      const s=document.createElement('script');
-      s.src='https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';
-      s.onload=res; s.onerror=rej;
-      document.head.appendChild(s);
+      const sc=document.createElement('script');
+      sc.src='https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';
+      sc.onload=res; sc.onerror=rej; document.head.appendChild(sc);
     });
   }
   const {Document,Packer,Paragraph,Table,TableRow,TableCell,TextRun,
-         AlignmentType,WidthType,BorderStyle,ShadingType,PageBreak,TableLayoutType}=window.docx;
+    AlignmentType,WidthType,BorderStyle,ShadingType,PageBreak,TableLayoutType}=window.docx;
 
-  const lbl  = document.getElementById('rLbl').textContent;
-  const val  = document.getElementById('rVal').textContent;
-  const sub  = document.getElementById('rSub').textContent;
-  const verd = document.getElementById('verdictBox');
-  const lcV  = document.getElementById('limitVerdict');
+  const lbl  =document.getElementById('rLbl').textContent;
+  const val  =document.getElementById('rVal').textContent;
+  const sub  =document.getElementById('rSub').textContent;
+  const verd =document.getElementById('verdictBox');
+  const lcV  =document.getElementById('limitVerdict');
   const rtRows=[];
   document.querySelectorAll('#rtBody tr').forEach(tr=>{
     rtRows.push([...tr.querySelectorAll('td')].map(td=>td.textContent.trim()));
@@ -817,48 +796,55 @@ async function saveWord(){
     });
   });
 
+  const F='Noto Sans KR';
   const HR=()=>new Paragraph({border:{bottom:{style:BorderStyle.SINGLE,size:8,color:'555555'}},spacing:{before:80,after:80}});
-  const SH=(txt)=>new Paragraph({children:[new TextRun({text:txt,bold:true,size:26,font:'Noto Sans KR'})],spacing:{before:200,after:80}});
-  const ROW_BG=(cells)=>new TableRow({children:cells.map(txt=>new TableCell({shading:{fill:'EBEBEB',type:ShadingType.CLEAR},children:[new Paragraph({children:[new TextRun({text:txt,bold:true,size:20,font:'Noto Sans KR'})],alignment:AlignmentType.CENTER})],margins:{top:60,bottom:60,left:80,right:80}}))});
-  const DATA_ROW=(cells)=>new TableRow({children:cells.map((txt,i)=>new TableCell({children:[new Paragraph({children:[new TextRun({text:txt,size:20,font:'Noto Sans KR'})],alignment:i>=1?AlignmentType.CENTER:AlignmentType.LEFT})],margins:{top:50,bottom:50,left:80,right:80}}))});
+  const SH=(txt)=>new Paragraph({children:[new TextRun({text:txt,bold:true,size:26,font:F})],spacing:{before:200,after:80}});
+  const RBG=(cells)=>new TableRow({children:cells.map(t=>new TableCell({
+    shading:{fill:'EBEBEB',type:ShadingType.CLEAR},
+    children:[new Paragraph({children:[new TextRun({text:t,bold:true,size:20,font:F})],alignment:AlignmentType.CENTER})],
+    margins:{top:60,bottom:60,left:80,right:80}
+  }))});
+  const RD=(cells)=>new TableRow({children:cells.map((t,i)=>new TableCell({
+    children:[new Paragraph({children:[new TextRun({text:t,size:20,font:F})],alignment:i>=1?AlignmentType.CENTER:AlignmentType.LEFT})],
+    margins:{top:50,bottom:50,left:80,right:80}
+  }))});
 
   const doc=new Document({
-    styles:{default:{document:{run:{font:'Noto Sans KR',size:22}}}},
+    styles:{default:{document:{run:{font:F,size:22}}}},
     sections:[{properties:{},children:[
-      new Paragraph({children:[new TextRun({text:'임원 퇴직소득 한도 계산기',bold:true,size:36,font:'Noto Sans KR'})],alignment:AlignmentType.CENTER,spacing:{after:60}}),
-      new Paragraph({children:[new TextRun({text:'소득세법 §22 · 법인세법 시행령 §44 · 납세자 유리 방식 자동 비교',size:18,color:'666666',font:'Noto Sans KR'})],alignment:AlignmentType.CENTER,spacing:{after:200}}),
-      HR(),
-      SH('■ 계산 결과'),
-      new Paragraph({children:[new TextRun({text:lbl,size:20,color:'666666',font:'Noto Sans KR'})],spacing:{after:40}}),
-      new Paragraph({children:[new TextRun({text:val,bold:true,size:40,font:'Noto Sans KR'})],spacing:{after:40}}),
-      new Paragraph({children:[new TextRun({text:sub,size:18,color:'666666',font:'Noto Sans KR'})],spacing:{after:120}}),
-      ...(lcV.style.display!=='none'?[new Paragraph({children:[new TextRun({text:lcV.textContent.trim(),size:20,font:'Noto Sans KR',color:'333333'})],spacing:{after:120}})]:[] ),
-      ...(verd.style.display!=='none'?[new Paragraph({children:[new TextRun({text:verd.textContent.trim(),size:20,font:'Noto Sans KR',color:verd.classList.contains('over')?'7a1515':verd.classList.contains('ok')?'145228':'333333'})],spacing:{after:160}})]:[] ),
-      HR(),
-      SH('■ 구간별 소득세법 한도 산출'),
-      new Table({width:{size:100,type:WidthType.PERCENTAGE},layout:TableLayoutType.FIXED,rows:[ROW_BG(['구분','근속연수','연평균급여','배수','한도액']),...rtRows.map(r=>DATA_ROW(r))]}),
+      new Paragraph({children:[new TextRun({text:'임원 퇴직소득 한도 계산기',bold:true,size:36,font:F})],alignment:AlignmentType.CENTER,spacing:{after:60}}),
+      new Paragraph({children:[new TextRun({text:'소득세법 §22 · 법인세법 시행령 §44 · 납세자 유리 방식 자동 비교',size:18,color:'666666',font:F})],alignment:AlignmentType.CENTER,spacing:{after:200}}),
+      HR(),SH('■ 계산 결과'),
+      new Paragraph({children:[new TextRun({text:lbl,size:20,color:'666666',font:F})],spacing:{after:40}}),
+      new Paragraph({children:[new TextRun({text:val,bold:true,size:40,font:F})],spacing:{after:40}}),
+      new Paragraph({children:[new TextRun({text:sub,size:18,color:'666666',font:F})],spacing:{after:120}}),
+      ...(lcV.style.display!=='none'?[new Paragraph({children:[new TextRun({text:lcV.textContent.trim(),size:20,font:F,
+        color:lcV.classList.contains('over')?'7a1515':lcV.classList.contains('ok')?'145228':'333333'})],spacing:{after:100}})]:[] ),
+      ...(verd.style.display!=='none'?[new Paragraph({children:[new TextRun({text:verd.textContent.trim(),size:20,font:F,
+        color:verd.classList.contains('over')?'7a1515':verd.classList.contains('ok')?'145228':'333333'})],spacing:{after:160}})]:[] ),
+      HR(),SH('■ 구간별 소득세법 한도 산출'),
+      new Table({width:{size:100,type:WidthType.PERCENTAGE},layout:TableLayoutType.FIXED,
+        rows:[RBG(['구분','근속연수','연평균급여','배수','한도액']),...rtRows.map(r=>RD(r))]}),
       new Paragraph({text:'',spacing:{after:160}}),
-      HR(),
-      SH('■ 계산 근거'),
+      HR(),SH('■ 계산 근거'),
       ...basisItems.flatMap(b=>[
-        new Paragraph({children:[new TextRun({text:b.h,bold:true,size:20,font:'Noto Sans KR',color:'444444'})],spacing:{before:120,after:40}}),
-        new Paragraph({children:[new TextRun({text:b.b,size:20,font:'Noto Sans KR'})],spacing:{after:80},indent:{left:200}}),
+        new Paragraph({children:[new TextRun({text:b.h,bold:true,size:20,font:F,color:'444444'})],spacing:{before:120,after:40}}),
+        new Paragraph({children:[new TextRun({text:b.b,size:20,font:F})],spacing:{after:80},indent:{left:200}}),
       ]),
       new Paragraph({children:[new PageBreak()]}),
-      SH('⚠ 퇴직소득 한도 계산 시 반드시 유의할 사항'),
-      new Paragraph({children:[new TextRun({text:'정관 없을 때: 소득세법 한도와 법인세법 한도(1년 총급여 × 근속연수)를 동시에 확인하세요. 두 한도 중 작은 금액이 실질 인정 한도입니다.',size:20,font:'Noto Sans KR'})],spacing:{after:80},indent:{left:200}}),
-      new Paragraph({children:[new TextRun({text:'한도 초과: 소득세법 한도 초과분은 개인 근로소득 과세, 법인세법 한도 초과분은 법인 손금불산입이 동시에 발생할 수 있습니다.',size:20,font:'Noto Sans KR'})],spacing:{after:80},indent:{left:200}}),
-      new Paragraph({children:[new TextRun({text:'연분연승법: 퇴직소득세는 연분연승법(÷근속연수 → 세율 적용 → ×근속연수)으로 계산됩니다.',size:20,font:'Noto Sans KR'})],spacing:{after:80},indent:{left:200}}),
-      new Paragraph({children:[new TextRun({text:'중간 정산: 중간정산 이력이 있으면 그 시점부터 근속연수를 재기산합니다.',size:20,font:'Noto Sans KR'})],spacing:{after:160},indent:{left:200}}),
-      new Paragraph({children:[new TextRun({text:'※ 본 계산기는 참고용입니다. 실제 세무처리는 반드시 담당 세무사와 상담하시기 바랍니다.',size:18,color:'999999',font:'Noto Sans KR'})],alignment:AlignmentType.CENTER}),
+      SH('⚠ 유의사항'),
+      new Paragraph({children:[new TextRun({text:'· 정관 없을 때: 소득세법 한도와 법인세법 손금 한도(1년 총급여 × 1/10 × 근속연수)를 동시에 확인하세요.',size:20,font:F})],spacing:{after:60},indent:{left:200}}),
+      new Paragraph({children:[new TextRun({text:'· 한도 초과: 소득세법 한도 초과분→개인 근로소득 과세, 법인세법 한도 초과분→법인 손금불산입',size:20,font:F})],spacing:{after:60},indent:{left:200}}),
+      new Paragraph({children:[new TextRun({text:'· 연분연승법: 퇴직소득세는 연분연승법(÷근속연수→세율적용→×근속연수)으로 계산됩니다.',size:20,font:F})],spacing:{after:60},indent:{left:200}}),
+      new Paragraph({children:[new TextRun({text:'· 중간 정산: 중간정산 이력이 있으면 그 시점부터 근속연수를 재기산합니다.',size:20,font:F})],spacing:{after:160},indent:{left:200}}),
+      new Paragraph({children:[new TextRun({text:'※ 본 계산기는 참고용입니다. 실제 세무처리는 반드시 담당 세무사와 상담하시기 바랍니다.',size:18,color:'999999',font:F})],alignment:AlignmentType.CENTER}),
     ]}]
   });
   const blob=await Packer.toBlob(doc);
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download=`퇴직소득_한도계산_${new Date().toISOString().slice(0,10)}.docx`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  a.click(); URL.revokeObjectURL(a.href);
 }
 </script>
 </body>
