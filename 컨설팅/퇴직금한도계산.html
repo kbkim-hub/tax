@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>임원 퇴직소득 한도 계산</title>
+<title>임원 퇴직소득 한도 계산기</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -283,28 +283,14 @@ input:focus{border-color:var(--dark);background:var(--white);}
 
     <!-- ③ 급여 입력 -->
     <div class="blk">
-      <div class="blk-head">③ 급여 정보</div>
+      <div class="blk-head" id="sal-blk-head">③ 급여 정보</div>
       <div class="blk-body">
-        <!-- 공통: 퇴직 소급 3년 연평균 (소득세법용) -->
-        <div class="row">
-          <div class="col">
-            <label>퇴직 소급 3년 연평균 총급여 <span class="sub">비과세 제외 · 소득세법 한도용</span></label>
-            <div class="inp-wrap">
-              <input type="text" id="sal_avg" placeholder="예) 120,000,000" oninput="fmtNum(this)">
-              <span class="unit">원</span>
-            </div>
-          </div>
-        </div>
-        <div class="note" style="margin-bottom:10px;">
-          연평균 급여 = 퇴직일 소급 3년 총급여(상여 포함·비과세 제외) ÷ 36개월 × 12 / 근속 3년 미만이면 실제 근속월수 기준 환산<br>
-          ※ 2012~2019 구간과 2020 이후 구간에 <b>동일 금액을 적용</b>합니다 (배수만 3배/2배로 다르게 적용)
-        </div>
 
-        <!-- 정관 없을 때만 표시: 퇴직 전 1년 총급여 (법인세법용) -->
-        <div id="row-sal1y" style="display:none;">
+        <!-- 정관 없음: 퇴직 전 1년 총급여만 표시 (법인세법 한도용) -->
+        <div id="row-sal1y">
           <div class="row">
             <div class="col">
-              <label>퇴직 전 1년간 총급여 <span class="sub">비과세 제외 · 법인세법 한도용</span></label>
+              <label>퇴직 전 1년간 총급여 <span class="sub">비과세 제외 · 법인세법 §44 한도용</span></label>
               <div class="inp-wrap">
                 <input type="text" id="sal_1y" placeholder="예) 130,000,000" oninput="fmtNum(this)">
                 <span class="unit">원</span>
@@ -313,10 +299,31 @@ input:focus{border-color:var(--dark);background:var(--white);}
             <div class="col"></div>
           </div>
           <div class="note">
-            법인세법 시행령 §44: 손금 인정 한도 = 퇴직 전 1년 총급여 × 근속연수<br>
-            이 한도를 초과 지급한 금액은 <b>법인 비용 불인정</b> + 퇴직자에게 근로소득 과세
+            <b>법인세법 시행령 §44 손금 한도</b> = 퇴직 전 1년 총급여(비과세 제외) × 근속연수<br>
+            이 한도를 초과 지급한 금액은 <b>법인 비용 불인정</b> + 퇴직자에게 근로소득 과세됩니다.<br>
+            ※ 소득세법 한도(구간별 산식)도 함께 계산되어 두 한도를 비교합니다.
           </div>
         </div>
+
+        <!-- 정관 있음: 퇴직 소급 3년 연평균만 표시 (소득세법 한도용) -->
+        <div id="row-sal-avg" style="display:none;">
+          <div class="row">
+            <div class="col">
+              <label>퇴직 소급 3년 연평균 총급여 <span class="sub">비과세 제외 · 소득세법 §22 한도용</span></label>
+              <div class="inp-wrap">
+                <input type="text" id="sal_avg" placeholder="예) 120,000,000" oninput="fmtNum(this)">
+                <span class="unit">원</span>
+              </div>
+            </div>
+            <div class="col"></div>
+          </div>
+          <div class="note">
+            연평균 급여 = 퇴직일 소급 3년 총급여(상여 포함·비과세 제외) ÷ 36개월 × 12<br>
+            근속 3년 미만이면 실제 근속월수 기준으로 환산합니다.<br>
+            ※ 2012~2019 구간(3배)과 2020 이후 구간(2배)에 <b>동일 금액</b>을 적용합니다.
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -502,8 +509,10 @@ function setJk(v){
   document.getElementById('btn-has-no').classList.toggle('on',!v);
   document.getElementById('box-jk').classList.toggle('hidden',!v);
   document.getElementById('box-nojk').style.display=v?'none':'block';
+  // 급여 입력란 전환: 정관 없음→1년 총급여, 정관 있음→3년 연평균
   document.getElementById('row-sal1y').style.display=v?'none':'block';
-  onDate(); // 2011이전 카드 재표시
+  document.getElementById('row-sal-avg').style.display=v?'block':'none';
+  onDate();
 }
 
 /* ── 핵심 계산 ── */
@@ -567,8 +576,10 @@ function calc(){
   if(!s||!e){ alert('취임일과 기준일을 YYYYMMDD 형식으로 입력해주세요.\n예) 20160703'); return; }
   if(s>=e){ alert('기준일이 취임일보다 이후여야 합니다.'); return; }
 
-  const salAvg = pN('sal_avg');
   const sal1y  = pN('sal_1y');
+  // 정관 없음: sal_1y를 소득세법 한도 계산에도 사용 (퇴직 전 1년 총급여로 근사)
+  // 정관 있음: sal_avg (3년 연평균) 사용
+  const salAvg = hasJk ? pN('sal_avg') : sal1y;
   const retire = mode==='act' ? pN('totalRetire') : 0;
   const jkY=pN('jk_y'), jkM=pN('jk_m');
   const jkX=parseFloat(document.getElementById('jk_x').value)||3;
@@ -771,6 +782,9 @@ window.onload=()=>{
   const disp=document.getElementById('ed-disp');
   disp.textContent=dispDate(str);
   disp.className='date-disp';
+  // 초기값: 정관 없음 → 1년 총급여 표시, 3년 평균 숨김
+  document.getElementById('row-sal1y').style.display='block';
+  document.getElementById('row-sal-avg').style.display='none';
 };
 
 /* ── Word 저장 ── */
