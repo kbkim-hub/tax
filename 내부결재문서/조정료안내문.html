@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>청구서 시스템 메인 – 대한세무법인</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a2340;
+    --navy-mid: #2c3a5c;
+    --gold: #b8962e;
+    --gold-light: #d4b86a;
+    --bg: #f4f7f9;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+  }
+
+  .container {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+
+  .logo-area {
+    margin-bottom: 30px;
+  }
+
+  .logo-area h1 {
+    font-size: 24px;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-area p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .menu-item:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(184, 150, 46, 0.15);
+  }
+
+  .menu-info {
+    text-align: left;
+  }
+
+  .menu-title {
+    display: block;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy-mid);
+  }
+
+  .menu-desc {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  .icon {
+    font-size: 24px;
+    color: var(--gold);
+  }
+
+  footer {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo-area">
+    <h1>대 한 세 무 법 인</h1>
+    <p>세무조정료 청구서 생성 시스템</p>
+  </div>
+
+  <div class="menu-list">
+    <a href="조정료_청구서_건별사용_1.html" class="menu-item">
+      <div class="menu-info">
+        <span class="menu-title">건별 청구서 생성</span>
+        <span class="menu-desc">단일 업체 정보를 직접 입력하여 생성</span>
+      </div>
+      <div class="icon">📄</div>
+    </a>
+
+    <a href="조정료_청구서_일괄사용.html" class="menu-item">
+      <div class="menu-info">
+        <span class="menu-title">일괄 청구서 생성 (Excel)</span>
+        <span class="menu-desc">엑셀 업로드를 통한 대량 청구서 생성</span>
+      </div>
+      <div class="icon">📊</div>
+    </a>
+  </div>
+
+  <footer>
+    &copy; 2026 대한세무법인. All rights reserved.
+  </footer>
+</div>
+
+</body>
+</html>
