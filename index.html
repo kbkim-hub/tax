@@ -276,7 +276,7 @@
         // 1. 섹션 전환 및 비밀번호 체크
         function showSection(sectionId) {
             // 비밀번호 보호가 필요한 섹션
-            if (sectionId === 'daehan' || sectionId === 'internal') {
+            if (sectionId === 'daehan') {
                 const pw = prompt("비밀번호를 입력하세요.");
                 if (pw !== '06250625') {
                     alert("비밀번호가 일치하지 않습니다.");
