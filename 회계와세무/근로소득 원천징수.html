@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024 프리미엄 근로소득세 계산기</title>
+    <title>근로소득세 계산기 (2026.3 개정 반영)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <style>
         :root {
@@ -92,7 +92,7 @@
 <div class="app-container">
     <header class="app-header">
         <h1>근로소득세 계산기</h1>
-        <p>2024년 최신 세액표 및 보험요율 반영</p>
+        <p>2026년 3월 개정 간이세액표 및 4대보험 요율 반영</p>
     </header>
 
     <div class="tabs">
@@ -219,50 +219,15 @@
         </div>
     </div>
 
-<<<<<<< Updated upstream
     <div class="note-card">
         <h4>💡 계산 안내</h4>
         <ul style="list-style:none; padding-left:5px">
-            <li>• 본 계산기는 2024년 근로소득 간이세액표를 기준으로 합니다.</li>
+            <li>• 본 계산기는 <strong>2026년 3월 개정 근로소득 간이세액표</strong>를 기준으로 합니다.</li>
             <li>• 국민연금(상한 637만원), 건강보험(상한 900.8만원) 기준이 적용되었습니다.</li>
             <li>• 실제 수령액은 기업의 비과세 항목(식대 등)에 따라 달라질 수 있습니다.</li>
         </ul>
     </div>
 </div>
-=======
-    <div class="container">
-    <h2>실수령액 기준 급여 역산 계산기</h2>
-
-    <div class="input-group">
-      <label for="dependents">부양가족 수:</label>
-      <select id="dependents">
-        <option value="1">1명</option>
-        <option value="2">2명</option>
-        <option value="3">3명</option>
-        <option value="4">4명</option>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="desiredTakeHome">실수령액 (원):</label>
-      <input type="text" id="desiredTakeHome" placeholder="예: 3,000,000">
-      <button onclick="reverseCalculate()">실수령액 기준 계산</button>
-    </div>
-
-    <div class="input-group">
-      <label for="salary">월급여 (계산 결과):</label>
-      <input type="text" id="salary" readonly>
-    </div>
-  </div>
-
-    
-
-    <script>
-        // 콤마 포맷팅 함수
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        }
->>>>>>> Stashed changes
 
 <script>
     // 탭 전환
@@ -306,42 +271,68 @@
                  total: nationalPension + healthInsurance + longTermCare + unemploymentInsurance };
     }
 
-    // 간이세액표 간략 로직 (제공된 데이터 기반)
-    function getTaxFromTable(salary, dependents) {
-        // 실제 간이세액표 데이터는 매우 방대하므로, 제공해주신 고소득 계산 로직을 핵심으로 구성
-        const salaryInThousands = Math.floor(salary / 1000);
-        if (salaryInThousands < 1060) return { tax: 0, isHighIncome: false };
-
-        // 1,000만원 초과 고소득 구간 공식
-        if (salaryInThousands > 10000) {
-            const baseTax = 1507400; // 1,000만원 기준 본인 1인 대략 세액
-            const excessAmount = (salaryInThousands - 10000) * 1000;
-            let additionalTax = 0;
-            let bracket = "";
-
-            if(salaryInThousands <= 14000) {
-                additionalTax = Math.floor(excessAmount * 0.98 * 0.35) + 25000;
-                bracket = "1,000만~1,400만";
-            } else {
-                additionalTax = Math.floor(excessAmount * 0.98 * 0.38) + 1397000;
-                bracket = "1,400만 초과";
-            }
-
-            return { tax: baseTax + additionalTax, isHighIncome: true, formula: `${bracket} 구간 공식 적용` };
-        }
-
-        // 일반 구간 (샘플 데이터 기반 근사치 계산)
-        let approxTax = 0;
-        if(salaryInThousands < 3000) approxTax = (salaryInThousands - 1500) * 50;
-        else if(salaryInThousands < 6000) approxTax = (salaryInThousands - 3000) * 150 + 80000;
-        else approxTax = (salaryInThousands - 6000) * 250 + 500000;
-
-        // 부양가족 할인 (단순화)
-        approxTax = approxTax * (1 - (dependents - 1) * 0.15);
-        return { tax: Math.max(0, Math.floor(approxTax)), isHighIncome: false };
+    // 2026.3 개정 간이세액표 데이터 (data/근로소득_간이세액표_2026-03.json)
+    let TAX_TABLE = null;
+    async function loadTaxTable() {
+        if (TAX_TABLE) return TAX_TABLE;
+        const res = await fetch('../data/근로소득_간이세액표_2026-03.json');
+        TAX_TABLE = await res.json();
+        return TAX_TABLE;
     }
 
-    function calculateTax() {
+    // 부양가족 1~11명 컬럼에서 세액 추출. 11명 초과는 공식 적용.
+    function pickByDependents(values11, dependents) {
+        const d = Math.max(1, dependents);
+        if (d <= 11) return values11[d - 1];
+        const tax10 = values11[9], tax11 = values11[10];
+        return Math.max(0, tax11 - (tax10 - tax11) * (d - 11));
+    }
+
+    // 간이세액표 룩업 + 1,000만원 초과 공식 적용
+    function getTaxFromTable(salary, dependents) {
+        if (!TAX_TABLE) return { tax: 0, isHighIncome: false };
+
+        const salaryK = salary / 1000;  // 천원 단위
+
+        // 770천원 미만: 면세
+        if (salaryK < TAX_TABLE.brackets[0][0]) {
+            return { tax: 0, isHighIncome: false };
+        }
+
+        // 1,000만원 이하: 룩업표
+        if (salaryK <= 10000) {
+            // [min, max, v1..v11] 행에서 min <= salaryK < max
+            const row = TAX_TABLE.brackets.find(b => salaryK >= b[0] && salaryK < b[1]);
+            if (row) {
+                const tax = pickByDependents(row.slice(2), dependents);
+                return { tax: Math.floor(tax), isHighIncome: false };
+            }
+            // 정확히 10,000천원인 경우
+            if (salaryK === 10000) {
+                return { tax: Math.floor(pickByDependents(TAX_TABLE.baseAt10M, dependents)), isHighIncome: false };
+            }
+            return { tax: 0, isHighIncome: false };
+        }
+
+        // 1,000만원 초과: 공식
+        const base = pickByDependents(TAX_TABLE.baseAt10M, dependents);
+        const f = TAX_TABLE.highIncomeFormula.find(x => salaryK > x.from && (x.to === null || salaryK <= x.to));
+        if (!f) return { tax: Math.floor(base), isHighIncome: true, formula: '구간 매칭 실패' };
+
+        const excess = (salaryK - f.from) * 1000;  // 원 단위
+        const tax = base + f.addConst + Math.floor(excess * f.factor * f.rate);
+        const bracketLabel = f.to === null
+            ? `${f.from.toLocaleString()}천원 초과`
+            : `${f.from.toLocaleString()}천~${f.to.toLocaleString()}천원`;
+        return {
+            tax: Math.floor(tax),
+            isHighIncome: true,
+            formula: `${bracketLabel} 구간: 기준세액(${base.toLocaleString()}) + 가산(${f.addConst.toLocaleString()}) + 초과액×${f.factor}×${(f.rate * 100).toFixed(0)}%`,
+        };
+    }
+
+    async function calculateTax() {
+        await loadTaxTable();
         const salaryType = document.getElementById('salaryType').value;
         const salaryInput = document.getElementById('salary').value;
         const inputVal = parseInt(removeCommas(salaryInput));
@@ -350,7 +341,7 @@
         if(!inputVal) return;
 
         let monthlyGross = salaryType === 'annual' ? Math.floor(inputVal / 12) : inputVal;
-        
+
         // 만약 실수령액으로 입력했다면 내부적으로 역산 실행
         if(salaryType === 'net') {
             monthlyGross = performReverse(inputVal, dependents);
@@ -421,7 +412,8 @@
         return result;
     }
 
-    function reverseCalculate() {
+    async function reverseCalculate() {
+        await loadTaxTable();
         const val = parseInt(removeCommas(document.getElementById('desiredTakeHome').value));
         const deps = parseInt(document.getElementById('rev-dependents').value);
         if(!val) return;
@@ -437,127 +429,9 @@
         document.getElementById('res-main-label').textContent = "계산된 세전 월급여";
         document.getElementById('summary-value').textContent = formatNumber(gross) + "원";
     }
+
+    // 페이지 로드 시 세액표 미리 가져오기
+    loadTaxTable().catch(err => console.error('간이세액표 로드 실패:', err));
 </script>
-
-<<<<<<< Updated upstream
-=======
-            // 연봉/월급 구분에 따른 월급여 계산
-            let monthlySalary;
-            let displaySalaryLabel;
-            
-            if (salaryType === 'annual') {
-                monthlySalary = Math.floor(inputSalary / 12);
-                displaySalaryLabel = `연봉 ${inputSalary.toLocaleString()}원 (월 ${monthlySalary.toLocaleString()}원)`;
-                } else {
-                monthlySalary = inputSalary;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            }
-
-            // 간이세액표 적용
-            const taxResult = getTaxFromTable(monthlySalary, dependents);
-            const incomeTax = (typeof taxResult === 'object' && taxResult.tax !== undefined) ? taxResult.tax : taxResult;
-            const localTax = Math.floor(incomeTax * 0.1);
-            const insurance = calculateInsurance(monthlySalary);
-            
-            const totalDeduction = incomeTax + localTax + insurance.total;
-            const realSalary = monthlySalary - totalDeduction;
-
-            // 결과 표시
-            document.getElementById('monthly-salary').textContent = displaySalaryLabel;
-            document.getElementById('dependents-count').textContent = dependents + '명';
-            document.getElementById('income-tax').textContent = incomeTax.toLocaleString() + '원';
-            document.getElementById('local-tax').textContent = localTax.toLocaleString() + '원';
-            document.getElementById('national-pension').textContent = insurance.nationalPension.toLocaleString() + '원';
-            document.getElementById('health-insurance').textContent = insurance.healthInsurance.toLocaleString() + '원';
-            document.getElementById('long-term-care').textContent = insurance.longTermCare.toLocaleString() + '원';
-            document.getElementById('unemployment-insurance').textContent = insurance.unemploymentInsurance.toLocaleString() + '원';
-            document.getElementById('total-insurance').textContent = insurance.total.toLocaleString() + '원';
-            document.getElementById('total-deduction').textContent = totalDeduction.toLocaleString() + '원';
-            document.getElementById('real-salary').textContent = realSalary.toLocaleString() + '원';
-
-            // 고소득 구간 계산 공식 표시
-            if (taxResult.isHighIncome) {
-                document.getElementById('high-income-formula').style.display = 'block';
-                document.getElementById('tax-bracket').textContent = taxResult.bracket;
-                document.getElementById('base-tax').textContent = taxResult.baseTax.toLocaleString() + '원';
-                document.getElementById('fixed-addition').textContent = taxResult.fixedAddition.toLocaleString() + '원';
-                document.getElementById('excess-amount').textContent = taxResult.excessAmount.toLocaleString() + '원';
-                document.getElementById('tax-rate').textContent = taxResult.taxRate;
-                document.getElementById('excess-tax').textContent = taxResult.excessTax.toLocaleString() + '원';
-                document.getElementById('calculation-formula').textContent = taxResult.formula;
-            } else {
-                document.getElementById('high-income-formula').style.display = 'none';
-            }
-
-            document.getElementById('result').classList.add('show');
-        }
-
-        // 급여 입력 필드 이벤트 처리
-        document.getElementById('salary').addEventListener('input', formatSalaryInput);
-        document.getElementById('salary').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculateTax();
-            }
-        });
-
-         function formatNumber(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-    function removeCommas(str) {
-      return str.replace(/,/g, '');
-    }
-
-    function calculateInsurance(salary) {
-      const pensionBase = Math.min(salary, 6370000);
-      const nationalPension = Math.floor(pensionBase * 0.045);
-      const healthBase = Math.min(salary, 9008340);
-      const healthInsurance = Math.floor(healthBase * 0.03545);
-      const longTermCare = Math.floor(healthInsurance * 0.1295);
-      const unemploymentInsurance = Math.floor(salary * 0.009);
-      return {
-        total: nationalPension + healthInsurance + longTermCare + unemploymentInsurance
-      };
-    }
-
-    function getTaxFromTable(salary, dependents) {
-      if (salary < 3000000) return { tax: 5000 * dependents };
-      if (salary < 4000000) return { tax: 10000 * dependents };
-      return { tax: 20000 * dependents };
-    }
-
-    function reverseCalculate() {
-      const desiredValue = parseInt(removeCommas(document.getElementById('desiredTakeHome').value));
-      const dependents = parseInt(document.getElementById('dependents').value);
-      if (!desiredValue || desiredValue <= 0) {
-        alert('올바른 실수령액을 입력해주세요.');
-        return;
-      }
-
-      let low = desiredValue;
-      let high = desiredValue * 2;
-      let result = desiredValue;
-
-      for (let i = 0; i < 100; i++) {
-        let mid = Math.floor((low + high) / 2);
-        let taxResult = getTaxFromTable(mid, dependents);
-        let incomeTax = taxResult.tax;
-        let localTax = Math.floor(incomeTax * 0.1);
-        let insurance = calculateInsurance(mid);
-        let totalDeduction = incomeTax + localTax + insurance.total;
-        let realSalary = mid - totalDeduction;
-
-        if (Math.abs(realSalary - desiredValue) <= 1000) {
-          result = mid;
-          break;
-        } else if (realSalary > desiredValue) {
-          high = mid;
-        } else {
-          low = mid;
-        }
-      }
-      document.getElementById('salary').value = formatNumber(result);
-    }
-    </script>
->>>>>>> Stashed changes
 </body>
 </html>
