@@ -433,7 +433,7 @@
             .type-row td { padding: 1.5px 5px; }
             .type-select { font-size: 9px; padding: 1px 4px; }
             .auto-mark { font-size: 8px; padding: 0 4px; top: 1px; right: 2px; }
-            .book-exp-info { font-size: 8.5px; line-height: 1.3; margin-top: 2px; }
+            .book-exp-info { font-size: 12px; line-height: 1.35; margin-top: 2px; }
             .book-exp-info .info-line { padding: 0; }
             .bottom-tables-area { display: flex; flex: 1 1 0; align-items: stretch; margin-top: 4mm; min-height: 0; }
             .guide-table-area { padding: 4px 8px; flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; }
@@ -443,11 +443,199 @@
             .rate-ref-table th, .rate-ref-table td { padding: 1.5px 4px; font-size: 8px; }
             .rate-ref-table { min-width: 0 !important; width: 100%; }
             .approval-area { padding: 2px 8px; flex-shrink: 0; margin-top: 4px !important; }
-            .approval-title { font-size: 10px !important; margin-bottom: 2px !important; }
+            .approval-title { font-size: 12px !important; margin-bottom: 3px !important; }
             .approval-table .ap-body { height: 1.2cm !important; min-height: 1.2cm !important; }
             .bottom-tables-area { margin-top: 2mm !important; }
             .table-wrap { margin-top: 2mm !important; }
-            .pay-label, .pay-val { font-size: 10px !important; }
+            .pay-label, .pay-val { font-size: 12px !important; }
+
+            /* ═════════════════ 흑백 인쇄 최적화 ═════════════════ */
+            /* 메인테이블 외곽 굵은 테두리 */
+            .main-table {
+                border: 2.5px solid #000000 !important;
+                border-collapse: collapse !important;
+            }
+            .table-wrap { overflow: visible !important; }
+
+            /* 상단 정보 영역(상호/개업일 등) 12px */
+            .info-grid .label {
+                font-size: 12px !important;
+                font-weight: 700 !important;
+                color: #000000 !important;
+            }
+            .info-grid input,
+            .info-grid select {
+                font-size: 12px !important;
+                color: #000000 !important;
+            }
+            /* 특이사항(메모) - 상단 입력값과 동일한 크기 */
+            .info-grid textarea#memo {
+                font-size: 12px !important;
+                color: #000000 !important;
+                line-height: 1.4 !important;
+            }
+
+            /* 메인테이블: 모든 색상 → 흰 배경 + 검정 테두리/글씨, 글씨 살짝 키움 */
+            .main-table th {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                border-bottom: 2.5px solid #000000 !important;
+                border-right: 1px solid #000000 !important;
+                border-top: 1.5px solid #000000 !important;
+                padding: 4px 6px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .main-table th:last-child { border-right: none !important; }
+            .main-table td {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11px !important;
+                border-bottom: 1px solid #000000 !important;
+                border-right: 1px solid #000000 !important;
+                padding: 3px 6px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .main-table td:last-child { border-right: none !important; }
+            /* 인라인 border-right(회색)도 검정으로 */
+            .main-table td[style*="border-right"],
+            .main-table th[style*="border-right"] {
+                border-right-color: #000000 !important;
+            }
+            /* 컬럼 라벨/연도 색깔 제거 */
+            .col-label {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                font-size: 11px !important;
+            }
+            .col-2024, .col-2025 { background: #ffffff !important; }
+
+            /* 인풋 글씨 */
+            .num-input {
+                font-size: 11px !important;
+                color: #000000 !important;
+                font-weight: 600 !important;
+            }
+            .readonly-val { color: #000000 !important; font-weight: 700 !important; }
+
+            /* 자동계산 행: 색깔 대신 굵게 */
+            .auto-row,
+            .auto-row .col-2024,
+            .auto-row .col-2025 { background: #ffffff !important; }
+            .auto-row .num-input,
+            .auto-row .col-label { font-weight: 700 !important; color: #000000 !important; }
+
+            /* 납부세액 행: 진한 검정 위/아래 테두리 + 굵은 글씨 */
+            .pay-row td {
+                background: #ffffff !important;
+                color: #000000 !important;
+                border-top: 2.5px solid #000000 !important;
+                border-bottom: 2.5px solid #000000 !important;
+            }
+            .pay-label, .pay-val {
+                color: #000000 !important;
+                font-weight: 800 !important;
+                font-size: 13px !important;
+            }
+
+            /* 신고유형/기장의무판단/경비율판단 — 드롭다운 외형 제거, 값만 크게 표시 */
+            .type-row td {
+                background: #ffffff !important;
+                border-bottom: 1px solid #000000 !important;
+                border-right: 1px solid #000000 !important;
+            }
+            .type-row td:last-child { border-right: none !important; }
+            .type-row td[style*="border-right"] { border-right: 2px solid #000000 !important; }
+            .type-select {
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                border: none !important;
+                background: transparent !important;
+                background-image: none !important;
+                padding: 0 !important;
+                font-size: 12px !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                text-align: center !important;
+                text-align-last: center !important;
+                width: 100% !important;
+                box-shadow: none !important;
+            }
+            /* 자동 판단 마크는 인쇄 시 숨김(드롭다운이 사라져 의미 없음) */
+            .auto-mark { display: none !important; }
+
+            /* 자동마크: 외곽선만 */
+            .auto-mark {
+                color: #000000 !important;
+                background: #ffffff !important;
+                border: 1px solid #000000 !important;
+            }
+
+            /* 안내 메시지 - 모두 검정 */
+            .book-exp-info,
+            .book-exp-info .info-line,
+            .book-exp-info .info-ok,
+            .book-exp-info .info-warn,
+            .book-exp-info .info-alert {
+                color: #000000 !important;
+            }
+            .book-exp-info .info-alert,
+            .book-exp-info .info-warn { font-weight: 700 !important; }
+
+            /* 신고소득율 */
+            .income-rate-positive,
+            .income-rate-negative {
+                color: #000000 !important;
+                font-weight: 700 !important;
+            }
+
+            /* 보조 테이블(세율표/추계표) — 가는 검정 테두리 1px */
+            .rate-ref-table, .rate-ref-table th, .rate-ref-table td,
+            .guide-table, .guide-table th, .guide-table td {
+                border: 1px solid #000000 !important;
+                border-collapse: collapse !important;
+                color: #000000 !important;
+            }
+            .rate-ref-table th, .guide-table th {
+                background: #ffffff !important;
+                font-weight: 700 !important;
+            }
+            .guide-table .row-header { background: #ffffff !important; font-weight: 700 !important; }
+            .guide-table .bold-cell { color: #000000 !important; font-weight: 800 !important; }
+            .rate-section-title { color: #000000 !important; }
+
+            /* 활성 세율 구간: 색 대신 굵은 검정 외곽선 */
+            .active-rate {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-weight: 800 !important;
+                outline: 2px solid #000000 !important;
+                outline-offset: -2px !important;
+            }
+
+            /* 결재란 */
+            .approval-table td { border-color: #000000 !important; color: #000000 !important; background: #ffffff !important; }
+            .approval-table .ap-head {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                border-bottom: 1.5px solid #000000 !important;
+            }
+            .approval-title { color: #000000 !important; font-weight: 800 !important; }
+
+            /* 헤더(상호) 강조 */
+            .report-header { color: #000000 !important; font-weight: 800 !important; }
+
+            /* 영역 분할선도 검정 */
+            .rate-table-area { border-right: 1px solid #000000 !important; }
+            /* ═════════════════════════════════════════════════════ */
+
             @page { size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
 
             /* 일괄 인쇄 모드 */
@@ -756,7 +944,7 @@
                 <!-- 특이사항 -->
                 <div class="input-row" style="align-items:flex-start;flex:1;min-height:0;">
                     <span class="label" style="padding-top:4px;">특이사항</span>
-                    <textarea id="memo" style="resize:none;font-size:10px;flex:1;height:100%;min-height:60px;"></textarea>
+                    <textarea id="memo" style="resize:none;font-size:12px;flex:1;height:100%;min-height:60px;"></textarea>
                 </div>
             </div>
         </div>
