@@ -289,6 +289,14 @@
                     return;
                 }
             }
+            
+        if (sectionId === 'internal') {
+            const pw = prompt("비밀번호를 입력하세요.");
+            if (pw !== '0625') {
+                alert("비밀번호가 일치하지 않습니다.");
+                return;
+            }
+        }
 
             const sections = document.querySelectorAll('.product-section');
             sections.forEach(s => s.classList.remove('active'));
