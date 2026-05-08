@@ -374,6 +374,12 @@
         .bizcode-item .biz-detail { color: #374151; }
 
         @media print {
+            /* 타소득 입력란의 placeholder(예시 문구) 인쇄 시 숨김 */
+            #otherIncome::placeholder { color: transparent !important; opacity: 0 !important; }
+            #otherIncome::-webkit-input-placeholder { color: transparent !important; opacity: 0 !important; }
+            #otherIncome::-moz-placeholder { color: transparent !important; opacity: 0 !important; }
+            #otherIncome:-ms-input-placeholder { color: transparent !important; opacity: 0 !important; }
+
             /* 1. 절대 인쇄되면 안 되는 요소들 (강제 삭제) */
             .admin-bar,
             .admin-bar *,
@@ -917,7 +923,7 @@
                     <span class="label">기장료</span>
                     <div class="fee-row">
                         <input type="text" id="monthlyFee" oninput="formatComma(this)" onkeydown="handlePlusKey(event, this)" style="flex:1;">
-                        <span class="vat-note">(VAT포함)</span>
+                        <span class="vat-note">(VAT별도)</span>
                     </div>
                 </div>
                 <!-- 타소득 -->
