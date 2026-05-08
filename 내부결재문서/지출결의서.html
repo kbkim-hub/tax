@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>지출결의서</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
 
@@ -120,6 +121,7 @@
     min-height: 60px;
   }
 
+  /* 항목 테이블 */
   .items-table {
     width: 100%;
     border-collapse: collapse;
@@ -185,6 +187,7 @@
     color: var(--accent);
   }
 
+  /* 영수증 업로드 */
   .receipt-drop {
     border: 2px dashed var(--border);
     border-radius: 10px;
@@ -252,6 +255,7 @@
     line-height: 1;
   }
 
+  /* 하단 버튼 */
   .action-bar {
     display: flex;
     gap: 12px;
@@ -299,6 +303,7 @@
 
   .btn-pdf:active { transform: translateY(0); }
 
+  /* 미리보기 모달 */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -347,24 +352,27 @@
 
   .modal-body { padding: 24px; }
 
+  /* ───────────── PDF 출력용 문서 스타일 ───────────── */
   #pdf-content {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 13px;
     color: #000;
   }
 
-  .pdf-page {
-    width: 210mm;
-    height: 297mm;
-    padding: 15mm 20mm;
-    background: white;
-    box-sizing: border-box;
-    position: relative;
-    page-break-after: always;
-    overflow: hidden;
-  }
+  /* pdf-page: 내용에 맞게 높이 자동 결정 */
+.pdf-page {
+  width: 210mm;
+  min-height: 10mm;
+  padding: 15mm 20mm;
+  background: white;
+  box-sizing: border-box;
+  position: relative;
+  page-break-after: always;
+}
 
-  .pdf-page:last-child { page-break-after: auto; }
+.pdf-page:last-child {
+  page-break-after: avoid;
+}
 
   .doc-title-wrap {
     text-align: center;
@@ -395,6 +403,7 @@
 
   .amount-left span { font-size: 14px; font-weight: 400; }
 
+  /* 결재란 */
   .approval-box {
     border: 1.5px solid #000;
     min-width: 240px;
@@ -433,6 +442,7 @@
 
   .ap-cell .ap-sign { height: 40px; }
 
+  /* 메타 테이블 */
   .meta-table {
     width: 100%;
     border-collapse: collapse;
@@ -452,6 +462,7 @@
     width: 90px;
   }
 
+  /* 항목 테이블 (PDF) */
   .detail-table {
     width: 100%;
     border-collapse: collapse;
@@ -474,6 +485,7 @@
   }
 
   .detail-table tr:nth-child(even) td { background: #f9fafb; }
+
   .detail-table .amt { text-align: right; font-variant-numeric: tabular-nums; }
 
   .detail-table tfoot td {
@@ -490,6 +502,7 @@
     line-height: 2;
   }
 
+  /* 영수증 페이지 */
   .receipt-page-title {
     text-align: center;
     font-size: 16px;
@@ -517,17 +530,16 @@
     align-items: center;
     justify-content: center;
     background: #f9f9f9;
-    max-height: 360px;
   }
 
   .receipt-pdf-img img {
     width: 100%;
-    height: 100%;
-    max-height: 360px;
+    height: auto;
     object-fit: contain;
     display: block;
   }
 
+  /* 로딩 */
   .loading-overlay {
     display: none;
     position: fixed;
@@ -571,8 +583,23 @@
 
 <div class="editor-wrap">
 
+  <!-- 기본 정보 -->
   <div class="card">
     <div class="card-title">기본 정보</div>
+    <!--<div class="form-row three">
+      <div class="field">
+        <label>담당자 <span class="req">*</span></label>
+        <input type="text" id="f-manager">
+      </div>
+      <div class="field">
+        <label>팀장</label>
+        <input type="text" id="f-chief">
+      </div>
+      <div class="field">
+        <label>세무사 / 결재자</label>
+        <input type="text" id="f-tax">
+      </div>
+    </div> -->
     <div class="form-row">
       <div class="field">
         <label>지출일 <span class="req">*</span></label>
@@ -591,6 +618,7 @@
     </div>
   </div>
 
+  <!-- 지출 항목 -->
   <div class="card">
     <div class="card-title">지출 항목</div>
     <table class="items-table" id="items-table">
@@ -603,7 +631,8 @@
           <th style="width:36px"></th>
         </tr>
       </thead>
-      <tbody id="items-body"></tbody>
+      <tbody id="items-body">
+      </tbody>
       <tfoot>
         <tr class="total-row">
           <td colspan="2" style="text-align:left; padding-left:12px;">합 계</td>
@@ -614,6 +643,7 @@
     <button class="btn-add-row" onclick="addRow()">+ 항목 추가</button>
   </div>
 
+  <!-- 영수자 -->
   <div class="card">
     <div class="card-title">영수자 정보</div>
     <div class="form-row">
@@ -628,6 +658,7 @@
     </div>
   </div>
 
+  <!-- 영수증 첨부 -->
   <div class="card">
     <div class="card-title">영수증 첨부</div>
     <div class="receipt-drop" id="drop-zone">
@@ -639,6 +670,7 @@
     <div class="receipt-previews" id="receipt-previews"></div>
   </div>
 
+  <!-- 버튼 -->
   <div class="action-bar">
     <button class="btn-preview" onclick="openPreview()">👁 미리보기</button>
     <button class="btn-pdf" onclick="generatePDF()">📥 PDF 저장</button>
@@ -646,6 +678,7 @@
 
 </div>
 
+<!-- 미리보기 모달 -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
     <div class="modal-header">
@@ -656,18 +689,18 @@
   </div>
 </div>
 
+<!-- 로딩 -->
 <div class="loading-overlay" id="loading">
   <div class="loading-spinner"></div>
   <p>PDF 생성 중...</p>
 </div>
 
+<!-- 숨겨진 PDF 콘텐츠 -->
 <div id="pdf-content" style="display:none;"></div>
 
-<!-- ★ 핵심 수정: script를 head가 아닌 body 맨 아래로 이동 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <script>
-  let receipts = [];
+  // ─── 초기화 ───
+  let receipts = []; // {dataUrl, name}
 
   document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
@@ -678,6 +711,7 @@
     addRow();
   });
 
+  // ─── 항목 행 ───
   let rowCount = 0;
 
   function addRow() {
@@ -722,6 +756,7 @@
     return getItems().reduce((s, r) => s + r.amt, 0);
   }
 
+  // ─── 영수증 ───
   const dropZone = document.getElementById('drop-zone');
   const receiptInput = document.getElementById('receipt-input');
 
@@ -766,7 +801,11 @@
     renderPreviews();
   }
 
-  function buildDocHTML() {
+  // ─── 문서 HTML 생성 ───
+  function buildDocHTML(forPDF = false) {
+    const manager = ''; // 입력창이 없으므로 빈 값 고정
+    const chief = '';
+    const tax = '';
     const issueDate = document.getElementById('f-issue-date').value || '';
     const account = document.getElementById('f-account').value || '';
     const process = document.getElementById('f-process').value || '';
@@ -819,6 +858,7 @@
         <div class="doc-title-wrap">
           <div class="doc-title">지 출 결 의 서</div>
         </div>
+
         <div class="amount-header">
           <div class="amount-left">
             일금 &nbsp;&nbsp; <span>${toKoreanAmt(total)}</span> &nbsp;&nbsp; ₩ ${fmtAmt(total)}
@@ -841,6 +881,7 @@
             </div>
           </div>
         </div>
+
         <table class="meta-table">
           <tr>
             <th>지출 년월일</th>
@@ -853,6 +894,7 @@
             <td colspan="3">${process}</td>
           </tr>
         </table>
+
         <table class="detail-table">
           <thead>
             <tr>
@@ -873,6 +915,7 @@
             </tr>
           </tfoot>
         </table>
+
         <div class="sign-line">
           위 금액을 영수(청구)합니다.<br>
           ${fmtDate(signDate)}<br>
@@ -883,16 +926,28 @@
 
     let page2 = '';
     if (receipts.length > 0) {
-      const cols = receipts.length === 1 ? 'single' : '';
-      const imgItems = receipts.map(r => `
-        <div class="receipt-pdf-img">
-          <img src="${r.dataUrl}" alt="영수증">
-        </div>
-      `).join('');
+      // 각 이미지를 자연 비율 그대로, 페이지 너비(170mm)에 맞게 배치
+      // 이미지 1장: 가운데 단일 배치 / 2장 이상: 2열 그리드
+      const useSingleCol = receipts.length === 1;
+      const imgItems = receipts.map(r => {
+        // naturalRatio는 렌더 시점에 알 수 없으므로 CSS로 비율 유지
+        return `
+          <div class="receipt-pdf-img">
+            <img src="${r.dataUrl}" alt="영수증" style="width:100%;height:auto;display:block;object-fit:contain;">
+          </div>
+        `;
+      }).join('');
+
+      const gridStyle = useSingleCol
+        ? 'display:grid;grid-template-columns:1fr;gap:14px;'
+        : 'display:grid;grid-template-columns:1fr 1fr;gap:14px;';
+
       page2 = `
         <div class="pdf-page">
           <div class="receipt-page-title">영 수 증 첨 부</div>
-          <div class="receipts-grid ${cols}">${imgItems}</div>
+          <div style="${gridStyle}">
+            ${imgItems}
+          </div>
         </div>
       `;
     }
@@ -900,8 +955,9 @@
     return `<div id="pdf-content" style="font-family:'Noto Sans KR',sans-serif;">${page1}${page2}</div>`;
   }
 
+  // ─── 미리보기 ───
   function openPreview() {
-    document.getElementById('modal-body').innerHTML = buildDocHTML();
+    document.getElementById('modal-body').innerHTML = buildDocHTML(false);
     document.getElementById('modal').classList.add('open');
   }
 
@@ -909,25 +965,50 @@
     document.getElementById('modal').classList.remove('open');
   }
 
+  // ─── PDF 생성 ───
   async function generatePDF() {
     const loading = document.getElementById('loading');
     loading.classList.add('show');
+
     await new Promise(r => setTimeout(r, 100));
 
-    const html = buildDocHTML();
+    const html = buildDocHTML(true);
     const container = document.createElement('div');
     container.innerHTML = html;
     document.body.appendChild(container);
 
     const element = container.querySelector('#pdf-content');
 
+    // 파일명: "청구날짜 영수자.pdf" 형식 (예: 26.05.08 이경희.pdf)
+    const signDateRaw = document.getElementById('f-sign-date').value || '';
+    const receiverName = document.getElementById('f-receiver').value || '영수자';
+    let fileDate = '날짜없음';
+    if (signDateRaw) {
+      // YYYY-MM-DD → YY.MM.DD
+      const parts = signDateRaw.split('-');
+      if (parts.length === 3) {
+        fileDate = parts[0].slice(2) + '.' + parts[1] + '.' + parts[2];
+      }
+    }
+    const filename = `${fileDate} ${receiverName}.pdf`;
+
     const opt = {
-      margin: [0, 0, 0, 0],
-      filename: '지출결의서.pdf',
-      image: { type: 'jpeg', quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+  margin: [0, 0, 0, 0],
+  filename: filename,
+  image: { type: 'jpeg', quality: 0.95 },
+  html2canvas: {
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    scrollY: 0,
+  },
+  jsPDF: {
+    unit: 'mm',
+    format: 'a4',
+    orientation: 'portrait'
+  },
+  pagebreak: { mode: ['css', 'legacy'] }
+};
 
     try {
       await html2pdf().set(opt).from(element).save();
