@@ -649,12 +649,16 @@
     <div class="form-row">
       <div class="field">
         <label>영수자 (이름) <span class="req">*</span></label>
-        <input type="text" id="f-receiver" placeholder="영수자 성명">
+        <input type="text" id="f-receiver" placeholder="영수자 성명" oninput="updateSealPreview()">
       </div>
       <div class="field">
         <label>청구 날짜</label>
         <input type="date" id="f-sign-date">
       </div>
+    </div>
+    <div id="seal-preview-wrap" style="display:none; margin-top:10px; padding:12px 14px; background:#fff5f5; border:1.5px solid #ffcfcf; border-radius:8px; display:flex; align-items:center; gap:14px;">
+      <div id="seal-preview-img"></div>
+      <div style="font-size:12px; color:#888;">도장 미리보기 — 결재란 및 (인) 옆에 자동 삽입됩니다</div>
     </div>
   </div>
 
@@ -699,6 +703,21 @@
 <div id="pdf-content" style="display:none;"></div>
 
 <script>
+  // ─── 도장 미리보기 업데이트 ───
+  function updateSealPreview() {
+    const name = document.getElementById('f-receiver').value || '';
+    const wrap = document.getElementById('seal-preview-wrap');
+    const img  = document.getElementById('seal-preview-img');
+    if (name.trim().length >= 1) {
+      const svg = makeSealSVG(name, 60);
+      img.innerHTML = svg;
+      wrap.style.display = 'flex';
+    } else {
+      wrap.style.display = 'none';
+      img.innerHTML = '';
+    }
+  }
+
   // ─── 초기화 ───
   let receipts = []; // {dataUrl, name}
 
@@ -801,6 +820,49 @@
     renderPreviews();
   }
 
+  // ─── 도장 SVG 생성 ───
+  function makeSealSVG(name, size = 52) {
+    const chars = [...name.trim()];
+    let twoChars = chars.length >= 2 ? chars.slice(-2) : chars;
+    if (!twoChars.length) return '';
+
+    // 세로로 긴 타원
+    const w = size;
+    const h = size * 1.65;
+    const cx = w / 2;
+    const cy = h / 2;
+    const rx = w / 2 - size * 0.08;
+    const ry = h / 2 - size * 0.08;
+    const stroke = Math.max(1.8, size * 0.07);
+    const fontSize = size * 0.46;
+    const gap = fontSize * 1.05;
+
+    const y1 = cy - gap / 2;
+    const y2 = cy + gap / 2;
+
+    const textNodes = twoChars.length === 2
+      ? `<text x="${cx}" y="${y1}" text-anchor="middle" dominant-baseline="central"
+          font-family="'Noto Sans KR', serif" font-size="${fontSize}px" font-weight="700"
+          fill="#cc1111">${twoChars[0]}</text>
+         <text x="${cx}" y="${y2}" text-anchor="middle" dominant-baseline="central"
+          font-family="'Noto Sans KR', serif" font-size="${fontSize}px" font-weight="700"
+          fill="#cc1111">${twoChars[1]}</text>`
+      : `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central"
+          font-family="'Noto Sans KR', serif" font-size="${fontSize}px" font-weight="700"
+          fill="#cc1111">${twoChars[0]}</text>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+      <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#cc1111" stroke-width="${stroke}"/>
+      ${textNodes}
+    </svg>`;
+  }
+
+  function makeSealDataURL(name, size = 52) {
+    const svg = makeSealSVG(name, size);
+    if (!svg) return '';
+    return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+  }
+
   // ─── 문서 HTML 생성 ───
   function buildDocHTML(forPDF = false) {
     const manager = ''; // 입력창이 없으므로 빈 값 고정
@@ -811,6 +873,7 @@
     const process = document.getElementById('f-process').value || '';
     const receiver = document.getElementById('f-receiver').value || '';
     const signDate = document.getElementById('f-sign-date').value || '';
+    const sealDataURL = receiver ? makeSealDataURL(receiver, 52) : '';
     const items = getItems();
     const total = getTotal();
 
@@ -868,7 +931,9 @@
             <div class="approval-grid">
               <div class="ap-cell">
                 <div class="ap-role">담당</div>
-                <div class="ap-sign"></div>
+                <div class="ap-sign" style="display:flex;align-items:center;justify-content:center;height:40px;">
+                  ${sealDataURL ? `<img src="${sealDataURL}" style="width:24px;height:40px;opacity:0.9;">` : ''}
+                </div>
               </div>
               <div class="ap-cell">
                 <div class="ap-role">팀장</div>
@@ -919,7 +984,13 @@
         <div class="sign-line">
           위 금액을 영수(청구)합니다.<br>
           ${fmtDate(signDate)}<br>
-          영수자 &nbsp;&nbsp;&nbsp; ${receiver} &nbsp;&nbsp;&nbsp; (인)
+          <span style="display:inline-flex;align-items:center;gap:6px;position:relative;">
+            영수자 &nbsp;&nbsp;&nbsp; ${receiver} &nbsp;&nbsp;&nbsp;
+            <span style="position:relative;display:inline-block;">
+              <span style="position:relative;z-index:1;">(인)</span>
+              ${sealDataURL ? `<img src="${sealDataURL}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:26px;height:44px;opacity:0.85;z-index:2;">` : ''}
+            </span>
+          </span>
         </div>
       </div>
     `;
