@@ -242,7 +242,7 @@
         .pay-label { color: var(--success) !important; font-size: 12px !important; font-weight: 700 !important; }
         .pay-val { color: var(--success) !important; font-weight: 700 !important; font-size: 12px !important; }
 
-        /* 신고소득율 */
+        /* 신고소득률 */
         .income-rate-positive { color: var(--primary); font-weight: 600; }
         .income-rate-negative { color: var(--danger); font-weight: 700; }
 
@@ -593,7 +593,7 @@
             .book-exp-info .info-alert,
             .book-exp-info .info-warn { font-weight: 700 !important; }
 
-            /* 신고소득율 */
+            /* 신고소득률 */
             .income-rate-positive,
             .income-rate-negative {
                 color: #000000 !important;
@@ -931,9 +931,9 @@
                     <span class="label">타 소 득</span>
                     <input type="text" id="otherIncome" placeholder="예: 사업소득 200만원">
                 </div>
-                <!-- 표준소득율 -->
+                <!-- 표준소득률 -->
                 <div class="input-row">
-                    <span class="label">표준소득율</span>
+                    <span class="label">표준소득률</span>
                     <div style="display:flex;align-items:center;gap:4px;">
                         <input type="text" id="stdIncomeRate" style="width:80px;" placeholder="자동계산" readonly>
                         <span class="vat-note">%</span>
@@ -1066,9 +1066,9 @@
                             <input type="text" class="num-input pay-val" id="final25" readonly>
                         </td>
                     </tr>
-                    <!-- 신고소득율 (자동) -->
+                    <!-- 신고소득률 (자동) -->
                     <tr class="auto-row">
-                        <td class="col-label" style="border-right:2px solid #94a3b8;">신고소득율</td>
+                        <td class="col-label" style="border-right:2px solid #94a3b8;">신고소득률</td>
                         <td class="col-2024" style="border-right:2px solid #94a3b8; text-align:right;">
                             <span id="incRate24" class="income-rate-positive">-</span>
                         </td>
@@ -2048,7 +2048,7 @@ function calcAll() {
         const final = Math.round(finalRaw);
         document.getElementById('final'+yr).value = final.toLocaleString();
 
-        // 신고소득율 = 소득금액 / 수입금액 * 100
+        // 신고소득률 = 소득금액 / 수입금액 * 100
         const rev = n('rev'+yr);
         const rateEl = document.getElementById('incRate'+yr);
         if (rev !== 0) {
@@ -2151,7 +2151,7 @@ function applyBizCode(code) {
     const hint = document.getElementById('bizCodeHint');
     hint.textContent = `단순 ${info.simple_rate}% / 기준 ${info.standard_rate}%`;
     hint.style.display = 'inline-block';
-    // 표준소득율 = 100 - 단순경비율(일반)
+    // 표준소득률 = 100 - 단순경비율(일반)
     if (info.simple_rate > 0) {
         document.getElementById('stdIncomeRate').value = (100 - info.simple_rate).toFixed(1);
     }
@@ -3499,7 +3499,7 @@ function buildCoverSheet(bizName, data) {
         [1, '조정보수',   fv(data.fee)       + (data.fee        ? ' (VAT별도)' : '')],
         [2, '기장료',     fv(data.monthlyFee)+ (data.monthlyFee ? ' (VAT포함)' : '')],
         [3, '타 소 득',   fv(data.otherIncome)],
-        [4, '표준소득율', fv(data.stdIncomeRate) ? fv(data.stdIncomeRate)+'%' : ''],
+        [4, '표준소득률', fv(data.stdIncomeRate) ? fv(data.stdIncomeRate)+'%' : ''],
         [5, '특이사항',   fv(data.memo)],
     ];
     RIGHT_INFO.forEach(([row, lbl, val], idx) => {
@@ -3545,7 +3545,7 @@ function buildCoverSheet(bizName, data) {
         [18, '세액감면·공제', nc(data.ded24),   nc(data.ded25),   false, false],
         [19, '가산세',        nc(data.add24),   nc(data.add25),   false, false],
         [20, '납부세액',      nc(data.final24), nc(data.final25), false, true ],
-        [21, '신고소득율',    ir24,             ir25,             true,  false],
+        [21, '신고소득률',    ir24,             ir25,             true,  false],
         [22, '신고유형',      fv(data.type24),  fv(data.type25),  false, false],
     ];
     TABLE_ROWS.forEach(([row, lbl, v24, v25, isAuto, isPay]) => {
@@ -4018,7 +4018,7 @@ function _parseSheetByKeywords(grid, sheetName) {
     data.fee         = stripVAT(valueOf(findLabel(['조정보수'])));
     data.monthlyFee  = stripVAT(valueOf(findLabel(['기장료'])));
     data.otherIncome = valueOf(findLabel(['타소득', '기타소득']));
-    const stdRate    = valueOf(findLabel(['표준소득율', '표준소득률']));
+    const stdRate    = valueOf(findLabel(['표준소득률', '표준소득률']));
     data.stdIncomeRate = String(stdRate).replace(/%/g, '').trim();
     data.memo        = valueOf(findLabel(['특이사항', '비고']));
 
