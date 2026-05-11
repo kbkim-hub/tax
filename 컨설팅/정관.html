@@ -351,7 +351,7 @@ textarea{resize:vertical;min-height:70px;}
     <div class="card-title">주주총회 정보</div>
     <div class="form-grid3">
       <div class="form-field"><label class="lbl">회의 일자 <span class="req">*</span></label>
-        <input type="text" id="i-date" placeholder="예) 2025년 3월 15일"></div>
+        <input type="text" id="i-date" placeholder="예) 2026년 3월 15일"></div>
       <div class="form-field"><label class="lbl">회의 시각</label>
         <input type="text" id="i-time" placeholder="예) 오전 10시 00분"></div>
       <div class="form-field"><label class="lbl">회의 장소</label>
@@ -359,9 +359,9 @@ textarea{resize:vertical;min-height:70px;}
     </div>
     <div class="form-grid" style="margin-top:12px;">
       <div class="form-field"><label class="lbl">출석 주주 현황</label>
-        <input type="text" id="i-attend" placeholder="예) 2명 / 71,000주 / 100%"></div>
+        <input type="text" id="i-attend" placeholder="예) 2명 / 100,000주 / 100%"></div>
       <div class="form-field"><label class="lbl">규정 승인일 (주총 결의일)</label>
-        <input type="text" id="i-approvedate" placeholder="예) 2025년 3월 15일"></div>
+        <input type="text" id="i-approvedate" placeholder="예) 2026년 3월 15일"></div>
     </div>
   </div>
 
@@ -376,13 +376,13 @@ textarea{resize:vertical;min-height:70px;}
       </div>
       <div class="num-card">
         <label>대표이사 퇴직금 배수</label>
-        <input type="number" id="i-ceomult" value="3" min="1" max="5" step="0.5">
+        <input type="number" id="i-ceomult" value="2" min="1" max="5" step="0.5">
         <span class="unit">배수</span>
         <span class="badge-def">주총 한도</span>
       </div>
       <div class="num-card">
         <label>그 외 임원 퇴직금 배수</label>
-        <input type="number" id="i-othermult" value="1.5" min="1" max="3" step="0.5">
+        <input type="number" id="i-othermult" value="1" min="1" max="3" step="0.5">
         <span class="unit">배수</span>
         <span class="badge-def">주총 한도</span>
       </div>
@@ -414,10 +414,10 @@ textarea{resize:vertical;min-height:70px;}
       <div class="doc-title">임 시 주 주 총 회 의 사 록</div>
       <table class="doc-info-table">
         <tr><td>회 사 명</td><td><span class="editable" contenteditable id="d1-company" data-ph="회사명을 입력하세요"></span></td></tr>
-        <tr><td>회의 일시</td><td><span class="editable" contenteditable id="d1-date" data-ph="예) 2025년 3월 15일"></span> &nbsp; <span class="editable" contenteditable id="d1-time" data-ph="예) 오전 10시 00분"></span></td></tr>
-        <tr><td>회의 장소</td><td><span class="editable" contenteditable id="d1-place" data-ph="예) 경기도 화성시 ○○ 본점 회의실"></span></td></tr>
-        <tr><td>발행주식총수</td><td><span class="editable" contenteditable id="d1-shares" data-ph="예) 71,000주 (보통주 전액)"></span></td></tr>
-        <tr><td>출 석 주 주</td><td><span class="editable" contenteditable id="d1-attend" data-ph="예) 2명 (71,000주 / 100%)"></span></td></tr>
+        <tr><td>회의 일시</td><td><span class="editable" contenteditable id="d1-date" data-ph="예) 2026년 3월 15일"></span> &nbsp; <span class="editable" contenteditable id="d1-time" data-ph="예) 오전 10시 00분"></span></td></tr>
+        <tr><td>회의 장소</td><td><span class="editable" contenteditable id="d1-place" data-ph="예) 서울특별시 서초구 ○○ 본점 회의실"></span></td></tr>
+        <tr><td>발행주식총수</td><td><span class="editable" contenteditable id="d1-shares" data-ph="예) 100,000주 (보통주 전액)"></span></td></tr>
+        <tr><td>출 석 주 주</td><td><span class="editable" contenteditable id="d1-attend" data-ph="예) 2명 (100,000주 / 100%)"></span></td></tr>
         <tr><td>의 &nbsp;&nbsp;&nbsp; 장</td><td>대표이사 <span class="editable" contenteditable id="d1-ceo" data-ph="대표이사 성명"></span> (출석 주주 전원 동의로 선출)</td></tr>
       </table>
 
@@ -464,7 +464,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="agenda-head">제3호 안건 &nbsp; <u>임원퇴직금지급규정 제정의 건</u></div>
       <p style="margin-left:18px;">의장은 임원 퇴직금 지급 기준을 법인세법 시행령 제44조에 따라 명확히 정하여 손금 인정 요건을 충족하고자 임원퇴직금지급규정을 제정하고자 함을 설명하였다.</p><br>
       <p style="margin-left:18px;">산정기준: 퇴직 전 3년간 연평균 환산액 × 1/10 × 근속연수 × 지급배수</p>
-      <p style="margin-left:18px;">대표이사 <strong><span class="editable" contenteditable id="d1-ceomult" data-ph="3"></span>배수</strong> / 그 외 임원 <strong><span class="editable" contenteditable id="d1-othermult" data-ph="1.5"></span>배수</strong> (이사회 최종 결의)</p>
+      <p style="margin-left:18px;">대표이사 <strong><span class="editable" contenteditable id="d1-ceomult" data-ph="2"></span>배수</strong> / 그 외 임원 <strong><span class="editable" contenteditable id="d1-othermult" data-ph="1"></span>배수</strong> (이사회 최종 결의)</p>
       <table class="doc-table vote-table" style="margin-top:10px;">
         <tr><th>표결</th><th>찬 성</th><th>반 대</th><th>기 권</th></tr>
         <tr><td class="c">주식수</td>
@@ -547,7 +547,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-title">제8조 (개정 및 시행)</div>
       <div class="art-body">① 이 규정의 제정 및 개정은 주주총회 결의에 의한다.<br>② 이 규정은 주주총회 승인일부터 시행한다.</div>
       <br><br>
-      <p style="text-align:center;">주주총회 승인일: <span class="editable" contenteditable id="d3-date" data-ph="예) 2025년 3월 15일"></span></p><br>
+      <p style="text-align:center;">주주총회 승인일: <span class="editable" contenteditable id="d3-date" data-ph="예) 2026년 3월 15일"></span></p><br>
       <p style="text-align:center;font-weight:700;font-size:15px;"><span id="d3-company2"></span></p><br>
       
     </div>
@@ -580,11 +580,11 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-body">② 직위별 지급배수 및 실제 지급액 결정은 아래 표와 같다.</div>
       <table class="doc-table">
         <tr><th>직위</th><th>지급배수(한도)</th><th>실제 지급액</th><th>비고</th></tr>
-        <tr><td class="c">대표이사(회장·사장)</td><td class="c"><span class="editable" contenteditable id="d4-ceomult" data-ph="3"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
-        <tr><td class="c">전무이사</td><td class="c"><span class="editable" contenteditable id="d4-othermult1" data-ph="1.5"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
-        <tr><td class="c">상무이사</td><td class="c"><span class="editable" contenteditable id="d4-othermult2" data-ph="1.5"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
-        <tr><td class="c">이사(등기)</td><td class="c"><span class="editable" contenteditable id="d4-othermult3" data-ph="1.5"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
-        <tr><td class="c">감사</td><td class="c"><span class="editable" contenteditable id="d4-othermult4" data-ph="1.5"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
+        <tr><td class="c">대표이사(회장·사장)</td><td class="c"><span class="editable" contenteditable id="d4-ceomult" data-ph="2"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
+        <tr><td class="c">전무이사</td><td class="c"><span class="editable" contenteditable id="d4-othermult1" data-ph="1"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
+        <tr><td class="c">상무이사</td><td class="c"><span class="editable" contenteditable id="d4-othermult2" data-ph="1"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
+        <tr><td class="c">이사(등기)</td><td class="c"><span class="editable" contenteditable id="d4-othermult3" data-ph="1"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
+        <tr><td class="c">감사</td><td class="c"><span class="editable" contenteditable id="d4-othermult4" data-ph="1"></span>배수</td><td class="c">이사회 결의로 확정</td><td class="l">한도 이내 감액 가능</td></tr>
       </table>
       <div class="art-body">③ 이사회는 회사의 재무상황, 퇴임 경위 등을 고려하여 한도 범위 내에서 실제 지급액을 별도로 결의한다.<br>④ 이사회가 처음부터 한도보다 적은 금액으로 결의한 경우 실제 결의된 금액에 대해서만 원천징수한다.<br><span style="color:#dc2626;">⑤ 한도액을 결의한 후 임원이 일부를 포기하는 방식은 포기금액에도 과세되므로 채택하지 아니한다.</span></div>
       <div class="art-title">제5조 (법인세법상 손금 한도)</div>
@@ -605,7 +605,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-title">제13조 (개정 및 시행)</div>
       <div class="art-body">① 이 규정의 제정 및 개정은 주주총회 결의에 의한다.<br>② 이 규정은 주주총회 승인일부터 시행하며, 시행 전 재임기간도 이 규정의 적용을 받는다.</div>
       <br><br>
-      <p style="text-align:center;">주주총회 승인일: <span class="editable" contenteditable id="d4-date" data-ph="예) 2025년 3월 15일"></span></p><br>
+      <p style="text-align:center;">주주총회 승인일: <span class="editable" contenteditable id="d4-date" data-ph="예) 2026년 3월 15일"></span></p><br>
       <p style="text-align:center;font-weight:700;font-size:15px;"><span id="d4-company2"></span></p><br>
       
     </div>
@@ -643,7 +643,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="art-title">제11조 (개정 및 시행)</div>
       <div class="art-body">① 이 규정의 제정 및 개정은 주주총회 결의에 의한다.<br>② 이 규정은 주주총회 승인일부터 시행한다.</div>
       <br><br>
-      <p style="text-align:center;">주주총회 승인일: <span class="editable" contenteditable id="d5-date" data-ph="예) 2025년 3월 15일"></span></p><br>
+      <p style="text-align:center;">주주총회 승인일: <span class="editable" contenteditable id="d5-date" data-ph="예) 2026년 3월 15일"></span></p><br>
       <p style="text-align:center;font-weight:700;font-size:15px;"><span id="d5-company2"></span></p><br>
       
     </div>
@@ -663,7 +663,7 @@ textarea{resize:vertical;min-height:70px;}
       <p style="text-align:right;font-size:12px;color:#6b7280;">(임원 퇴직금 지급 결의)</p><br>
       <table class="doc-info-table">
         <tr><td>회 사 명</td><td><span class="editable" contenteditable id="d6-company" data-ph="회사명"></span></td></tr>
-        <tr><td>회의 일시</td><td><span class="editable" contenteditable id="d6-date" data-ph="예) 2025년 3월 15일"></span> &nbsp; <span class="editable" contenteditable id="d6-time" data-ph="예) 오전 10시 00분"></span></td></tr>
+        <tr><td>회의 일시</td><td><span class="editable" contenteditable id="d6-date" data-ph="예) 2026년 3월 15일"></span> &nbsp; <span class="editable" contenteditable id="d6-time" data-ph="예) 오전 10시 00분"></span></td></tr>
         <tr><td>회의 장소</td><td><span class="editable" contenteditable id="d6-place" data-ph="예) 본점 회의실"></span></td></tr>
         <tr><td>출석 이사</td><td><span class="editable" contenteditable id="d6-attend" data-ph="예) 2명 (재적이사 2명 / 과반수 충족)"></span></td></tr>
         <tr><td>의 &nbsp;&nbsp;&nbsp; 장</td><td>대표이사 <span class="editable" contenteditable id="d6-ceo" data-ph="대표이사 성명"></span></td></tr>
@@ -676,7 +676,7 @@ textarea{resize:vertical;min-height:70px;}
         <tr><th style="width:180px;">구 분</th><th>내 용</th><th style="width:120px;">비 고</th></tr>
         <tr><td>퇴임자 직위·성명</td><td><span class="editable" contenteditable data-ph="예) 대표이사 홍길동"></span></td><td class="c">등기임원</td></tr>
         <tr><td>취 임 일</td><td><span class="editable" contenteditable data-ph="예) 2019년 7월 31일"></span></td><td></td></tr>
-        <tr><td>퇴 임 일</td><td><span class="editable" contenteditable data-ph="예) 2025년 3월 15일"></span></td><td></td></tr>
+        <tr><td>퇴 임 일</td><td><span class="editable" contenteditable data-ph="예) 2026년 3월 15일"></span></td><td></td></tr>
         <tr><td>근 속 기 간</td><td><span class="editable" contenteditable data-ph="예) 5년 7개월"></span></td><td class="c">역년 계산</td></tr>
         <tr><td>최근 3년 연평균 환산액</td><td>금 <span class="editable" contenteditable data-ph="금액"></span> 원</td><td class="c">3년 총보수 ÷ 3</td></tr>
         <tr><td>규정상 한도액</td><td>금 <span class="editable" contenteditable data-ph="금액"></span> 원</td><td class="c">세무사 확인</td></tr>
@@ -702,7 +702,7 @@ textarea{resize:vertical;min-height:70px;}
       <div class="result-box">결 의 : 원안대로 가결되다.</div>
       <br>
       <p>위 결의를 명확히 하기 위하여 이 결의서를 작성하고 출석한 이사 전원이 기명날인한다.</p>
-      <p style="text-align:right;margin-top:8px;"><span class="editable" contenteditable id="d6-sign-date" data-ph="예) 2025년 3월 15일"></span></p><br>
+      <p style="text-align:right;margin-top:8px;"><span class="editable" contenteditable id="d6-sign-date" data-ph="예) 2026년 3월 15일"></span></p><br>
       <p style="text-align:center;font-weight:700;font-size:15px;"><span id="d6-company2"></span></p><br>
       <div id="d6-sign-wrap"></div>
       <div class="note-box">
