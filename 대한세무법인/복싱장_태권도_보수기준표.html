@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>복싱장 및 태권도 보수 기준</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #005a9e;
+            padding-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-left: 4px solid #005a9e;
+            padding-left: 10px;
+        }
+
+        .unit-note {
+            font-size: 0.8em;
+            color: #666;
+            text-align: right;
+            margin-bottom: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        
+        th {
+            background-color: #005a9e;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+        
+        td {
+            padding: 8px 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        td:first-child {
+            text-align: left;
+        }
+
+        .number {
+            text-align: right;
+        }
+
+        .notes {
+            margin-top: 8px;
+            font-size: 0.88em;
+            color: #444;
+            line-height: 1.8;
+        }
+
+        .notes p {
+            margin: 0;
+        }
+
+        .notes .sub {
+            padding-left: 16px;
+            color: #555;
+        }
+
+        /* 데스크톱 기본 스타일 */
+        .mobile-header .mobile-only-br {
+            display: none;
+        }
+
+        .mobile-header .mobile-only-float {
+            float: none;
+        }
+
+        /* 모바일 반응형 스타일 */
+        @media (max-width: 768px) {
+            .number {
+                word-break: break-all;
+                line-height: 1.2;
+            }
+
+            .mobile-break {
+                word-break: break-all;
+                line-height: 1.3;
+            }
+
+            .small-text {
+                font-size: 0.8em;
+                line-height: 1.1;
+            }
+
+            .mobile-header {
+                word-break: keep-all;
+                line-height: 1.2;
+            }
+
+            .mobile-header .mobile-only-br {
+                display: inline;
+            }
+
+            .mobile-header .mobile-only-float {
+                float: right;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>복싱장 및 태권도 보수 기준</h1>
+
+        <h2>기장료</h2>
+        <div class="unit-note">(단위 : 원, VAT 별도)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50%;">구분</th>
+                    <th style="width: 50%;">기장료</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>기본가</td>
+                    <td class="number">60,000원</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="notes">
+            <p>① 인건비 신고 시 기장료 추가</p>
+            <p class="sub">- 3인 미만 신고 시 월 기장료 추가 2만원</p>
+            <p class="sub">- 3인 이상 10인 미만 신고 시 월 기장료 추가 3만원</p>
+        </div>
+
+        <h2>조정료</h2>
+        <div class="unit-note">(단위 : 원, VAT 별도)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 55%;">연 매출 구간</th>
+                    <th style="width: 45%;">조정료</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>5천만원 이하</td>
+                    <td>조정료 없음</td>
+                </tr>
+                <tr>
+                    <td>5천만원 ~ 7천만원</td>
+                    <td class="number">300,000</td>
+                </tr>
+                <tr>
+                    <td>7천만원 ~ 9천만원</td>
+                    <td class="number">450,000</td>
+                </tr>
+                <tr>
+                    <td>9천만원 ~ 1억1천만원</td>
+                    <td class="number">600,000</td>
+                </tr>
+                <tr>
+                    <td>1억1천만원 초과</td>
+                    <td>개별 협의</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="notes">
+            <p>① 결산 완료된 타소득 단순 합산 시 별도 가산 10만원</p>
+            <p>② 타소득 결산 및 세무조정 추가 시 업종에 따라 조정료 산출 후 협의하여 청구</p>
+            <p>③ 감면 및 세액공제에 따른 조정 시 조정료 별도 가산</p>
+        </div>
+    </div>
+</body>
+</html>
