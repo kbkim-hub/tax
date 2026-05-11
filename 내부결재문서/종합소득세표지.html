@@ -242,7 +242,7 @@
         .pay-label { color: var(--success) !important; font-size: 12px !important; font-weight: 700 !important; }
         .pay-val { color: var(--success) !important; font-weight: 700 !important; font-size: 12px !important; }
 
-        /* 신고소득율 */
+        /* 신고소득률 */
         .income-rate-positive { color: var(--primary); font-weight: 600; }
         .income-rate-negative { color: var(--danger); font-weight: 700; }
 
@@ -374,6 +374,12 @@
         .bizcode-item .biz-detail { color: #374151; }
 
         @media print {
+            /* 타소득 입력란의 placeholder(예시 문구) 인쇄 시 숨김 */
+            #otherIncome::placeholder { color: transparent !important; opacity: 0 !important; }
+            #otherIncome::-webkit-input-placeholder { color: transparent !important; opacity: 0 !important; }
+            #otherIncome::-moz-placeholder { color: transparent !important; opacity: 0 !important; }
+            #otherIncome:-ms-input-placeholder { color: transparent !important; opacity: 0 !important; }
+
             /* 1. 절대 인쇄되면 안 되는 요소들 (강제 삭제) */
             .admin-bar,
             .admin-bar *,
@@ -433,7 +439,7 @@
             .type-row td { padding: 1.5px 5px; }
             .type-select { font-size: 9px; padding: 1px 4px; }
             .auto-mark { font-size: 8px; padding: 0 4px; top: 1px; right: 2px; }
-            .book-exp-info { font-size: 8.5px; line-height: 1.3; margin-top: 2px; }
+            .book-exp-info { font-size: 12px; line-height: 1.35; margin-top: 2px; }
             .book-exp-info .info-line { padding: 0; }
             .bottom-tables-area { display: flex; flex: 1 1 0; align-items: stretch; margin-top: 4mm; min-height: 0; }
             .guide-table-area { padding: 4px 8px; flex: 1 1 0; display: flex; flex-direction: column; min-height: 0; }
@@ -442,10 +448,200 @@
             .rate-table-area { padding: 3px 7px; border-right: 1px solid #aaa; flex: 0 0 auto; display: flex; flex-direction: column; max-width: 210px; }
             .rate-ref-table th, .rate-ref-table td { padding: 1.5px 4px; font-size: 8px; }
             .rate-ref-table { min-width: 0 !important; width: 100%; }
-            .approval-area { padding: 3px 8px; flex-shrink: 0; }
-            .approval-title { font-size: 11px !important; margin-bottom: 3px !important; }
-            .approval-table .ap-body { height: 22px; }
-            .pay-label, .pay-val { font-size: 10px !important; }
+            .approval-area { padding: 2px 8px; flex-shrink: 0; margin-top: 4px !important; }
+            .approval-title { font-size: 12px !important; margin-bottom: 3px !important; }
+            .approval-table .ap-body { height: 1.2cm !important; min-height: 1.2cm !important; }
+            .bottom-tables-area { margin-top: 2mm !important; }
+            .table-wrap { margin-top: 2mm !important; }
+            .pay-label, .pay-val { font-size: 12px !important; }
+
+            /* ═════════════════ 흑백 인쇄 최적화 ═════════════════ */
+            /* 메인테이블 외곽 굵은 테두리 */
+            .main-table {
+                border: 2.5px solid #000000 !important;
+                border-collapse: collapse !important;
+            }
+            .table-wrap { overflow: visible !important; }
+
+            /* 상단 정보 영역(상호/개업일 등) 12px */
+            .info-grid .label {
+                font-size: 12px !important;
+                font-weight: 700 !important;
+                color: #000000 !important;
+            }
+            .info-grid input,
+            .info-grid select {
+                font-size: 12px !important;
+                color: #000000 !important;
+            }
+            /* 특이사항(메모) - 상단 입력값과 동일한 크기 */
+            .info-grid textarea#memo {
+                font-size: 12px !important;
+                color: #000000 !important;
+                line-height: 1.4 !important;
+            }
+
+            /* 메인테이블: 모든 색상 → 흰 배경 + 검정 테두리/글씨, 글씨 살짝 키움 */
+            .main-table th {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                border-bottom: 2.5px solid #000000 !important;
+                border-right: 1px solid #000000 !important;
+                border-top: 1.5px solid #000000 !important;
+                padding: 4px 6px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .main-table th:last-child { border-right: none !important; }
+            .main-table td {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11px !important;
+                border-bottom: 1px solid #000000 !important;
+                border-right: 1px solid #000000 !important;
+                padding: 3px 6px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .main-table td:last-child { border-right: none !important; }
+            /* 인라인 border-right(회색)도 검정으로 */
+            .main-table td[style*="border-right"],
+            .main-table th[style*="border-right"] {
+                border-right-color: #000000 !important;
+            }
+            /* 컬럼 라벨/연도 색깔 제거 */
+            .col-label {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                font-size: 11px !important;
+            }
+            .col-2024, .col-2025 { background: #ffffff !important; }
+
+            /* 인풋 글씨 */
+            .num-input {
+                font-size: 11px !important;
+                color: #000000 !important;
+                font-weight: 600 !important;
+            }
+            .readonly-val { color: #000000 !important; font-weight: 700 !important; }
+
+            /* 자동계산 행: 색깔 대신 굵게 */
+            .auto-row,
+            .auto-row .col-2024,
+            .auto-row .col-2025 { background: #ffffff !important; }
+            .auto-row .num-input,
+            .auto-row .col-label { font-weight: 700 !important; color: #000000 !important; }
+
+            /* 납부세액 행: 진한 검정 위/아래 테두리 + 굵은 글씨 */
+            .pay-row td {
+                background: #ffffff !important;
+                color: #000000 !important;
+                border-top: 2.5px solid #000000 !important;
+                border-bottom: 2.5px solid #000000 !important;
+            }
+            .pay-label, .pay-val {
+                color: #000000 !important;
+                font-weight: 800 !important;
+                font-size: 13px !important;
+            }
+
+            /* 신고유형/기장의무판단/경비율판단 — 드롭다운 외형 제거, 값만 크게 표시 */
+            .type-row td {
+                background: #ffffff !important;
+                border-bottom: 1px solid #000000 !important;
+                border-right: 1px solid #000000 !important;
+            }
+            .type-row td:last-child { border-right: none !important; }
+            .type-row td[style*="border-right"] { border-right: 2px solid #000000 !important; }
+            .type-select {
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                border: none !important;
+                background: transparent !important;
+                background-image: none !important;
+                padding: 0 !important;
+                font-size: 12px !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                text-align: center !important;
+                text-align-last: center !important;
+                width: 100% !important;
+                box-shadow: none !important;
+            }
+            /* 자동 판단 마크는 인쇄 시 숨김(드롭다운이 사라져 의미 없음) */
+            .auto-mark { display: none !important; }
+
+            /* 자동마크: 외곽선만 */
+            .auto-mark {
+                color: #000000 !important;
+                background: #ffffff !important;
+                border: 1px solid #000000 !important;
+            }
+
+            /* 안내 메시지 - 모두 검정 */
+            .book-exp-info,
+            .book-exp-info .info-line,
+            .book-exp-info .info-ok,
+            .book-exp-info .info-warn,
+            .book-exp-info .info-alert {
+                color: #000000 !important;
+            }
+            .book-exp-info .info-alert,
+            .book-exp-info .info-warn { font-weight: 700 !important; }
+
+            /* 신고소득률 */
+            .income-rate-positive,
+            .income-rate-negative {
+                color: #000000 !important;
+                font-weight: 700 !important;
+            }
+
+            /* 보조 테이블(세율표/추계표) — 가는 검정 테두리 1px */
+            .rate-ref-table, .rate-ref-table th, .rate-ref-table td,
+            .guide-table, .guide-table th, .guide-table td {
+                border: 1px solid #000000 !important;
+                border-collapse: collapse !important;
+                color: #000000 !important;
+            }
+            .rate-ref-table th, .guide-table th {
+                background: #ffffff !important;
+                font-weight: 700 !important;
+            }
+            .guide-table .row-header { background: #ffffff !important; font-weight: 700 !important; }
+            .guide-table .bold-cell { color: #000000 !important; font-weight: 800 !important; }
+            .rate-section-title { color: #000000 !important; }
+
+            /* 활성 세율 구간: 색 대신 굵은 검정 외곽선 */
+            .active-rate {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-weight: 800 !important;
+                outline: 2px solid #000000 !important;
+                outline-offset: -2px !important;
+            }
+
+            /* 결재란 */
+            .approval-table td { border-color: #000000 !important; color: #000000 !important; background: #ffffff !important; }
+            .approval-table .ap-head {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                border-bottom: 1.5px solid #000000 !important;
+            }
+            .approval-title { color: #000000 !important; font-weight: 800 !important; }
+
+            /* 헤더(상호) 강조 */
+            .report-header { color: #000000 !important; font-weight: 800 !important; }
+
+            /* 영역 분할선도 검정 */
+            .rate-table-area { border-right: 1px solid #000000 !important; }
+            /* ═════════════════════════════════════════════════════ */
+
             @page { size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
 
             /* 일괄 인쇄 모드 */
@@ -727,17 +923,17 @@
                     <span class="label">기장료</span>
                     <div class="fee-row">
                         <input type="text" id="monthlyFee" oninput="formatComma(this)" onkeydown="handlePlusKey(event, this)" style="flex:1;">
-                        <span class="vat-note">(VAT포함)</span>
+                        <span class="vat-note">(VAT별도)</span>
                     </div>
                 </div>
                 <!-- 타소득 -->
                 <div class="input-row">
                     <span class="label">타 소 득</span>
-                    <input type="text" id="otherIncome" oninput="formatComma(this)" onkeydown="handlePlusKey(event, this)">
+                    <input type="text" id="otherIncome" placeholder="예: 사업소득 200만원">
                 </div>
-                <!-- 표준소득율 -->
+                <!-- 표준소득률 -->
                 <div class="input-row">
-                    <span class="label">표준소득율</span>
+                    <span class="label">표준소득률</span>
                     <div style="display:flex;align-items:center;gap:4px;">
                         <input type="text" id="stdIncomeRate" style="width:80px;" placeholder="자동계산" readonly>
                         <span class="vat-note">%</span>
@@ -754,7 +950,7 @@
                 <!-- 특이사항 -->
                 <div class="input-row" style="align-items:flex-start;flex:1;min-height:0;">
                     <span class="label" style="padding-top:4px;">특이사항</span>
-                    <textarea id="memo" style="resize:none;font-size:10px;flex:1;height:100%;min-height:60px;"></textarea>
+                    <textarea id="memo" style="resize:none;font-size:12px;flex:1;height:100%;min-height:60px;"></textarea>
                 </div>
             </div>
         </div>
@@ -850,6 +1046,16 @@
                             <input type="text" class="num-input" id="ded25" oninput="formatComma(this); calcAll()" onkeydown="handlePlusKey(event, this)">
                         </td>
                     </tr>
+                    <!-- 가산세 -->
+                    <tr>
+                        <td class="col-label" style="border-right:2px solid #94a3b8;">가산세</td>
+                        <td class="col-2024" style="border-right:2px solid #94a3b8;">
+                            <input type="text" class="num-input" id="add24" oninput="formatComma(this); calcAll()" onkeydown="handlePlusKey(event, this)">
+                        </td>
+                        <td class="col-2025">
+                            <input type="text" class="num-input" id="add25" oninput="formatComma(this); calcAll()" onkeydown="handlePlusKey(event, this)">
+                        </td>
+                    </tr>
                     <!-- 납부세액 (자동) -->
                     <tr class="pay-row">
                         <td class="col-label pay-label" style="border-right:2px solid #94a3b8;">납부세액</td>
@@ -860,9 +1066,9 @@
                             <input type="text" class="num-input pay-val" id="final25" readonly>
                         </td>
                     </tr>
-                    <!-- 신고소득율 (자동) -->
+                    <!-- 신고소득률 (자동) -->
                     <tr class="auto-row">
-                        <td class="col-label" style="border-right:2px solid #94a3b8;">신고소득율</td>
+                        <td class="col-label" style="border-right:2px solid #94a3b8;">신고소득률</td>
                         <td class="col-2024" style="border-right:2px solid #94a3b8; text-align:right;">
                             <span id="incRate24" class="income-rate-positive">-</span>
                         </td>
@@ -1168,7 +1374,7 @@ function formatComma(el) {
 
 // + 키 → 1 누른 뒤 + 마다 ×1000 (1+ → 1,000 / 1++ → 1,000,000)
 // 메인표 입력 가능 필드 순서 (각 칼럼별 위→아래)
-const _MAIN_TABLE_ORDER = ['rev','exp','base','pre','ded'];
+const _MAIN_TABLE_ORDER = ['rev','exp','base','pre','ded','add'];
 
 function handlePlusKey(e, el) {
     if (e.key === '+' || e.key === '=') {
@@ -1318,8 +1524,8 @@ let _shiftBackup = null;
 const _SHIFT_BACKUP_KEY = '_taxShiftBackup';
 
 const _SHIFT_BACKUP_FIELDS = [
-    'rev24','exp24','inc24','base24','rate24','tax24','pre24','ded24','final24',
-    'rev25','exp25','inc25','base25','rate25','tax25','pre25','ded25','final25',
+    'rev24','exp24','inc24','base24','rate24','tax24','pre24','ded24','add24','final24',
+    'rev25','exp25','inc25','base25','rate25','tax25','pre25','ded25','add25','final25',
     'type24','type25','book24','book25','expCat24','expCat25'
 ];
 
@@ -1367,7 +1573,7 @@ function shiftYear() {
     // 이월 직전 상태 백업 (되돌리기용)
     _captureShiftBackup();
     // 이월할 필드 목록 (25→24)
-    const fields = ['rev', 'exp', 'inc', 'base', 'rate', 'tax', 'pre', 'ded', 'final'];
+    const fields = ['rev', 'exp', 'inc', 'base', 'rate', 'tax', 'pre', 'ded', 'add', 'final'];
     fields.forEach(f => {
         const curr = document.getElementById(f + '25');
         const prev = document.getElementById(f + '24');
@@ -1388,7 +1594,7 @@ function shiftYear() {
     const expCat24 = document.getElementById('expCat24');
     if (expCat25 && expCat24) expCat24.value = expCat25.value;
     // 당해 필드 초기화
-    ['rev25','exp25','inc25','base25','rate25','tax25','pre25','ded25','final25'].forEach(id => {
+    ['rev25','exp25','inc25','base25','rate25','tax25','pre25','ded25','add25','final25'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
@@ -1452,7 +1658,7 @@ ${yearPrev}년 데이터를 ${yearCurr}년으로 옮기고 ${yearPrev}년 입력
 
 진행할까요?`)) return;
     // 전년(24) → 당해(25) 이동
-    const fields = ['rev', 'exp', 'inc', 'base', 'rate', 'tax', 'pre', 'ded', 'final'];
+    const fields = ['rev', 'exp', 'inc', 'base', 'rate', 'tax', 'pre', 'ded', 'add', 'final'];
     fields.forEach(f => {
         const prev = document.getElementById(f + '24');
         const curr = document.getElementById(f + '25');
@@ -1473,7 +1679,7 @@ ${yearPrev}년 데이터를 ${yearCurr}년으로 옮기고 ${yearPrev}년 입력
     const expCat25 = document.getElementById('expCat25');
     if (expCat25 && expCat24) expCat25.value = expCat24.value;
     // 전년 필드 초기화
-    ['rev24','exp24','inc24','base24','rate24','tax24','pre24','ded24','final24'].forEach(id => {
+    ['rev24','exp24','inc24','base24','rate24','tax24','pre24','ded24','add24','final24'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
@@ -1826,23 +2032,23 @@ function calcAll() {
 
         if (base > 0 && bracket) {
             document.getElementById('rate'+yr).value = (bracket.rate * 100) + '%';
-            // 산출세액: 국고금관리법 제47조에 따라 10원 미만 끝수(1~9원) 절사
+            // 산출세액: 1원 단위까지 표시 (절사 없음)
             const taxRaw = (base * bracket.rate) - bracket.ded;
             const taxPos = Math.max(0, taxRaw);
-            const tax = Math.floor(taxPos / 10) * 10;
+            const tax = Math.round(taxPos);
             document.getElementById('tax'+yr).value = tax.toLocaleString();
         } else {
             document.getElementById('rate'+yr).value = '';
             document.getElementById('tax'+yr).value = '0';
         }
 
-        // 납부세액 = 산출세액 - 중간예납 - 세액감면·공제
-        // 국고금관리법 제47조: 양수 납부세액의 10원 미만 끝수(1~9원) 절사
-        const finalRaw = n('tax'+yr) - n('pre'+yr) - n('ded'+yr);
-        const final = finalRaw > 0 ? Math.floor(finalRaw / 10) * 10 : finalRaw;
+        // 납부세액 = 산출세액 - 중간예납 - 세액감면·공제 + 가산세
+        // 1원 단위까지 표시 (절사 없음)
+        const finalRaw = n('tax'+yr) - n('pre'+yr) - n('ded'+yr) + n('add'+yr);
+        const final = Math.round(finalRaw);
         document.getElementById('final'+yr).value = final.toLocaleString();
 
-        // 신고소득율 = 소득금액 / 수입금액 * 100
+        // 신고소득률 = 소득금액 / 수입금액 * 100
         const rev = n('rev'+yr);
         const rateEl = document.getElementById('incRate'+yr);
         if (rev !== 0) {
@@ -1945,7 +2151,7 @@ function applyBizCode(code) {
     const hint = document.getElementById('bizCodeHint');
     hint.textContent = `단순 ${info.simple_rate}% / 기준 ${info.standard_rate}%`;
     hint.style.display = 'inline-block';
-    // 표준소득율 = 100 - 단순경비율(일반)
+    // 표준소득률 = 100 - 단순경비율(일반)
     if (info.simple_rate > 0) {
         document.getElementById('stdIncomeRate').value = (100 - info.simple_rate).toFixed(1);
     }
@@ -3293,7 +3499,7 @@ function buildCoverSheet(bizName, data) {
         [1, '조정보수',   fv(data.fee)       + (data.fee        ? ' (VAT별도)' : '')],
         [2, '기장료',     fv(data.monthlyFee)+ (data.monthlyFee ? ' (VAT포함)' : '')],
         [3, '타 소 득',   fv(data.otherIncome)],
-        [4, '표준소득율', fv(data.stdIncomeRate) ? fv(data.stdIncomeRate)+'%' : ''],
+        [4, '표준소득률', fv(data.stdIncomeRate) ? fv(data.stdIncomeRate)+'%' : ''],
         [5, '특이사항',   fv(data.memo)],
     ];
     RIGHT_INFO.forEach(([row, lbl, val], idx) => {
@@ -3337,9 +3543,10 @@ function buildCoverSheet(bizName, data) {
         [16, '산출세액',      nc(data.tax24),   nc(data.tax25),   true,  false],
         [17, '중간예납',      nc(data.pre24),   nc(data.pre25),   false, false],
         [18, '세액감면·공제', nc(data.ded24),   nc(data.ded25),   false, false],
-        [19, '납부세액',      nc(data.final24), nc(data.final25), false, true ],
-        [20, '신고소득율',    ir24,             ir25,             true,  false],
-        [21, '신고유형',      fv(data.type24),  fv(data.type25),  false, false],
+        [19, '가산세',        nc(data.add24),   nc(data.add25),   false, false],
+        [20, '납부세액',      nc(data.final24), nc(data.final25), false, true ],
+        [21, '신고소득률',    ir24,             ir25,             true,  false],
+        [22, '신고유형',      fv(data.type24),  fv(data.type25),  false, false],
     ];
     TABLE_ROWS.forEach(([row, lbl, v24, v25, isAuto, isPay]) => {
         const sL  = isPay ? S.payLbl : S.rowLbl;
@@ -3351,27 +3558,27 @@ function buildCoverSheet(bizName, data) {
     });
 
     /* ════════════════════════════════════════════════════════════
-     *  행 22 : 빈 구분행
+     *  행 23 : 빈 구분행
      * ════════════════════════════════════════════════════════════*/
-    for (let c = 0; c <= 4; c++) slave(22, c, S.empty);
+    for (let c = 0; c <= 4; c++) slave(23, c, S.empty);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 23 : 세율표 제목
+     *  행 24 : 세율표 제목
      * ════════════════════════════════════════════════════════════*/
-    w(23, 0, `📊 ${cy}년 종합소득세 세율표`, S.secTtl);
-    for (let c = 1; c <= 4; c++) slave(23, c, S.secTtl);
-    mg(23,0,23,4);
+    w(24, 0, `📊 ${cy}년 종합소득세 세율표`, S.secTtl);
+    for (let c = 1; c <= 4; c++) slave(24, c, S.secTtl);
+    mg(24,0,24,4);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 24 : 세율표 헤더
+     *  행 25 : 세율표 헤더
      *   A~B=과세표준구간(병합) | C=세율 | D~E=누진공제(병합)
      * ════════════════════════════════════════════════════════════*/
-    w(24, 0, '과세표준 구간', S.tblHdr); slave(24,1,S.tblHdr); mg(24,0,24,1);
-    w(24, 2, '세  율',        S.tblHdr);
-    w(24, 3, '누진공제액',    S.tblHdr); slave(24,4,S.tblHdr); mg(24,3,24,4);
+    w(25, 0, '과세표준 구간', S.tblHdr); slave(25,1,S.tblHdr); mg(25,0,25,1);
+    w(25, 2, '세  율',        S.tblHdr);
+    w(25, 3, '누진공제액',    S.tblHdr); slave(25,4,S.tblHdr); mg(25,3,25,4);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 25~32 : 세율표 8구간
+     *  행 26~33 : 세율표 8구간
      * ════════════════════════════════════════════════════════════*/
     const RATE_TBL = [
         '1,400만원 이하|6%|-',
@@ -3388,55 +3595,55 @@ function buildCoverSheet(bizName, data) {
         const isAct = (i === activeR);
         const sL = isAct ? S.actL : S.tblL;
         const sC = isAct ? S.actC : S.tblC;
-        const row = 25 + i;
+        const row = 26 + i;
         w(row, 0, bracket, sL); slave(row,1,sL); mg(row,0,row,1);
         w(row, 2, rate,    sC);
         w(row, 3, ded,     sC); slave(row,4,sC); mg(row,3,row,4);
     });
 
     /* ════════════════════════════════════════════════════════════
-     *  행 33 : 세율표 주석
+     *  행 34 : 세율표 주석
      * ════════════════════════════════════════════════════════════*/
-    w(33, 0, '※ 노란색 행 = 현재 과세표준(당해) 해당 구간', S.note);
-    for (let c = 1; c <= 4; c++) slave(33, c, S.note);
-    mg(33,0,33,4);
+    w(34, 0, '※ 노란색 행 = 현재 과세표준(당해) 해당 구간', S.note);
+    for (let c = 1; c <= 4; c++) slave(34, c, S.note);
+    mg(34,0,34,4);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 34 : 빈 구분행
+     *  행 35 : 빈 구분행
      * ════════════════════════════════════════════════════════════*/
-    for (let c = 0; c <= 4; c++) slave(34, c, S.empty);
+    for (let c = 0; c <= 4; c++) slave(35, c, S.empty);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 35 : 추계표 제목
+     *  행 36 : 추계표 제목
      * ════════════════════════════════════════════════════════════*/
-    w(35, 0, '📋 추계신고 기준금액 (업종별 신고유형 판단기준)', S.secTtl);
-    for (let c = 1; c <= 4; c++) slave(35, c, S.secTtl);
-    mg(35,0,35,4);
+    w(36, 0, '📋 추계신고 기준금액 (업종별 신고유형 판단기준)', S.secTtl);
+    for (let c = 1; c <= 4; c++) slave(36, c, S.secTtl);
+    mg(36,0,36,4);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 36~38 : 추계표 헤더 3단
-     *   행36: A36:A38=업종별(세로3병합) | B36:E36=추계신고유형(가로병합)
-     *   행37: B37:C37=계속사업자 | D37:E37=신규사업자
-     *   행38: B=단순 | C=기준 | D=단순 | E=기준
+     *  행 37~39 : 추계표 헤더 3단
+     *   행37: A37:A39=업종별(세로3병합) | B37:E37=추계신고유형(가로병합)
+     *   행38: B38:C38=계속사업자 | D38:E38=신규사업자
+     *   행39: B=단순 | C=기준 | D=단순 | E=기준
      * ════════════════════════════════════════════════════════════*/
-    // 행 36
-    w(36, 0, '업종별',           S.tblHdr);
-    slave(37, 0, S.tblHdr); slave(38, 0, S.tblHdr);
-    mg(36,0,38,0);
-    w(36, 1, '추계 신고 유형',   S.tblHdr);
-    slave(36,2,S.tblHdr); slave(36,3,S.tblHdr); slave(36,4,S.tblHdr);
-    mg(36,1,36,4);
     // 행 37
-    w(37, 1, '계속사업자', S.tblHdr); slave(37,2,S.tblHdr); mg(37,1,37,2);
-    w(37, 3, '신규사업자', S.tblHdr); slave(37,4,S.tblHdr); mg(37,3,37,4);
+    w(37, 0, '업종별',           S.tblHdr);
+    slave(38, 0, S.tblHdr); slave(39, 0, S.tblHdr);
+    mg(37,0,39,0);
+    w(37, 1, '추계 신고 유형',   S.tblHdr);
+    slave(37,2,S.tblHdr); slave(37,3,S.tblHdr); slave(37,4,S.tblHdr);
+    mg(37,1,37,4);
     // 행 38
-    w(38, 1, '단순경비율', S.tblHdr);
-    w(38, 2, '기준경비율', S.tblHdr);
-    w(38, 3, '단순경비율', S.tblHdr);
-    w(38, 4, '기준경비율', S.tblHdr);
+    w(38, 1, '계속사업자', S.tblHdr); slave(38,2,S.tblHdr); mg(38,1,38,2);
+    w(38, 3, '신규사업자', S.tblHdr); slave(38,4,S.tblHdr); mg(38,3,38,4);
+    // 행 39
+    w(39, 1, '단순경비율', S.tblHdr);
+    w(39, 2, '기준경비율', S.tblHdr);
+    w(39, 3, '단순경비율', S.tblHdr);
+    w(39, 4, '기준경비율', S.tblHdr);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 39~41 : 추계표 데이터
+     *  행 40~42 : 추계표 데이터
      * ════════════════════════════════════════════════════════════*/
     [
         ['1. 농업·도소매업·부동산매매업\n   제2·3호 해당 외 업종',
@@ -3446,7 +3653,7 @@ function buildCoverSheet(bizName, data) {
         ['3. 부동산임대업·사업서비스업\n   교육·보건·사회복지·개인서비스업',
             '2천4백 미만','2천4백 이상','7천5백 미만','7천5백 이상'],
     ].forEach(([lbl,b,c,d,e], i) => {
-        const row = 39 + i;
+        const row = 40 + i;
         w(row, 0, lbl, S.gLbl);
         w(row, 1, b,   S.gCell);
         w(row, 2, c,   S.gCell);
@@ -3455,31 +3662,31 @@ function buildCoverSheet(bizName, data) {
     });
 
     /* ════════════════════════════════════════════════════════════
-     *  행 42 : 빈 구분행
+     *  행 43 : 빈 구분행
      * ════════════════════════════════════════════════════════════*/
-    for (let c = 0; c <= 4; c++) slave(42, c, S.empty);
+    for (let c = 0; c <= 4; c++) slave(43, c, S.empty);
 
     /* ════════════════════════════════════════════════════════════
-     *  행 43~45 : 결재란
-     *   행43 : A43:B43 병합 → '결  재' 라벨
-     *          C43='담  당' | D43='총 괄 이 사' | E43='세 무 사'  (헤더)
-     *   행44 : A44:B44 병합 → 빈칸
-     *          C44~E44 서명 빈칸
+     *  행 44~45 : 결재란
+     *   행44 : A44:B44 병합 → '결  재' 라벨
+     *          C44='담  당' | D44='총 괄 이 사' | E44='세 무 사'  (헤더)
+     *   행45 : A45:B45 병합 → 빈칸
+     *          C45~E45 서명 빈칸
      * ════════════════════════════════════════════════════════════*/
-    w(43, 0, '결  재', S.apLbl); slave(43,1,S.apLbl); mg(43,0,43,1);
-    w(43, 2, '담  당',      S.apHdr);
-    w(43, 3, '총 괄 이 사', S.apHdr);
-    w(43, 4, '세 무 사',    S.apHdr);
+    w(44, 0, '결  재', S.apLbl); slave(44,1,S.apLbl); mg(44,0,44,1);
+    w(44, 2, '담  당',      S.apHdr);
+    w(44, 3, '총 괄 이 사', S.apHdr);
+    w(44, 4, '세 무 사',    S.apHdr);
 
-    w(44, 0, '', S.apLbl); slave(44,1,S.apLbl); mg(44,0,44,1);
-    w(44, 2, '', S.apBody);
-    w(44, 3, '', S.apBody);
-    w(44, 4, '', S.apBody);
+    w(45, 0, '', S.apLbl); slave(45,1,S.apLbl); mg(45,0,45,1);
+    w(45, 2, '', S.apBody);
+    w(45, 3, '', S.apBody);
+    w(45, 4, '', S.apBody);
 
     /* ════════════════════════════════════════════════════════════
      *  시트 메타
      * ════════════════════════════════════════════════════════════*/
-    ws['!ref']    = 'A1:E45';
+    ws['!ref']    = 'A1:E46';
     ws['!merges'] = merges;
 
     // 열 너비 — 원본 파일 실측값
@@ -3498,23 +3705,23 @@ function buildCoverSheet(bizName, data) {
         for (let r=1;r<=8;r++) h[r] = { hpt: 18 };  // 기본정보
         h[9]  = { hpt: 8  };    // 구분행
         h[10] = { hpt: 20 };    // 테이블 헤더
-        for (let r=11;r<=21;r++) h[r] = { hpt: 17 }; // 테이블 데이터
-        h[22] = { hpt: 8  };    // 구분행
-        h[23] = { hpt: 15 };    // 세율표 제목
-        h[24] = { hpt: 16 };    // 세율표 헤더
-        for (let r=25;r<=32;r++) h[r] = { hpt: 15 }; // 세율표 데이터
-        h[33] = { hpt: 13 };    // 세율표 주석
-        h[34] = { hpt: 8  };    // 구분행
-        h[35] = { hpt: 15 };    // 추계표 제목
-        h[36] = { hpt: 16 };    // 추계표 헤더1
-        h[37] = { hpt: 16 };    // 추계표 헤더2
-        h[38] = { hpt: 16 };    // 추계표 헤더3
-        h[39] = { hpt: 24 };    // 추계표 데이터 (2줄)
-        h[40] = { hpt: 24 };
+        for (let r=11;r<=22;r++) h[r] = { hpt: 17 }; // 테이블 데이터 (가산세 추가)
+        h[23] = { hpt: 8  };    // 구분행
+        h[24] = { hpt: 15 };    // 세율표 제목
+        h[25] = { hpt: 16 };    // 세율표 헤더
+        for (let r=26;r<=33;r++) h[r] = { hpt: 15 }; // 세율표 데이터
+        h[34] = { hpt: 13 };    // 세율표 주석
+        h[35] = { hpt: 8  };    // 구분행
+        h[36] = { hpt: 15 };    // 추계표 제목
+        h[37] = { hpt: 16 };    // 추계표 헤더1
+        h[38] = { hpt: 16 };    // 추계표 헤더2
+        h[39] = { hpt: 16 };    // 추계표 헤더3
+        h[40] = { hpt: 24 };    // 추계표 데이터 (2줄)
         h[41] = { hpt: 24 };
-        h[42] = { hpt: 8  };    // 구분행
-        h[43] = { hpt: 15 };    // 결재 헤더
-        h[44] = { hpt: 36 };    // 결재 서명란
+        h[42] = { hpt: 24 };
+        h[43] = { hpt: 8  };    // 구분행
+        h[44] = { hpt: 15 };    // 결재 헤더
+        h[45] = { hpt: 30 };    // 결재 서명란 (가산세 행 추가로 36→30 축소)
         return h;
     })();
 
@@ -3811,7 +4018,7 @@ function _parseSheetByKeywords(grid, sheetName) {
     data.fee         = stripVAT(valueOf(findLabel(['조정보수'])));
     data.monthlyFee  = stripVAT(valueOf(findLabel(['기장료'])));
     data.otherIncome = valueOf(findLabel(['타소득', '기타소득']));
-    const stdRate    = valueOf(findLabel(['표준소득율', '표준소득률']));
+    const stdRate    = valueOf(findLabel(['표준소득률', '표준소득률']));
     data.stdIncomeRate = String(stdRate).replace(/%/g, '').trim();
     data.memo        = valueOf(findLabel(['특이사항', '비고']));
 
@@ -3880,6 +4087,7 @@ function _parseSheetByKeywords(grid, sheetName) {
             { keys: ['산출세액'],                               prev: 'tax24',   curr: 'tax25' },
             { keys: ['중간예납'],                               prev: 'pre24',   curr: 'pre25' },
             { keys: ['세액감면공제', '세액감면', '감면공제'],   prev: 'ded24',   curr: 'ded25' },
+            { keys: ['가산세'],                                 prev: 'add24',   curr: 'add25' },
             { keys: ['납부세액', '결정세액'],                   prev: 'final24', curr: 'final25' },
             { keys: ['신고유형'],                               prev: 'type24',  curr: 'type25' },
         ];

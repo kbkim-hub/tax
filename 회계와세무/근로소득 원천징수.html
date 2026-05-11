@@ -3,1878 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024년 근로소득세 계산기</title>
+    <title>근로소득세 계산기 (2026.3 개정 반영)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            padding: 20px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 20px; line-height: 1.6; }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
+        .app-container { max-width: 900px; margin: 0 auto; }
 
-        .header {
-            background: #0B3D91;
-            color: #ffffff;
-            padding: 30px;
-            text-align: center;
-        }
+        /* 헤더 디자인 */
+        .app-header { text-align: center; margin-bottom: 30px; }
+        .app-header h1 { font-size: 2rem; color: var(--primary); font-weight: 800; letter-spacing: -0.02em; }
+        .app-header p { color: var(--text-sub); font-size: 1rem; }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
+        /* 탭 디자인 */
+        .tabs { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: none; border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--secondary); transition: 0.3s; }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
 
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
+        /* 카드 공통 스타일 */
+        .card { background: var(--card); border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); padding: 30px; margin-bottom: 25px; border: 1px solid var(--border); }
+        .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--primary); }
 
-        .calculator {
-            padding: 40px;
-        }
+        /* 입력 그룹 */
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group.full { grid-column: span 2; }
+        label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--secondary); margin-bottom: 8px; }
+        input, select { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; transition: 0.2s; background: #fdfdfd; }
+        input:focus { outline: none; border-color: var(--primary); background: white; }
 
-        .input-group {
-            margin-bottom: 30px;
-        }
+        .btn-main { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-main:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 1.1em;
-        }
+        /* 결과 섹션 */
+        .result-container { display: none; animation: slideUp 0.5s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
+        .main-result-card { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; text-align: center; padding: 40px; }
+        .main-result-card .label { font-size: 1rem; opacity: 0.9; margin-bottom: 10px; }
+        .main-result-card .amount { font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; }
 
-        .input-group input:focus, .input-group select:focus {
-            outline: none;
-            border-color: #0B5ED7;
-            box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.2);
-        }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px; }
+        .detail-item { background: white; padding: 20px; border-radius: 16px; border: 1px solid var(--border); }
+        .detail-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+        .detail-row { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 8px; }
+        .val { font-weight: 700; color: var(--text-main); }
+        .deduction { color: var(--danger); }
 
-        .calculate-btn {
-            width: 100%;
-            padding: 18px;
-            background: #0B5ED7;
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 30px;
-        }
+        /* 고소득 공식 */
+        .formula-box { background: #f1f5f9; padding: 15px; border-radius: 10px; font-size: 0.85rem; margin-top: 15px; border-left: 4px solid var(--secondary); }
 
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(11, 94, 215, 0.35);
-        }
+        /* 보험 토글 스위치 */
+        .insurance-toggle { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 10px; margin-bottom: 10px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-        .result {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #e9ecef;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .result.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result h3 {
-            color: #0B3D91;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-            font-weight: 600;
-            font-size: 1.2em;
-            color: #0B3D91;
-        }
-
-        .result-label {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .result-value {
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .note {
-            background: #fff3cd;
-            color: #856404;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #ffc107;
-            margin-top: 20px;
-        }
-
-        .note h4 {
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .note ul {
-            margin-left: 20px;
-        }
-
-        .note li {
-            margin-bottom: 5px;
-        }
+        .note-card { background: #fffbeb; border: 1px solid #fef3c7; color: #92400e; padding: 20px; border-radius: 15px; font-size: 0.9rem; }
+        .note-card h4 { margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .calculator {
-                padding: 20px;
-            }
-        }
-
-        /* Animated toggle switch for insurance checkboxes */
-        .insurance-toggle input[type="checkbox"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .insurance-toggle .toggle-switch {
-            width: 40px;
-            height: 22px;
-            background: #e9ecef;
-            border-radius: 999px;
-            position: relative;
-            transition: background 0.25s ease, box-shadow 0.25s ease;
-            box-shadow: inset 0 0 0 2px #dee2e6;
-        }
-        .insurance-toggle .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: transform 0.25s ease;
-        }
-        .insurance-toggle input[type="checkbox"]:checked + .toggle-switch {
-            background: #0B5ED7;
-            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.25);
-        }
-        .insurance-toggle input[type="checkbox"]:checked + .toggle-switch::after {
-            transform: translateX(18px);
-        }
-        /* Subtle highlight of row when enabled/disabled */
-        .result-item.toggled-off {
-            opacity: 0.55;
-        }
-        /* Summary card (blue box) */
-        .summary-card {
-            background: #0B5ED7;
-            color: #ffffff;
-            border-radius: 14px;
-            padding: 28px;
-            margin-top: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 10px 24px rgba(11, 94, 215, 0.25);
-            border-bottom: none;
-        }
-        .summary-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: 12px;
-        }
-        .summary-title {
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-        .summary-amount {
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 1.8em;
-        }
-        .summary-sub {
-            display: none;
-            margin-top: 10px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
-            flex-direction: column;
-            gap: 6px;
-        }
-        .summary-sub-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-        .summary-sub-label {
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.2em;
-        }
-        .summary-sub-value {
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.8em;
-        }
-        /* Improve legibility of white text on blue summary cards with outline */
-        .summary-card .summary-title,
-        .summary-card .summary-amount,
-        .summary-card .summary-sub-label,
-        .summary-card .summary-sub-value {
-            -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
-            text-shadow:
-                1px 0 0 rgba(0, 0, 0, 0.4),
-                -1px 0 0 rgba(0, 0, 0, 0.4),
-                0 1px 0 rgba(0, 0, 0, 0.4),
-                0 -1px 0 rgba(0, 0, 0, 0.4),
-                1px 1px 0 rgba(0, 0, 0, 0.35),
-                1px -1px 0 rgba(0, 0, 0, 0.35),
-                -1px 1px 0 rgba(0, 0, 0, 0.35),
-                -1px -1px 0 rgba(0, 0, 0, 0.35);
-        }
-        /* Emphasis: Income tax and total deduction first */
-        .tax-primary .result-label {
-            font-weight: 700;
-            color: #0B3D91;
-        }
-        .tax-primary .result-value {
-            font-weight: 800;
-            color: #dc3545;
-            font-size: 1.15em;
-        }
-        #row-total-deduction .result-label {
-            font-weight: 800;
-            font-size: 1.1em;
-            color: #0B3D91;
-        }
-        #row-total-deduction .result-value {
-            color: #dc3545;
-            font-weight: 800;
-            font-size: 1.25em;
-        }
-        /* Slightly enhance visibility for '다른 계산 결과' section */
-        #other-results .result-item {
-            padding: 18px 0;
-        }
-        #other-results .result-label {
-            font-size: 1.12em;
-            font-weight: 700;
-        }
-        #other-results .result-value {
-            font-size: 1.22em;
-            font-weight: 700;
-        }
-        /* Prevent last item in '다른 계산 결과' from being larger than others */
-        #other-results .result-item:last-child {
-            font-size: 1em;
-            font-weight: 400;
-            color: inherit;
+            .grid-inputs, .detail-grid { grid-template-columns: 1fr; }
+            .input-group.full { grid-column: span 1; }
+            .main-result-card .amount { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>근로소득세 계산기</h1>
-            <p>2024년 근로소득 간이세액표 기준</p>
+
+<div class="app-container">
+    <header class="app-header">
+        <h1>근로소득세 계산기</h1>
+        <p>2026년 3월 개정 간이세액표 및 4대보험 요율 반영</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('normal')">급여로 계산</button>
+        <button class="tab-btn" onclick="switchTab('reverse')">실수령액으로 역산</button>
+    </div>
+
+    <!-- 일반 계산 섹션 -->
+    <div id="normal-calc">
+        <div class="card">
+            <div class="card-title">⌨️ 급여 정보 입력</div>
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label>급여 구분</label>
+                    <select id="salaryType" onchange="updateSalaryLabel()">
+                        <option value="monthly">월급여</option>
+                        <option value="annual">연봉</option>
+                        <option value="net">월 실수령액 기준</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label id="salaryLabel">월 급여액 (원)</label>
+                    <input type="text" id="salary" placeholder="예: 3,000,000" oninput="formatSalaryInput(event)">
+                </div>
+                <div class="input-group full">
+                    <label>부양가족 수 (본인 포함)</label>
+                    <select id="dependents">
+                        <option value="1">1명 (본인)</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                        <option value="5">5명 이상</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-main" onclick="calculateTax()">결과 확인하기</button>
+        </div>
+    </div>
+
+    <!-- 역산 계산 섹션 -->
+    <div id="reverse-calc" style="display:none;">
+        <div class="card">
+            <div class="card-title">🔄 실수령액 기준 역산</div>
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label>희망 월 실수령액 (원)</label>
+                    <input type="text" id="desiredTakeHome" placeholder="예: 3,000,000" oninput="formatSalaryInput(event)">
+                </div>
+                <div class="input-group">
+                    <label>부양가족 수</label>
+                    <select id="rev-dependents">
+                        <option value="1">1명</option>
+                        <option value="2">2명</option>
+                        <option value="3">3명</option>
+                        <option value="4">4명</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-main" onclick="reverseCalculate()">역산하기</button>
+        </div>
+    </div>
+
+    <!-- 결과 리포트 -->
+    <div id="result" class="result-container">
+        <div class="card main-result-card">
+            <div class="label" id="res-main-label">예상 월 실수령액</div>
+            <div class="amount" id="summary-value">0원</div>
         </div>
 
-        <div class="calculator">
-            <div class="input-group">
-                <label for="salaryType">급여 구분</label>
-                <select id="salaryType" onchange="updateSalaryLabel()">
-                    <option value="monthly">월급여</option>
-                    <option value="annual">연봉</option>
-                    <option value="net">월 실수령액</option>
-                    <option value="netAnnual">연 실수령액</option>
-                    <option value="npInput">국민연금 금액</option>
-                    <option value="hiInput">건강보험 금액</option>
-                    <option value="ltcInput">장기요양보험 금액</option>
-                    <option value="uiInput">고용보험 금액</option>
-                    <option value="itInput">소득세 금액</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label for="salary" id="salaryLabel">월 급여액 (원)</label>
-                <input type="text" id="salary" placeholder="예: 3,000,000">
-            </div>
-
-            <div class="input-group">
-                <label for="dependents">부양가족 수 (본인 포함)</label>
-                <select id="dependents">
-                    <option value="1">1명</option>
-                    <option value="2">2명</option>
-                    <option value="3">3명</option>
-                    <option value="4">4명</option>
-                    <option value="5">5명</option>
-                    <option value="6">6명</option>
-                    <option value="7">7명</option>
-                    <option value="8">8명</option>
-                    <option value="9">9명</option>
-                    <option value="10">10명</option>
-                    <option value="11">11명</option>
-                </select>
-            </div>
-
-            <button class="calculate-btn" onclick="calculateTax()">세액 계산하기</button>
-
-            <div class="result" id="result">
-                <h3>📊 계산 결과</h3>
+        <div class="detail-grid">
+            <!-- 세금 카드 -->
+            <div class="detail-item">
+                <div class="detail-header">
+                    <span style="font-weight:700">⚖️ 세금</span>
+                    <span class="deduction" id="income-local-total">0원</span>
+                </div>
+                <div class="detail-row"><span>소득세</span><span class="val" id="income-tax">0원</span></div>
+                <div class="detail-row"><span>지방소득세</span><span class="val" id="local-tax">0원</span></div>
                 
-                
-                <div class="result-section">
-                    <h4 style="color: #0B3D91; margin: 20px 0 10px 0; font-size: 1.2em;">💰 세금</h4>
-                    <div class="result-item tax-primary" id="row-income-tax">
-                        <span class="result-label">소득세</span>
-                        <span class="result-value" id="income-tax">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">지방소득세</span>
-                        <span class="result-value" id="local-tax">-</span>
-                    </div>
-                    <div class="result-item" style="border-top: 2px solid #0B3D91; padding-top: 15px; margin-top: 10px;">
-                        <span class="result-label" style="font-weight: 600;">합계</span>
-                        <span class="result-value" style="color: #0B3D91; font-weight: 600;" id="income-local-total">-</span>
-                    </div>
-                </div>
-
-                <!-- 고소득 구간 계산 공식 (1,000만원 초과 시에만 표시) -->
-                <div class="result-section" id="high-income-formula" style="display: none;">
-                    <h4 style="color: #333; margin: 20px 0 10px 0; font-size: 1.1em;">📊 고소득 구간 세액 계산 공식</h4>
-                    <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 12px; margin: 10px 0; font-size: 0.9em;">
-                        <div class="result-item" style="border-bottom: 1px solid #e9ecef; padding: 8px 0;">
-                            <span class="result-label" style="color: #333; font-size: 0.9em;">적용 구간</span>
-                            <span class="result-value" style="color: #333; font-size: 0.9em;" id="tax-bracket">-</span>
-                        </div>
-                        <div class="result-item" style="border-bottom: 1px solid #e9ecef; padding: 8px 0;">
-                            <span class="result-label" style="color: #333; font-size: 0.9em;">기본 세액 (1,000만원)</span>
-                            <span class="result-value" style="color: #333; font-size: 0.9em;" id="base-tax">-</span>
-                        </div>
-                        <div class="result-item" style="border-bottom: 1px solid #e9ecef; padding: 8px 0;">
-                            <span class="result-label" style="color: #333; font-size: 0.9em;">고정 가산액</span>
-                            <span class="result-value" style="color: #333; font-size: 0.9em;" id="fixed-addition">-</span>
-                        </div>
-                        <div class="result-item" style="border-bottom: 1px solid #e9ecef; padding: 8px 0;">
-                            <span class="result-label" style="color: #333; font-size: 0.9em;">초과 금액</span>
-                            <span class="result-value" style="color: #333; font-size: 0.9em;" id="excess-amount">-</span>
-                        </div>
-                        <div class="result-item" style="border-bottom: 1px solid #e9ecef; padding: 8px 0;">
-                            <span class="result-label" style="color: #333; font-size: 0.9em;">적용 세율</span>
-                            <span class="result-value" style="color: #333; font-size: 0.9em;" id="tax-rate">-</span>
-                        </div>
-                        <div class="result-item" style="border-bottom: 1px solid #e9ecef; padding: 8px 0;">
-                            <span class="result-label" style="color: #333; font-size: 0.9em;">초과분 세액</span>
-                            <span class="result-value" style="color: #333; font-size: 0.9em;" id="excess-tax">-</span>
-                        </div>
-                        <div class="result-item" style="padding: 8px 0; background: #e9ecef; border-radius: 5px; margin-top: 5px;">
-                            <span class="result-label" style="font-weight: 700; color: #333; font-size: 0.9em;">계산 공식</span>
-                            <span class="result-value" style="font-weight: 700; color: #333; font-size: 0.9em;" id="calculation-formula">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-section">
-                    <h4 style="color: #0B3D91; margin: 20px 0 10px 0; font-size: 1.2em;">🏥 4대보험</h4>
-                    <div class="result-item" id="item-np">
-                        <span class="result-label"><label class="insurance-toggle" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;position:relative;"><input type="checkbox" id="toggle-np" checked><span class="toggle-switch" aria-hidden="true"></span> 국민연금 (4.5%)</label></span>
-                        <span class="result-value" id="national-pension">-</span>
-                    </div>
-                    <div class="result-item" id="item-hi">
-                        <span class="result-label"><label class="insurance-toggle" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;position:relative;"><input type="checkbox" id="toggle-hi" checked><span class="toggle-switch" aria-hidden="true"></span> 건강보험 (3.545%)</label></span>
-                        <span class="result-value" id="health-insurance">-</span>
-                    </div>
-                    <div class="result-item" id="item-ltc">
-                        <span class="result-label"><label class="insurance-toggle" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;position:relative;"><input type="checkbox" id="toggle-ltc" checked><span class="toggle-switch" aria-hidden="true"></span> 장기요양보험 (건강보험료×12.95%)</label></span>
-                        <span class="result-value" id="long-term-care">-</span>
-                    </div>
-                    <div class="result-item" id="item-ui">
-                        <span class="result-label"><label class="insurance-toggle" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;position:relative;"><input type="checkbox" id="toggle-ui" checked><span class="toggle-switch" aria-hidden="true"></span> 고용보험 (0.9%)</label></span>
-                        <span class="result-value" id="unemployment-insurance">-</span>
-                    </div>
-                    <div class="result-item" style="border-top: 2px solid #0B3D91; padding-top: 15px; margin-top: 10px;">
-                        <span class="result-label" style="font-weight: 600;">4대보험 합계</span>
-                        <span class="result-value" style="color: #0B3D91; font-weight: 600;" id="total-insurance">-</span>
-                    </div>
-                </div>
-
-                
-                <div id="summary-tax-card" class="result-item summary-card">
-                    <div class="summary-header">
-                        <span class="summary-title">💰 세금 총액</span>
-                        <span class="summary-amount" id="summary-tax-value">-</span>
-                    </div>
-                </div>
-
-                <div id="summary-card" class="result-item summary-card">
-                    <div class="summary-header">
-                        <span class="summary-title" id="summary-label">💵 실수령액</span>
-                        <span class="summary-amount" id="summary-value">-</span>
-                    </div>
-                    <div id="summary-sub" class="summary-sub">
-                        <div class="summary-sub-row">
-                            <span class="summary-sub-label" id="summary-sub-label">세금 총액</span>
-                            <span class="summary-sub-value" id="summary-annual">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="result-section" id="other-results" style="margin-top: 10px;">
-                    <h4 style="color: #0B3D91; margin: 20px 0 10px 0; font-size: 1.2em;">🔁 다른 계산 결과</h4>
-                    <div class="result-item" id="row-alt-monthly-gross">
-                        <span class="result-label">월 급여액</span>
-                        <span class="result-value" id="alt-monthly-gross">-</span>
-                    </div>
-                    <div class="result-item" id="row-alt-monthly-net">
-                        <span class="result-label">월 실수령액</span>
-                        <span class="result-value" id="alt-monthly-net">-</span>
-                    </div>
-                    <div class="result-item" id="row-alt-annual-gross">
-                        <span class="result-label">연봉</span>
-                        <span class="result-value" id="alt-annual-gross">-</span>
-                    </div>
-                    <div class="result-item" id="row-alt-annual-net" style="border-bottom: none;">
-                        <span class="result-label">연 실수령액</span>
-                        <span class="result-value" id="alt-annual-net">-</span>
+                <div id="high-income-formula" style="display:none">
+                    <div class="formula-box">
+                        <strong>고소득 구간 공식 적용</strong><br>
+                        <span id="calculation-formula"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="note">
-                <h4>📝 유의사항</h4>
-                <ul>
-                    <li><strong>급여 구분:</strong> 연봉 선택 시 12개월로 나누어 월급여로 계산</li>
-                    <li><strong>2024년 기준:</strong> 근로소득 간이세액표 + 4대보험료율 적용</li>
-                    <li><strong>4대보험 요율:</strong> 국민연금 4.5%, 건강보험 3.545%, 장기요양보험 12.95%(건강보험료의), 고용보험 0.9%</li>
-                    <li><strong>상한액:</strong> 국민연금 637만원, 건강보험 9,008,340원 기준</li>
-                    <li><strong>고소득 구간:</strong> 1,000만원 초과 시 누진세율 적용</li>
-                    <li><strong>지방소득세:</strong> 소득세의 10%로 계산</li>
-                </ul>
+            <!-- 보험료 카드 -->
+            <div class="detail-item">
+                <div class="detail-header">
+                    <span style="font-weight:700">🏥 4대보험</span>
+                    <span class="deduction" id="total-insurance">0원</span>
+                </div>
+                <div class="insurance-toggle">
+                    <span>국민연금 (4.5%)</span>
+                    <label class="switch"><input type="checkbox" id="toggle-np" checked onchange="calculateTax()"><span class="slider"></span></label>
+                </div>
+                <div class="detail-row" style="padding:0 12px"><span>금액</span><span class="val" id="national-pension">0원</span></div>
+                
+                <div class="insurance-toggle">
+                    <span>건강보험 (3.545%)</span>
+                    <label class="switch"><input type="checkbox" id="toggle-hi" checked onchange="calculateTax()"><span class="slider"></span></label>
+                </div>
+                <div class="detail-row" style="padding:0 12px"><span>금액</span><span class="val" id="health-insurance">0원</span></div>
+                
+                <div class="detail-row" style="padding:0 12px; margin-top:10px; font-size:0.85rem; color:var(--text-sub)">
+                    <span>장기요양/고용 포함</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="other-results" style="margin-top:20px; padding:20px">
+            <div class="card-title" style="font-size:1rem; margin-bottom:10px">📊 환산 결과</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px">
+                <div>
+                    <label>월 세전급여</label>
+                    <div class="val" id="alt-monthly-gross">-</div>
+                </div>
+                <div>
+                    <label>예상 연봉</label>
+                    <div class="val" id="alt-annual-gross">-</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="container">
-    <h2>실수령액 기준 급여 역산 계산기</h2>
-
-    <div class="input-group">
-      <label for="dependents">부양가족 수:</label>
-      <select id="dependents">
-        <option value="1">1명</option>
-        <option value="2">2명</option>
-        <option value="3">3명</option>
-        <option value="4">4명</option>
-      </select>
+    <div class="note-card">
+        <h4>💡 계산 안내</h4>
+        <ul style="list-style:none; padding-left:5px">
+            <li>• 본 계산기는 <strong>2026년 3월 개정 근로소득 간이세액표</strong>를 기준으로 합니다.</li>
+            <li>• 국민연금(상한 637만원), 건강보험(상한 900.8만원) 기준이 적용되었습니다.</li>
+            <li>• 실제 수령액은 기업의 비과세 항목(식대 등)에 따라 달라질 수 있습니다.</li>
+        </ul>
     </div>
+</div>
 
-    <div class="input-group">
-      <label for="desiredTakeHome">실수령액 (원):</label>
-      <input type="text" id="desiredTakeHome" placeholder="예: 3,000,000">
-      <button onclick="reverseCalculate()">실수령액 기준 계산</button>
-    </div>
-
-    <div class="input-group">
-      <label for="salary">월급여 (계산 결과):</label>
-      <input type="text" id="salary" readonly>
-    </div>
-  </div>
-
-    
-
-    <script>
-        // 콤마 포맷팅 함수
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+<script>
+    // 탭 전환
+    function switchTab(type) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        if(type === 'normal') {
+            document.getElementById('normal-calc').style.display = 'block';
+            document.getElementById('reverse-calc').style.display = 'none';
+        } else {
+            document.getElementById('normal-calc').style.display = 'none';
+            document.getElementById('reverse-calc').style.display = 'block';
         }
+    }
 
-        // 콤마 제거 함수
-        function removeCommas(str) {
-            return str.replace(/,/g, '');
-        }
+    // 포맷팅 및 숫자 처리 함수들
+    function formatNumber(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function removeCommas(str) { return str.replace(/,/g, ''); }
+    function formatSalaryInput(event) {
+        let value = event.target.value.replace(/[^\d]/g, '');
+        event.target.value = value ? formatNumber(value) : '';
+    }
 
-        // 급여 입력 필드 실시간 포맷팅 (커서 위치 보존)
-        function formatSalaryInput(event) {
-            const input = event.target;
-            
-            // 현재 커서 위치 저장
-            const cursorStart = input.selectionStart;
-            const cursorEnd = input.selectionEnd;
-            
-            // 이전 값과 비교를 위해 저장
-            const oldValue = input.value;
-            const oldValueClean = removeCommas(oldValue);
-            
-            // 숫자만 추출
-            let newValue = oldValue.replace(/[^\d]/g, '');
-            
-            // 포맷팅 적용
-            if (newValue) {
-                const formattedValue = formatNumber(newValue);
-                input.value = formattedValue;
-                
-                // 커서 위치 계산
-                let newCursorPos = cursorStart;
-                
-                // 콤마 개수 변화 계산
-                const oldCommas = (oldValue.match(/,/g) || []).length;
-                const newCommas = (formattedValue.match(/,/g) || []).length;
-                const commaDiff = newCommas - oldCommas;
-                
-                // 커서 위치 조정
-                newCursorPos = cursorStart + commaDiff;
-                
-                // 커서가 범위를 벗어나지 않도록 조정
-                newCursorPos = Math.max(0, Math.min(newCursorPos, formattedValue.length));
-                
-                // 커서가 콤마 위에 있으면 뒤로 이동
-                if (newCursorPos > 0 && formattedValue[newCursorPos - 1] === ',') {
-                    newCursorPos--;
-                }
-                
-                // 커서 위치 설정
-                requestAnimationFrame(() => {
-                    input.setSelectionRange(newCursorPos, newCursorPos);
-                });
-            } else {
-                input.value = '';
-            }
-        }
+    function updateSalaryLabel() {
+        const type = document.getElementById('salaryType').value;
+        const label = document.getElementById('salaryLabel');
+        label.textContent = type === 'annual' ? '연봉 (원)' : (type === 'net' ? '희망 월 실수령액 (원)' : '월 급여액 (원)');
+    }
 
-        // 급여 구분에 따른 라벨 업데이트
-        function updateSalaryLabel() {
-            const salaryType = document.getElementById('salaryType').value;
-            const salaryLabel = document.getElementById('salaryLabel');
-            const salaryInput = document.getElementById('salary');
-            
-            if (salaryType === 'annual') {
-                salaryLabel.textContent = '연봉 (원)';
-                salaryInput.placeholder = '예: 60,000,000';
-            } else if (salaryType === 'net') {
-                salaryLabel.textContent = '월 실수령액 (원)';
-                salaryInput.placeholder = '예: 2,500,000';
-            } else if (salaryType === 'netAnnual') {
-                salaryLabel.textContent = '연 실수령액 (원)';
-                salaryInput.placeholder = '예: 30,000,000';
-            } else if (salaryType === 'npInput') {
-                salaryLabel.textContent = '국민연금 금액 (원)';
-                salaryInput.placeholder = '예: 135,000';
-            } else if (salaryType === 'hiInput') {
-                salaryLabel.textContent = '건강보험 금액 (원)';
-                salaryInput.placeholder = '예: 106,350';
-            } else if (salaryType === 'ltcInput') {
-                salaryLabel.textContent = '장기요양보험 금액 (원)';
-                salaryInput.placeholder = '예: 13,780';
-            } else if (salaryType === 'uiInput') {
-                salaryLabel.textContent = '고용보험 금액 (원)';
-                salaryInput.placeholder = '예: 27,000';
-            } else if (salaryType === 'itInput') {
-                salaryLabel.textContent = '소득세 금액 (원)';
-                salaryInput.placeholder = '예: 74,350';
-            } else {
-                salaryLabel.textContent = '월 급여액 (원)';
-                salaryInput.placeholder = '예: 3,000,000';
-            }
-        }
+    // 보험료 계산 로직
+    function calculateInsurance(salary) {
+        const pensionBase = Math.min(salary, 6370000);
+        const nationalPension = Math.floor(pensionBase * 0.045);
+        const healthBase = Math.min(salary, 9008340);
+        const healthInsurance = Math.floor(healthBase * 0.03545);
+        const longTermCare = Math.floor(healthInsurance * 0.1295);
+        const unemploymentInsurance = Math.floor(salary * 0.009);
+        
+        return { nationalPension, healthInsurance, longTermCare, unemploymentInsurance, 
+                 total: nationalPension + healthInsurance + longTermCare + unemploymentInsurance };
+    }
 
-        // 2024년 근로소득 간이세액표 (정확한 구간 구조)
-        function getTaxFromTable(salary, dependents) {
-            const salaryInThousands = Math.floor(salary / 1000);
-            
-            // 1060천원 미만은 모두 0원
-            if (salaryInThousands < 1060) return { tax: 0, isHighIncome: false };
-            
-            // 세액 계산 함수
-            function calculateTax(base, rate1, rate2, rate3, rate4, rate5, rate6, rate7, rate8, rate9, rate10, rate11) {
-                const rates = [rate1, rate2, rate3, rate4, rate5, rate6, rate7, rate8, rate9, rate10, rate11];
-                return rates[dependents - 1] || 0;
-            }
-            
-            // 1060~1340천원: 부양가족 1명만 세액 있음 (5천원 단위)
-            if (salaryInThousands >= 1060 && salaryInThousands < 1340) {
-                const ranges = [
-                    [1060, 1040], [1065, 1110], [1070, 1180], [1075, 1250], [1080, 1320],
-                    [1085, 1390], [1090, 1460], [1095, 1530], [1100, 1600], [1105, 1670],
-                    [1110, 1740], [1115, 1810], [1120, 1880], [1125, 1950], [1130, 2020],
-                    [1135, 2090], [1140, 2160], [1145, 2230], [1150, 2300], [1155, 2370],
-                    [1160, 2440], [1165, 2500], [1170, 2570], [1175, 2640], [1180, 2710],
-                    [1185, 2780], [1190, 2850], [1195, 2920], [1200, 2990], [1205, 3060],
-                    [1210, 3130], [1215, 3200], [1220, 3270], [1225, 3340], [1230, 3410],
-                    [1235, 3480], [1240, 3550], [1245, 3620], [1250, 3700], [1255, 3810],
-                    [1260, 3910], [1265, 4010], [1270, 4120], [1275, 4220], [1280, 4320],
-                    [1285, 4430], [1290, 4530], [1295, 4630], [1300, 4740], [1305, 4840],
-                    [1310, 4940], [1315, 5050], [1320, 5150], [1325, 5250], [1330, 5360], [1335, 5460]
-                ];
-                
-                for (let [minVal, tax] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 5) {
-                        return { tax: calculateTax(0, tax, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 1340~1500천원: 부양가족 1~2명 세액 있음 (5천원 단위)
-            if (salaryInThousands >= 1340 && salaryInThousands < 1500) {
-                const ranges = [
-                    [1340, 5560, 1060], [1345, 5670, 1170], [1350, 5770, 1270], [1355, 5870, 1370],
-                    [1360, 5980, 1480], [1365, 6080, 1580], [1370, 6180, 1680], [1375, 6290, 1790],
-                    [1380, 6390, 1890], [1385, 6490, 1990], [1390, 6600, 2100], [1395, 6700, 2200],
-                    [1400, 6800, 2300], [1405, 6910, 2410], [1410, 7010, 2510], [1415, 7110, 2610],
-                    [1420, 7210, 2710], [1425, 7320, 2820], [1430, 7420, 2920], [1435, 7520, 3020],
-                    [1440, 7630, 3130], [1445, 7730, 3230], [1450, 7830, 3330], [1455, 7940, 3440],
-                    [1460, 8040, 3540], [1465, 8140, 3640], [1470, 8250, 3750], [1475, 8350, 3850],
-                    [1480, 8450, 3950], [1485, 8560, 4060], [1490, 8660, 4160], [1495, 8760, 4260]
-                ];
-                
-                for (let [minVal, tax1, tax2] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 5) {
-                        return { tax: calculateTax(0, tax1, tax2, 0, 0, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 1500~1630천원: 부양가족 1~2명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 1500 && salaryInThousands < 1630) {
-                const ranges = [
-                    [1500, 8920, 4420], [1510, 9120, 4620], [1520, 9330, 4830], [1530, 9540, 5040],
-                    [1540, 9740, 5240], [1550, 9950, 5450], [1560, 10160, 5660], [1570, 10360, 5860],
-                    [1580, 10570, 6070], [1590, 10780, 6280], [1600, 10980, 6480], [1610, 11190, 6690],
-                    [1620, 11400, 6900]
-                ];
-                
-                for (let [minVal, tax1, tax2] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, 0, 0, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 1630~1720천원: 부양가족 1~2명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 1630 && salaryInThousands < 1720) {
-                const ranges = [
-                    [1630, 11600, 7100], [1640, 11810, 7310], [1650, 12020, 7520], [1660, 12220, 7720],
-                    [1670, 12430, 7930], [1680, 12640, 8140], [1690, 12840, 8340], [1700, 13050, 8550],
-                    [1710, 13260, 8760]
-                ];
-                
-                for (let [minVal, tax1, tax2] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, 0, 0, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 1720~1890천원: 부양가족 1~3명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 1720 && salaryInThousands < 1890) {
-                const ranges = [
-                    [1720, 13460, 8960, 1040], [1730, 13670, 9170, 1240], [1740, 13880, 9380, 1440],
-                    [1750, 14080, 9580, 1640], [1760, 14290, 9790, 1830], [1770, 14500, 10000, 2030],
-                    [1780, 14700, 10200, 2230], [1790, 14910, 10410, 2430], [1800, 15110, 10610, 2630],
-                    [1810, 15320, 10820, 2830], [1820, 15530, 11030, 3020], [1830, 15730, 11230, 3220],
-                    [1840, 15940, 11440, 3420], [1850, 16150, 11650, 3620], [1860, 16350, 11850, 3820],
-                    [1870, 16560, 12060, 4020], [1880, 16770, 12270, 4220]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, 0, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 1890~2060천원: 부양가족 1~4명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 1890 && salaryInThousands < 2060) {
-                const ranges = [
-                    [1890, 16970, 12470, 4410, 1040], [1900, 17180, 12680, 4610, 1240], [1910, 17390, 12890, 4810, 1440],
-                    [1920, 17590, 13090, 5010, 1630], [1930, 17800, 13300, 5210, 1830], [1940, 18010, 13510, 5410, 2030],
-                    [1950, 18210, 13710, 5600, 2230], [1960, 18420, 13920, 5800, 2430], [1970, 18630, 14130, 6000, 2630],
-                    [1980, 18880, 14330, 6200, 2820], [1990, 19200, 14540, 6400, 3020], [2000, 19520, 14750, 6600, 3220],
-                    [2010, 19850, 14950, 6800, 3420], [2020, 20170, 15160, 6990, 3620], [2030, 20490, 15370, 7190, 3820],
-                    [2040, 20810, 15570, 7390, 4020], [2050, 21130, 15780, 7590, 4210]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, 0, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 2060~2110천원: 부양가족 1~5명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 2060 && salaryInThousands < 2110) {
-                const ranges = [
-                    [2060, 21450, 15990, 7790, 4410, 1040], [2070, 21770, 16190, 7990, 4610, 1240],
-                    [2080, 22090, 16400, 8180, 4810, 1430], [2090, 22420, 16600, 8380, 5010, 1630],
-                    [2100, 22740, 16810, 8580, 5210, 1830]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 2110~2230천원: 부양가족 1~6명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 2110 && salaryInThousands < 2230) {
-                const ranges = [
-                    [2110, 23060, 17020, 8780, 5400, 2030], [2120, 23380, 17220, 8980, 5600, 2230],
-                    [2130, 23700, 17430, 9180, 5800, 2430], [2140, 24020, 17640, 9380, 6000, 2630],
-                    [2150, 24340, 17840, 9570, 6200, 2820], [2160, 24660, 18050, 9770, 6400, 3020],
-                    [2170, 24990, 18260, 9970, 6600, 3220], [2180, 25310, 18460, 10170, 6790, 3420],
-                    [2190, 25630, 18670, 10370, 6990, 3620], [2200, 25950, 18950, 10570, 7190, 3820],
-                    [2210, 26270, 19270, 10760, 7390, 4010], [2220, 26590, 19590, 10960, 7590, 4210]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, 0, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 2230~2400천원: 부양가족 1~7명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 2230 && salaryInThousands < 2400) {
-                const ranges = [
-                    [2230, 26910, 19910, 11160, 7790, 4410, 1040], [2240, 27240, 20240, 11360, 7980, 4610, 1230],
-                    [2250, 27560, 20560, 11560, 8180, 4810, 1430], [2260, 27880, 20880, 11760, 8380, 5010, 1630],
-                    [2270, 28200, 21200, 11960, 8580, 5210, 1830], [2280, 28520, 21520, 12150, 8780, 5400, 2030],
-                    [2290, 28840, 21840, 12350, 8980, 5600, 2230], [2300, 29160, 22160, 12550, 9180, 5800, 2430],
-                    [2310, 29480, 22480, 12750, 9370, 6000, 2620], [2320, 29810, 22810, 12950, 9570, 6200, 2820],
-                    [2330, 30130, 23130, 13150, 9770, 6400, 3020], [2340, 30450, 23450, 13340, 9970, 6590, 3220],
-                    [2350, 30770, 23770, 13540, 10170, 6790, 3420], [2360, 31090, 24090, 13740, 10370, 6990, 3620],
-                    [2370, 31410, 24410, 13940, 10560, 7190, 3810], [2380, 31730, 24730, 14140, 10760, 7390, 4010],
-                    [2390, 32050, 25050, 14340, 10960, 7590, 4210]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, 0, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 2400~2570천원: 부양가족 1~8명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 2400 && salaryInThousands < 2570) {
-                const ranges = [
-                    [2400, 32380, 25380, 14530, 11160, 7780, 4410, 1030], [2410, 32700, 25700, 14730, 11360, 7980, 4610, 1230],
-                    [2420, 33020, 26020, 14930, 11560, 8180, 4810, 1430], [2430, 33340, 26340, 15130, 11760, 8380, 5010, 1630],
-                    [2440, 33660, 26660, 15330, 11950, 8580, 5200, 1830], [2450, 33980, 26980, 15530, 12150, 8780, 5400, 2030],
-                    [2460, 34300, 27300, 15730, 12350, 8980, 5600, 2230], [2470, 34630, 27630, 15920, 12550, 9170, 5800, 2420],
-                    [2480, 34950, 27950, 16120, 12750, 9370, 6000, 2620], [2490, 35270, 28270, 16320, 12950, 9570, 6200, 2820],
-                    [2500, 35600, 28600, 16530, 13150, 9780, 6400, 3030], [2510, 35940, 28940, 16740, 13360, 9990, 6610, 3240],
-                    [2520, 36280, 29280, 16950, 13580, 10200, 6830, 3450], [2530, 36630, 29630, 17160, 13790, 10410, 7040, 3660],
-                    [2540, 36970, 29970, 17370, 14000, 10620, 7250, 3870], [2550, 37310, 30310, 17590, 14210, 10840, 7460, 4090],
-                    [2560, 37650, 30650, 17800, 14420, 11050, 7670, 4300]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, 0, 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 2570~2890천원: 부양가족 1~9명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 2570 && salaryInThousands < 2890) {
-                const ranges = [
-                    [2570, 38000, 31000, 18010, 14630, 11260, 7880, 4510, 1130], [2580, 38340, 31340, 18220, 14850, 11470, 8100, 4720, 1350],
-                    [2590, 38830, 31680, 18430, 15060, 11680, 8310, 4930, 1560], [2600, 39690, 32020, 18650, 15270, 11900, 8520, 5150, 1770],
-                    [2610, 40540, 32360, 18920, 15480, 12110, 8730, 5360, 1980], [2620, 41400, 32710, 19250, 15690, 12320, 8940, 5570, 2190],
-                    [2630, 42260, 33050, 19580, 15910, 12530, 9160, 5780, 2410], [2640, 43110, 33390, 19910, 16120, 12740, 9370, 5990, 2620],
-                    [2650, 43970, 33730, 20240, 16330, 12960, 9580, 6210, 2830], [2660, 44820, 34080, 20570, 16540, 13170, 9790, 6420, 3040],
-                    [2670, 45680, 34420, 20900, 16750, 13380, 10000, 6630, 3250], [2680, 46540, 34760, 21230, 16970, 13590, 10220, 6840, 3470],
-                    [2690, 47390, 35100, 21560, 17180, 13800, 10430, 7050, 3680], [2700, 48250, 35450, 21890, 17390, 14020, 10640, 7270, 3890],
-                    [2710, 49100, 35790, 22220, 17600, 14230, 10850, 7480, 4100], [2720, 49960, 36130, 22550, 17810, 14440, 11060, 7690, 4310],
-                    [2730, 50810, 36470, 22880, 18030, 14650, 11280, 7900, 4530, 1150], [2740, 51670, 36810, 23210, 18240, 14860, 11490, 8110, 4740, 1360],
-                    [2750, 52530, 37160, 23540, 18450, 15070, 11700, 8320, 4950, 1570], [2760, 53380, 37500, 23870, 18660, 15290, 11910, 8540, 5160, 1790],
-                    [2770, 54240, 37840, 24200, 18950, 15500, 12120, 8750, 5370, 2000], [2780, 55090, 38180, 24520, 19270, 15710, 12340, 8960, 5590, 2210],
-                    [2790, 55950, 38530, 24850, 19600, 15920, 12550, 9170, 5800, 2420], [2800, 56800, 39300, 25180, 19930, 16130, 12760, 9380, 6010, 2630],
-                    [2810, 57660, 40160, 25510, 20260, 16350, 12970, 9600, 6220, 2850], [2820, 58520, 41020, 25840, 20590, 16560, 13180, 9810, 6430, 3060],
-                    [2830, 59370, 41870, 26170, 20920, 16770, 13400, 10020, 6650, 3270], [2840, 60230, 42730, 26500, 21250, 16980, 13610, 10230, 6860, 3480],
-                    [2850, 61080, 43580, 26830, 21580, 17190, 13820, 10440, 7070, 3690], [2860, 61940, 44440, 27160, 21910, 17410, 14030, 10660, 7280, 3910],
-                    [2870, 62790, 45290, 27490, 22240, 17620, 14240, 10870, 7490, 4120], [2880, 63650, 46150, 27820, 22570, 17830, 14460, 11080, 7710, 4330]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9 || 0, 0, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 2890~3000천원: 부양가족 1~11명 세액 있음 (10천원 단위)
-            if (salaryInThousands >= 2890 && salaryInThousands < 3000) {
-                const ranges = [
-                    [2890, 64510, 47010, 28150, 22900, 18040, 14670, 11290, 7920, 4540, 1170], 
-                    [2900, 65360, 47860, 28480, 23230, 18250, 14880, 11500, 8130, 4750, 1380], 
-                    [2910, 66220, 48720, 28810, 23560, 18470, 15090, 11720, 8340, 4970, 1590], 
-                    [2920, 67070, 49570, 29140, 23890, 18680, 15300, 11930, 8550, 5180, 1800], 
-                    [2930, 67930, 50430, 29470, 24220, 18970, 15510, 12140, 8760, 5390, 2010], 
-                    [2940, 68780, 51280, 29800, 24550, 19300, 15730, 12350, 8980, 5600, 2230], 
-                    [2950, 69640, 52140, 30130, 24880, 19630, 15940, 12560, 9190, 5810, 2440], 
-                    [2960, 70500, 53000, 30460, 25210, 19960, 16150, 12780, 9400, 6030, 2650], 
-                    [2970, 71350, 53850, 30790, 25540, 20290, 16360, 12990, 9610, 6240, 2860], 
-                    [2980, 72210, 54710, 31120, 25870, 20620, 16570, 13200, 9820, 6450, 3070], 
-                    [2990, 73060, 55560, 31450, 26200, 20950, 16790, 13410, 10040, 6660, 3290]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 10) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 3000~3220천원: 부양가족 1~11명 세액 있음 (20천원 단위)
-            if (salaryInThousands >= 3000 && salaryInThousands < 3220) {
-                const ranges = [
-                    [3000, 74350, 56850, 31940, 26690, 21440, 17100, 13730, 10350, 6980, 3600],
-                    [3020, 76060, 58560, 32600, 27350, 22100, 17530, 14150, 10780, 7400, 4030],
-                    [3040, 77770, 60270, 33260, 28010, 22760, 17950, 14580, 11200, 7830, 4450, 1080],
-                    [3060, 79480, 61980, 33920, 28670, 23420, 18380, 15000, 11630, 8250, 4880, 1500],
-                    [3080, 81190, 63690, 34580, 29330, 24080, 18830, 15430, 12050, 8680, 5300, 1930],
-                    [3100, 82900, 65400, 35240, 29990, 24740, 19490, 15850, 12470, 9100, 5720, 2350],
-                    [3120, 84620, 67120, 35900, 30650, 25400, 20150, 16270, 12900, 9520, 6150, 2770],
-                    [3140, 86330, 68830, 36560, 31310, 26060, 20810, 16700, 13320, 9950, 6570, 3200],
-                    [3160, 88040, 70540, 37220, 31970, 26720, 21470, 17120, 13750, 10370, 7000, 3620],
-                    [3180, 89750, 72250, 37880, 32630, 27380, 22130, 17540, 14170, 10790, 7420, 4040],
-                    [3200, 91460, 73960, 38540, 33290, 28040, 22790, 17970, 14590, 11220, 7840, 4470]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 3220~5000천원: 부양가족 1~11명 세액 있음 (20천원 단위, 일부 구간만)
-            if (salaryInThousands >= 3220 && salaryInThousands < 5000) {
-                const ranges = [
-                    [3220, 93170, 75670, 40120, 33950, 28700, 23450, 18390, 15020, 11640, 8270, 4890],
-                    [3240, 95430, 77380, 41770, 34610, 29360, 24110, 18860, 15440, 12070, 8690, 5320],
-                    [3260, 97880, 79100, 43420, 35270, 30020, 24770, 19520, 15870, 12490, 9120, 5740],
-                    [3280, 100320, 80810, 45070, 35920, 30670, 25420, 20170, 16290, 12910, 9540, 6160],
-                    [3300, 102770, 82520, 46720, 36580, 31330, 26080, 20830, 16710, 13340, 9960, 6590],
-                    [3320, 105210, 84230, 48370, 37240, 31990, 26740, 21490, 17140, 13760, 10390, 7010],
-                    [3340, 107660, 85940, 49940, 37870, 32620, 27370, 22120, 17540, 14170, 10790, 7420],
-                    [3360, 110100, 87650, 51510, 38500, 33250, 28000, 22750, 17950, 14570, 11200, 7820],
-                    [3380, 112550, 89370, 53070, 39950, 33880, 28630, 23380, 18350, 14970, 11600, 8220],
-                    [3400, 114990, 91080, 54640, 41510, 34500, 29250, 24000, 18750, 15370, 12000, 8620],
-                    [3420, 117440, 92790, 56200, 43080, 35130, 29880, 24630, 19380, 15780, 12400, 9030],
-                    [3440, 119880, 94880, 57770, 44640, 35750, 30500, 25250, 20000, 16180, 12800, 9430],
-                    [3460, 122330, 97330, 59330, 46210, 36380, 31130, 25880, 20630, 16580, 13210, 9830],
-                    [3480, 124770, 99770, 60900, 47770, 37010, 31760, 26510, 21260, 16980, 13610, 10230],
-                    [3500, 127220, 102220, 62460, 49340, 37630, 32380, 27130, 21880, 17390, 14010, 10640],
-                    [3520, 129660, 104660, 64030, 50900, 38260, 33010, 27760, 22510, 17790, 14410, 11040],
-                    [3540, 132110, 107110, 65590, 52460, 39340, 33630, 28380, 23130, 18190, 14820, 11440],
-                    [3560, 134550, 109550, 67150, 54030, 40900, 34260, 29010, 23760, 18590, 15220, 11840],
-                    [3580, 137000, 112000, 68720, 55590, 42470, 34880, 29630, 24380, 19130, 15620, 12250],
-                    [3600, 139440, 114440, 70280, 57160, 44030, 35510, 30260, 25010, 19760, 16020, 12650],
-                    [3620, 141890, 116890, 71850, 58720, 45600, 36140, 30890, 25640, 20390, 16420, 13050],
-                    [3640, 144330, 119330, 73410, 60290, 47160, 36760, 31510, 26260, 21010, 16830, 13450],
-                    [3660, 146780, 121780, 74980, 61850, 48730, 37390, 32140, 26890, 21640, 17230, 13850],
-                    [3680, 149220, 124220, 76540, 63420, 50290, 38010, 32760, 27510, 22260, 17630, 14260],
-                    [3700, 151670, 126670, 78110, 64980, 51860, 38730, 33390, 28140, 22890, 18030, 14660],
-                    [3720, 154110, 129110, 79670, 66550, 53420, 40300, 34020, 28770, 23520, 18440, 15060],
-                    [3740, 156560, 131560, 81230, 68110, 54980, 41860, 34640, 29390, 24140, 18890, 15460],
-                    [3760, 163920, 136090, 84260, 71130, 58010, 44880, 35850, 30600, 25350, 20100, 16240],
-                    [3780, 166590, 138740, 85970, 72850, 59720, 46600, 36540, 31290, 26040, 20790, 16680],
-                    [3800, 169260, 141400, 87680, 74560, 61430, 48310, 37220, 31970, 26720, 21470, 17120],
-                    [3820, 171930, 144050, 89390, 76270, 63140, 50020, 37900, 32650, 27400, 22150, 17560],
-                    [3840, 174600, 146710, 91100, 77980, 64850, 51730, 38600, 33340, 28090, 22840, 18000],
-                    [3860, 177270, 149360, 92820, 79690, 66570, 53440, 40320, 34020, 28770, 23520, 18440],
-                    [3880, 179940, 152020, 94920, 81400, 68280, 55150, 42030, 34710, 29460, 24210, 18960],
-                    [3900, 182610, 154670, 97370, 83110, 69990, 56860, 43740, 35390, 30140, 24890, 19640],
-                    [3920, 185280, 157330, 99810, 84830, 71700, 58580, 45450, 36080, 30830, 25580, 20330],
-                    [3940, 187950, 159980, 102260, 86540, 73410, 60290, 47160, 36760, 31510, 26260, 21010],
-                    [3960, 190620, 162640, 104700, 88250, 75120, 62000, 48870, 37450, 32200, 26950, 21700],
-                    [3980, 193290, 165290, 107150, 89960, 76840, 63710, 50590, 38130, 32880, 27630, 22380],
-                    [4000, 195960, 167950, 109590, 91670, 78550, 65420, 52300, 39170, 33570, 28320, 23070],
-                    [4020, 198630, 170600, 112040, 93380, 80260, 67130, 54010, 40880, 34250, 29000, 23750],
-                    [4040, 201300, 173260, 114480, 95730, 81970, 68840, 55720, 42590, 34930, 29680, 24430],
-                    [4060, 203970, 175910, 116930, 98180, 83680, 70560, 57430, 44310, 35620, 30370, 25120],
-                    [4080, 206640, 178570, 119370, 100620, 85390, 72270, 59140, 46020, 36300, 31050, 25800],
-                    [4100, 209310, 181220, 121820, 103070, 87100, 73980, 60850, 47730, 36990, 31740, 26490],
-                    [4120, 211980, 183880, 124260, 105510, 88820, 75690, 62570, 49440, 37670, 32420, 27170],
-                    [4140, 214650, 186530, 126710, 107960, 90530, 77400, 64280, 51150, 38360, 33110, 27860],
-                    [4160, 217320, 189190, 129150, 110400, 92240, 79110, 65990, 52860, 39740, 33790, 28540],
-                    [4180, 219990, 191840, 131600, 112850, 94100, 80830, 67700, 54580, 41450, 34480, 29230],
-                    [4200, 222660, 194500, 134040, 115290, 96540, 82540, 69410, 56290, 43160, 35160, 29910],
-                    [4220, 225330, 197150, 136490, 117740, 98990, 84250, 71120, 58000, 44870, 35850, 30600],
-                    [4240, 228000, 199810, 138930, 120180, 101430, 85960, 72830, 59710, 46580, 36530, 31280],
-                    [4260, 230670, 202460, 141380, 122630, 103880, 87670, 74550, 61420, 48300, 37220, 31970],
-                    [4280, 233340, 205120, 143820, 125070, 106320, 89380, 76260, 63130, 50010, 37900, 32650],
-                    [4300, 236010, 207770, 146270, 127520, 108770, 91090, 77970, 64840, 51720, 38590, 33330],
-                    [4320, 238680, 210430, 148710, 129960, 111210, 92810, 79680, 66560, 53430, 40310, 34020],
-                    [4340, 241350, 213080, 151160, 132410, 113660, 94910, 81390, 68270, 55140, 42020, 34700],
-                    [4360, 244020, 215740, 153600, 134850, 116100, 97350, 83100, 69980, 56850, 43730, 35390],
-                    [4380, 246690, 218390, 156050, 137300, 118550, 99800, 84820, 71690, 58570, 45440, 36070],
-                    [4400, 249360, 221050, 158490, 139740, 120990, 102240, 86530, 73400, 60280, 47150, 36760],
-                    [4420, 252030, 223700, 160940, 142190, 123440, 104690, 88240, 75110, 61990, 48860, 37440],
-                    [4440, 254700, 226360, 163380, 144630, 125880, 107130, 89950, 76820, 63700, 50570, 38130],
-                    [4460, 257370, 229010, 165830, 147080, 128330, 109580, 91660, 78540, 65410, 52290, 39160],
-                    [4480, 260040, 231670, 168270, 149520, 130770, 112020, 93370, 80250, 67120, 54000, 40870],
-                    [4500, 262840, 234460, 170850, 152100, 133350, 114600, 95850, 82050, 68930, 55800, 42680],
-                    [4520, 265650, 237250, 173430, 154680, 135930, 117180, 98430, 83860, 70730, 57610, 44480],
-                    [4540, 268450, 240040, 176010, 157260, 138510, 119760, 101010, 85670, 72540, 59420, 46290],
-                    [4560, 271260, 242830, 178590, 159840, 141090, 122340, 103590, 87470, 74350, 61220, 48100],
-                    [4580, 276560, 248120, 183670, 164920, 146170, 127420, 108670, 89920, 76150, 63030, 49900],
-                    [4600, 279370, 250910, 186250, 167500, 148750, 130000, 111250, 92500, 77960, 64830, 51710],
-                    [4620, 282170, 253700, 188830, 170080, 151330, 132580, 113830, 95080, 79760, 66640, 53510],
-                    [4640, 284980, 256490, 191410, 172660, 153910, 135160, 116410, 97660, 81570, 68450, 55320],
-                    [4660, 287780, 259280, 193990, 175240, 156490, 137740, 118990, 100240, 83380, 70250, 57130],
-                    [4680, 290590, 262070, 196570, 177820, 159070, 140320, 121570, 102820, 85180, 72060, 58930],
-                    [4700, 293390, 264860, 199150, 180400, 161650, 142900, 124150, 105400, 86990, 73860, 60740],
-                    [4720, 296200, 267650, 201730, 182980, 164230, 145480, 126730, 107980, 89230, 75670, 62540],
-                    [4740, 299000, 270440, 204310, 185560, 166810, 148060, 129310, 110560, 91810, 77480, 64350],
-                    [4760, 301810, 273230, 206890, 188140, 169390, 150640, 131890, 113140, 94390, 79280, 66160],
-                    [4780, 304610, 276020, 209470, 190720, 171970, 153220, 134470, 115720, 96970, 81090, 67960],
-                    [4800, 307420, 278810, 212050, 193300, 174550, 155800, 137050, 118300, 99550, 82890, 69770],
-                    [4820, 310220, 281600, 214630, 195880, 177130, 158380, 139630, 120880, 102130, 84700, 71570],
-                    [4840, 313030, 284390, 217210, 198460, 179710, 160960, 142210, 123460, 104710, 86510, 73380],
-                    [4860, 315830, 287180, 219790, 201040, 182290, 163540, 144790, 126040, 107290, 88540, 75190],
-                    [4880, 318640, 289970, 222370, 203620, 184870, 166120, 147370, 128620, 109870, 91120, 76990],
-                    [4900, 321440, 292760, 224950, 206200, 187450, 168700, 149950, 131200, 112450, 93700, 78800],
-                    [4920, 324250, 295550, 227530, 208780, 190030, 171280, 152530, 133780, 115030, 96280, 80600],
-                    [4940, 327050, 298340, 230110, 211360, 192610, 173860, 155110, 136360, 117610, 98860, 82410],
-                    [4960, 329860, 301130, 232690, 213940, 195190, 176440, 157690, 138940, 120190, 101440, 84220],
-                    [4980, 332660, 303920, 235270, 216520, 197770, 179020, 160270, 141520, 122770, 104020, 86020]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11 || 0), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 5000~8320천원: 부양가족 1~11명 세액 있음 (다양한 단위)
-            if (salaryInThousands >= 5000 && salaryInThousands < 8320) {
-                const ranges = [
-                    [5000, 335470, 306710, 237850, 219100, 200350, 181600, 162850, 144100, 125350, 106600, 87850],
-                    [5020, 338270, 309500, 240430, 221680, 202930, 184180, 165430, 146680, 127930, 109180, 90430],
-                    [5040, 341080, 312290, 243010, 224260, 205510, 186760, 168010, 149260, 130510, 111760, 93010],
-                    [5060, 343880, 315080, 245590, 226840, 208090, 189340, 170590, 151840, 133090, 114340, 95590],
-                    [5080, 346690, 317870, 248170, 229420, 210670, 191920, 173170, 154420, 135670, 116920, 98170],
-                    [5100, 349490, 320660, 250750, 232000, 213250, 194500, 175750, 157000, 138250, 119500, 100750],
-                    [5120, 352300, 323450, 253330, 234580, 215830, 197080, 178330, 159580, 140830, 122080, 103330],
-                    [5140, 355100, 326240, 255910, 237160, 218410, 199660, 180910, 162160, 143410, 124660, 105910],
-                    [5160, 357910, 329030, 258490, 239740, 220990, 202240, 183490, 164740, 145990, 127240, 108490],
-                    [5180, 360710, 331820, 261070, 242320, 223570, 204820, 186070, 167320, 148570, 129820, 111070],
-                    [5200, 363520, 334610, 263650, 244900, 226150, 207400, 188650, 169900, 151150, 132400, 113650],
-                    [5220, 366320, 337400, 266230, 247480, 228730, 209980, 191230, 172480, 153730, 134980, 116230],
-                    [5240, 369130, 340190, 268810, 250060, 231310, 212560, 193810, 175060, 156310, 137560, 118810],
-                    [5260, 371930, 342980, 271390, 252640, 233890, 215140, 196390, 177640, 158890, 140140, 121390],
-                    [5280, 374740, 345770, 273970, 255220, 236470, 217720, 198970, 180220, 161470, 142720, 123970],
-                    [5300, 377540, 348560, 276550, 257800, 239050, 220300, 201550, 182800, 164050, 145300, 126550],
-                    [5320, 380350, 351350, 279130, 260380, 241630, 222880, 204130, 185380, 166630, 147880, 129130],
-                    [5340, 383150, 354140, 281710, 262960, 244210, 225460, 206710, 187960, 169210, 150460, 131710],
-                    [5360, 385960, 356930, 284290, 265540, 246790, 228040, 209290, 190540, 171790, 153040, 134290],
-                    [5380, 388760, 359720, 286870, 268120, 249370, 230620, 211870, 193120, 174370, 155620, 136870],
-                    [5400, 391570, 362510, 289450, 270700, 251950, 233200, 214450, 195700, 176950, 158200, 139450],
-                    [5420, 394370, 365300, 292030, 273280, 254530, 235780, 217030, 198280, 179530, 160780, 142030],
-                    [5440, 397180, 368090, 294610, 275860, 257110, 238360, 219610, 200860, 182110, 163360, 144610],
-                    [5460, 399980, 370880, 297190, 278440, 259690, 240940, 222190, 203440, 184690, 165940, 147190],
-                    [5480, 402790, 373670, 299770, 281020, 262270, 243520, 224770, 206020, 187270, 168520, 149770],
-                    [5500, 405590, 376460, 302350, 283600, 264850, 246100, 227350, 208600, 189850, 171100, 152350],
-                    [5520, 408400, 379250, 304930, 286180, 267430, 248680, 229930, 211180, 192430, 173680, 154930],
-                    [5540, 411200, 382040, 307510, 288760, 270010, 251260, 232510, 213760, 195010, 176260, 157510],
-                    [5560, 414010, 384830, 310090, 291340, 272590, 253840, 235090, 216340, 197590, 178840, 160090],
-                    [5580, 416810, 387620, 312670, 293920, 275170, 256420, 237670, 218920, 200170, 181420, 162670],
-                    [5600, 419620, 390410, 315250, 296500, 277750, 259000, 240250, 221500, 202750, 184000, 165250],
-                    [5620, 422420, 393200, 317830, 299080, 280330, 261580, 242830, 224080, 205330, 186580, 167830],
-                    [5640, 425230, 395990, 320410, 301660, 282910, 264160, 245410, 226660, 207910, 189160, 170410],
-                    [5660, 428030, 398780, 322990, 304240, 285490, 266740, 247990, 229240, 210490, 191740, 172990],
-                    [5680, 430840, 401570, 325570, 306820, 288070, 269320, 250570, 231820, 213070, 194320, 175570],
-                    [5700, 433640, 404360, 328150, 309400, 290650, 271900, 253150, 234400, 215650, 196900, 178150],
-                    [5720, 436450, 407150, 330730, 311980, 293230, 274480, 255730, 236980, 218230, 199480, 180730],
-                    [5740, 439250, 409940, 333310, 314560, 295810, 277060, 258310, 239560, 220810, 202060, 183310],
-                    [5760, 442060, 412730, 335890, 317140, 298390, 279640, 260890, 242140, 223390, 204640, 185890],
-                    [5780, 444860, 415520, 338470, 319720, 300970, 282220, 263470, 244720, 225970, 207220, 188470],
-                    [5800, 447670, 418310, 341050, 322300, 303550, 284800, 266050, 247300, 228550, 209800, 191050],
-                    [5820, 450470, 421100, 343630, 324880, 306130, 287380, 268630, 249880, 231130, 212380, 193630],
-                    [5840, 470380, 441000, 372100, 353350, 334600, 315850, 297100, 278350, 259600, 240850, 222100],
-                    [5860, 475720, 446320, 377240, 358490, 339740, 320990, 302240, 283490, 264740, 245990, 227240],
-                    [5880, 478690, 449140, 379880, 361130, 342380, 323630, 304880, 286130, 267380, 248630, 229880],
-                    [5900, 483220, 451960, 382520, 363770, 345020, 326270, 307520, 288770, 270020, 251270, 232520],
-                    [5920, 487760, 454780, 385160, 366410, 347660, 328910, 310160, 291410, 272660, 253910, 235160],
-                    [5940, 492300, 457600, 387800, 369050, 350300, 331550, 312800, 294050, 275300, 256550, 237800],
-                    [5960, 496830, 460420, 390440, 371690, 352940, 334190, 315440, 296690, 277940, 259190, 240440],
-                    [5980, 501370, 463240, 393080, 374330, 355580, 336830, 318080, 299330, 280580, 261830, 243080],
-                    [6000, 505900, 466060, 395720, 376970, 358220, 339470, 320720, 301970, 283220, 264470, 245720],
-                    [6020, 510440, 468880, 398360, 379610, 360860, 342110, 323360, 304610, 285860, 267110, 248360],
-                    [6040, 514980, 471700, 401000, 382250, 363500, 344750, 326000, 307250, 288500, 269750, 251000],
-                    [6060, 519510, 474520, 403640, 384890, 366140, 347390, 328640, 309890, 291140, 272390, 253640],
-                    [6080, 524050, 477340, 406280, 387530, 368780, 350030, 331280, 312530, 293780, 275030, 256280],
-                    [6100, 528580, 481250, 408920, 390170, 371420, 352670, 333920, 315170, 296420, 277670, 258920],
-                    [6120, 533120, 485760, 411560, 392810, 374060, 355310, 336560, 317810, 299060, 280310, 261560],
-                    [6140, 537660, 490280, 414200, 395450, 376700, 357950, 339200, 320450, 301700, 282950, 264200],
-                    [6160, 542190, 494790, 416840, 398090, 379340, 360590, 341840, 323090, 304340, 285590, 266840],
-                    [6180, 546730, 499300, 419480, 400730, 381980, 363230, 344480, 325730, 306980, 288230, 269480],
-                    [6200, 551260, 503810, 422120, 403370, 384620, 365870, 347120, 328370, 309620, 290870, 272120],
-                    [6220, 555800, 508320, 424760, 406010, 387260, 368510, 349760, 331010, 312260, 293510, 274760],
-                    [6240, 560340, 512840, 427400, 408650, 389900, 371150, 352400, 333650, 314900, 296150, 277400],
-                    [6260, 564870, 517350, 430040, 411290, 392540, 373790, 355040, 336290, 317540, 298790, 280040],
-                    [6280, 569410, 521860, 432680, 413930, 395180, 376430, 357680, 338930, 320180, 301430, 282680],
-                    [6300, 573940, 526370, 435320, 416570, 397820, 379070, 360320, 341570, 322820, 304070, 285320],
-                    [6320, 578480, 530880, 437960, 419210, 400460, 381710, 362960, 344210, 325460, 306710, 287960],
-                    [6340, 583020, 535400, 440600, 421850, 403100, 384350, 365600, 346850, 328100, 309350, 290600],
-                    [6360, 587550, 539910, 443240, 424490, 405740, 386990, 368240, 349490, 330740, 311990, 293240],
-                    [6380, 592090, 544420, 445880, 427130, 408380, 389630, 370880, 352130, 333380, 314630, 295880],
-                    [6400, 596620, 548930, 448520, 429770, 411020, 392270, 373520, 354770, 336020, 317270, 298520],
-                    [6420, 601160, 553440, 451160, 432410, 413660, 394910, 376160, 357410, 338660, 319910, 301160],
-                    [6440, 605700, 557960, 453800, 435050, 416300, 397550, 378800, 360050, 341300, 322550, 303800],
-                    [6460, 610230, 562470, 456440, 437690, 418940, 400190, 381440, 362690, 343940, 325190, 306440],
-                    [6480, 614770, 566980, 459080, 440330, 421580, 402830, 384080, 365330, 346580, 327830, 309080],
-                    [6500, 619300, 571490, 461720, 442970, 424220, 405470, 386720, 367970, 349220, 330470, 311720],
-                    [6520, 623840, 576000, 464360, 445610, 426860, 408110, 389360, 370610, 351860, 333110, 314360],
-                    [6540, 628380, 580520, 467000, 448250, 429500, 410750, 392000, 373250, 354500, 335750, 317000],
-                    [6560, 632910, 585030, 469640, 450890, 432140, 413390, 394640, 375890, 357140, 338390, 319640],
-                    [6580, 637450, 589540, 472280, 453530, 434780, 416030, 397280, 378530, 359780, 341030, 322280],
-                    [6600, 641980, 594050, 474920, 456170, 437420, 418670, 399920, 381170, 362420, 343670, 324920],
-                    [6620, 646520, 598560, 477560, 458810, 440060, 421310, 402560, 383810, 365060, 346310, 327560],
-                    [6640, 651060, 603080, 481320, 461450, 442700, 423950, 405200, 386450, 367700, 348950, 330200],
-                    [6660, 655590, 607590, 485540, 464090, 445340, 426590, 407840, 389090, 370340, 351590, 332840],
-                    [6680, 660130, 612100, 489760, 466730, 447980, 429230, 410480, 391730, 372980, 354230, 335480],
-                    [6700, 664660, 616610, 493990, 469370, 450620, 431870, 413120, 394370, 375620, 356870, 338120],
-                    [6720, 669200, 621120, 498210, 472010, 453260, 434510, 415760, 397010, 378260, 359510, 340760],
-                    [6740, 673740, 625640, 502440, 474650, 455900, 437150, 418400, 399650, 380900, 362150, 343400],
-                    [6760, 678270, 630150, 506660, 477290, 458540, 439790, 421040, 402290, 383540, 364790, 346040],
-                    [6780, 682810, 634660, 510880, 480880, 461180, 442430, 423680, 404930, 386180, 367430, 348680],
-                    [6800, 687340, 639170, 515110, 485110, 463820, 445070, 426320, 407570, 388820, 370070, 351320],
-                    [6820, 691880, 643680, 519330, 489330, 466460, 447710, 428960, 410210, 391460, 372710, 353960],
-                    [6840, 696420, 648200, 523560, 493560, 469100, 450350, 431600, 412850, 394100, 375350, 356600],
-                    [6860, 700950, 652710, 527780, 497780, 471740, 452990, 434240, 415490, 396740, 377990, 359240],
-                    [6880, 705490, 657220, 532000, 502000, 474380, 455630, 436880, 418130, 399380, 380630, 361880],
-                    [6900, 710020, 661730, 536230, 506230, 477020, 458270, 439520, 420770, 402020, 383270, 364520],
-                    [6920, 714560, 666240, 540450, 510450, 480450, 460910, 442160, 423410, 404660, 385910, 367160],
-                    [6940, 719100, 670760, 544680, 514680, 484680, 463550, 444800, 426050, 407300, 388550, 369800],
-                    [6960, 723630, 675270, 548900, 518900, 488900, 466190, 447440, 428690, 409940, 391190, 372440],
-                    [6980, 728170, 679780, 553120, 523120, 493120, 468830, 450080, 431330, 412580, 393830, 375080],
-                    [7000, 732700, 684290, 557350, 527350, 497350, 471470, 452720, 433970, 415220, 396470, 377720],
-                    [7020, 737240, 688800, 561570, 531570, 501570, 474110, 455360, 436610, 417860, 399110, 380360],
-                    [7040, 741780, 693320, 565800, 535800, 505800, 476750, 458000, 439250, 420500, 401750, 383000],
-                    [7060, 746310, 697830, 570020, 540020, 510020, 480020, 460640, 441890, 423140, 404390, 385640],
-                    [7080, 750850, 702340, 574240, 544240, 514240, 484240, 463280, 444530, 425780, 407030, 388280],
-                    [7100, 755380, 706850, 578470, 548470, 518470, 488470, 465920, 447170, 428420, 409670, 390920],
-                    [7120, 759920, 711360, 582690, 552690, 522690, 492690, 468560, 449810, 431060, 412310, 393560],
-                    [7140, 764460, 715880, 586920, 556920, 526920, 496920, 471200, 452450, 433700, 414950, 396200],
-                    [7160, 768990, 720390, 591140, 561140, 531140, 501140, 473840, 455090, 436340, 417590, 398840],
-                    [7180, 773530, 724900, 595360, 565360, 535360, 505360, 476480, 457730, 438980, 420230, 401480],
-                    [7200, 778060, 729410, 599590, 569590, 539590, 509590, 479590, 460370, 441620, 422870, 404120],
-                    [7220, 782600, 733920, 603810, 573810, 543810, 513810, 483810, 463010, 444260, 425510, 406760],
-                    [7240, 787140, 738440, 608040, 578040, 548040, 518040, 488040, 465650, 446900, 428150, 409400],
-                    [7260, 791670, 742950, 612260, 582260, 552260, 522260, 492260, 468290, 449540, 430790, 412040],
-                    [7280, 796210, 747460, 616480, 586480, 556480, 526480, 496480, 470930, 452180, 433430, 414680],
-                    [7300, 800740, 751970, 620710, 590710, 560710, 530710, 500710, 473570, 454820, 436070, 417320],
-                    [7320, 805280, 756480, 624930, 594930, 564930, 534930, 504930, 476210, 457460, 438710, 419960],
-                    [7340, 809820, 761000, 629160, 599160, 569160, 539160, 509160, 479160, 460100, 441350, 422600],
-                    [7360, 814350, 765510, 633380, 603380, 573380, 543380, 513380, 483380, 462740, 443990, 425240],
-                    [7380, 818890, 770020, 637600, 607600, 577600, 547600, 517600, 487600, 465380, 446630, 427880],
-                    [7400, 823420, 774530, 641830, 611830, 581830, 551830, 521830, 491830, 468020, 449270, 430520],
-                    [7420, 827960, 779040, 646050, 616050, 586050, 556050, 526050, 496050, 470660, 451910, 433160],
-                    [7440, 832500, 783560, 650280, 620280, 590280, 560280, 530280, 500280, 473300, 454550, 435800],
-                    [7460, 837030, 788070, 654500, 624500, 594500, 564500, 534500, 504500, 475940, 457190, 438440],
-                    [7480, 841570, 792580, 658720, 628720, 598720, 568720, 538720, 508720, 478720, 459830, 441080],
-                    [7500, 846100, 797090, 662950, 632950, 602950, 572950, 542950, 512950, 482950, 462470, 443720],
-                    [7520, 850640, 801600, 667170, 637170, 607170, 577170, 547170, 517170, 487170, 465110, 446360],
-                    [7540, 855180, 806120, 671400, 641400, 611400, 581400, 551400, 521400, 491400, 467750, 449000],
-                    [7560, 859710, 810630, 675620, 645620, 615620, 585620, 555620, 525620, 495620, 470390, 451640],
-                    [7580, 864250, 815140, 679840, 649840, 619840, 589840, 559840, 529840, 499840, 473030, 454280],
-                    [7600, 868780, 819650, 684070, 654070, 624070, 594070, 564070, 534070, 504070, 475670, 456920],
-                    [7620, 873320, 824160, 688290, 658290, 628290, 598290, 568290, 538290, 508290, 478310, 459560],
-                    [7640, 877860, 828680, 692520, 662520, 632520, 602520, 572520, 542520, 512520, 482520, 462200],
-                    [7660, 882390, 833190, 696740, 666740, 636740, 606740, 576740, 546740, 516740, 486740, 464840],
-                    [7680, 886930, 837700, 700960, 670960, 640960, 610960, 580960, 550960, 520960, 490960, 467480],
-                    [7700, 891460, 842210, 705190, 675190, 645190, 615190, 585190, 555190, 525190, 495190, 470120],
-                    [7720, 896000, 846720, 709410, 679410, 649410, 619410, 589410, 559410, 529410, 499410, 472760],
-                    [7740, 900540, 851240, 713640, 683640, 653640, 623640, 593640, 563640, 533640, 503640, 475400],
-                    [7760, 905070, 855750, 717860, 687860, 657860, 627860, 597860, 567860, 537860, 507860, 478040],
-                    [7780, 909610, 860260, 722080, 692080, 662080, 632080, 602080, 572080, 542080, 512080, 482080],
-                    [7800, 914140, 864770, 726310, 696310, 666310, 636310, 606310, 576310, 546310, 516310, 486310],
-                    [7820, 918680, 869280, 730530, 700530, 670530, 640530, 610530, 580530, 550530, 520530, 490530],
-                    [7840, 923220, 873800, 734760, 704760, 674760, 644760, 614760, 584760, 554760, 524760, 494760],
-                    [7860, 927750, 878310, 738980, 708980, 678980, 648980, 618980, 588980, 558980, 528980, 498980],
-                    [7880, 932290, 882820, 743200, 713200, 683200, 653200, 623200, 593200, 563200, 533200, 503200],
-                    [7900, 936820, 887330, 747430, 717430, 687430, 657430, 627430, 597430, 567430, 537430, 507430],
-                    [7920, 941360, 891840, 751650, 721650, 691650, 661650, 631650, 601650, 571650, 541650, 511650],
-                    [7940, 945900, 896360, 755880, 725880, 695880, 665880, 635880, 605880, 575880, 545880, 515880],
-                    [7960, 950430, 900870, 760100, 730100, 700100, 670100, 640100, 610100, 580100, 550100, 520100],
-                    [7980, 954970, 905380, 764320, 734320, 704320, 674320, 644320, 614320, 584320, 554320, 524320],
-                    [8000, 959500, 909890, 768550, 738550, 708550, 678550, 648550, 618550, 588550, 558550, 528550],
-                    [8020, 964040, 914400, 772770, 742770, 712770, 682770, 652770, 622770, 592770, 562770, 532770],
-                    [8040, 968580, 918920, 777000, 747000, 717000, 687000, 657000, 627000, 597000, 567000, 537000],
-                    [8060, 973110, 923430, 781220, 751220, 721220, 691220, 661220, 631220, 601220, 571220, 541220],
-                    [8080, 977650, 927940, 785440, 755440, 725440, 695440, 665440, 635440, 605440, 575440, 545440],
-                    [8100, 982180, 932450, 789670, 759670, 729670, 699670, 669670, 639670, 609670, 579670, 549670],
-                    [8120, 986720, 936960, 793890, 763890, 733890, 703890, 673890, 643890, 613890, 583890, 553890],
-                    [8140, 991260, 941480, 798120, 768120, 738120, 708120, 678120, 648120, 618120, 588120, 558120],
-                    [8160, 995790, 945990, 802340, 772340, 742340, 712340, 682340, 652340, 622340, 592340, 562340],
-                    [8180, 1000330, 950500, 806560, 776560, 746560, 716560, 686560, 656560, 626560, 596560, 566560],
-                    [8200, 1004860, 955010, 810790, 780790, 750790, 720790, 690790, 660790, 630790, 600790, 570790],
-                    [8220, 1009400, 959520, 815010, 785010, 755010, 725010, 695010, 665010, 635010, 605010, 575010],
-                    [8240, 1013940, 964040, 819240, 789240, 759240, 729240, 699240, 669240, 639240, 609240, 579240],
-                    [8260, 1018470, 968550, 823460, 793460, 763460, 733460, 703460, 673460, 643460, 613460, 583460],
-                    [8280, 1023010, 973060, 827680, 797680, 767680, 737680, 707680, 677680, 647680, 617680, 587680],
-                    [8300, 1027540, 977570, 831910, 801910, 771910, 741910, 711910, 681910, 651910, 621910, 591910]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11);
-                    }
-                }
-            }
-            
-            // 8320~9980천원: 부양가족 1~11명 세액 있음 (20천원 단위)
-            if (salaryInThousands >= 8320 && salaryInThousands < 9980) {
-                const ranges = [
-                    [8320, 1032080, 982080, 836130, 806130, 776130, 746130, 716130, 686130, 656130, 626130, 596130],
-                    [8340, 1036740, 986720, 840480, 810480, 780480, 750480, 720480, 690480, 660480, 630480, 600480],
-                    [8360, 1041420, 991370, 844840, 814840, 784840, 754840, 724840, 694840, 664840, 634840, 604840],
-                    [8380, 1046100, 996030, 849210, 819210, 789210, 759210, 729210, 699210, 669210, 639210, 609210],
-                    [8400, 1050780, 1000680, 853580, 823580, 793580, 763580, 733580, 703580, 673580, 643580, 613580],
-                    [8420, 1055460, 1005340, 857950, 827950, 797950, 767950, 737950, 707950, 677950, 647950, 617950],
-                    [8440, 1060140, 1010000, 862320, 832320, 802320, 772320, 742320, 712320, 682320, 652320, 622320],
-                    [8460, 1064820, 1014650, 866680, 836680, 806680, 776680, 746680, 716680, 686680, 656680, 626680],
-                    [8480, 1069500, 1019310, 871050, 841050, 811050, 781050, 751050, 721050, 691050, 661050, 631050],
-                    [8500, 1074180, 1023960, 875420, 845420, 815420, 785420, 755420, 725420, 695420, 665420, 635420],
-                    [8520, 1078860, 1028620, 879790, 849790, 819790, 789790, 759790, 729790, 699790, 669790, 639790],
-                    [8540, 1083540, 1033280, 884160, 854160, 824160, 794160, 764160, 734160, 704160, 674160, 644160],
-                    [8560, 1088220, 1037930, 888520, 858520, 828520, 798520, 768520, 738520, 708520, 678520, 648520],
-                    [8580, 1092900, 1042590, 892890, 862890, 832890, 802890, 772890, 742890, 712890, 682890, 652890],
-                    [8600, 1097580, 1047240, 897260, 867260, 837260, 807260, 777260, 747260, 717260, 687260, 657260],
-                    [8620, 1102260, 1051900, 901630, 871630, 841630, 811630, 781630, 751630, 721630, 691630, 661630],
-                    [8640, 1106940, 1056560, 906000, 876000, 846000, 816000, 786000, 756000, 726000, 696000, 666000],
-                    [8660, 1111620, 1061210, 910360, 880360, 850360, 820360, 790360, 760360, 730360, 700360, 670360],
-                    [8680, 1116300, 1065870, 914730, 884730, 854730, 824730, 794730, 764730, 734730, 704730, 674730],
-                    [8700, 1120980, 1070520, 919100, 889100, 859100, 829100, 799100, 769100, 739100, 709100, 679100],
-                    [8720, 1125660, 1075180, 923470, 893470, 863470, 833470, 803470, 773470, 743470, 713470, 683470],
-                    [8740, 1130340, 1079840, 927840, 897840, 867840, 837840, 807840, 777840, 747840, 717840, 687840],
-                    [8760, 1135020, 1084490, 932200, 902200, 872200, 842200, 812200, 782200, 752200, 722200, 692200],
-                    [8780, 1139700, 1089150, 936570, 906570, 876570, 846570, 816570, 786570, 756570, 726570, 696570],
-                    [8800, 1144380, 1093800, 940940, 910940, 880940, 850940, 820940, 790940, 760940, 730940, 700940],
-                    [8820, 1149060, 1098460, 945310, 915310, 885310, 855310, 825310, 795310, 765310, 735310, 705310],
-                    [8840, 1153740, 1103120, 949680, 919680, 889680, 859680, 829680, 799680, 769680, 739680, 709680],
-                    [8860, 1158420, 1107770, 954040, 924040, 894040, 864040, 834040, 804040, 774040, 744040, 714040],
-                    [8880, 1163100, 1112430, 958410, 928410, 898410, 868410, 838410, 808410, 778410, 748410, 718410],
-                    [8900, 1167780, 1117080, 962780, 932780, 902780, 872780, 842780, 812780, 782780, 752780, 722780],
-                    [8920, 1172460, 1121740, 967150, 937150, 907150, 877150, 847150, 817150, 787150, 757150, 727150],
-                    [8940, 1177140, 1126400, 971520, 941520, 911520, 881520, 851520, 821520, 791520, 761520, 731520],
-                    [8960, 1181820, 1131050, 975880, 945880, 915880, 885880, 855880, 825880, 795880, 765880, 735880],
-                    [8980, 1186500, 1135710, 980250, 950250, 920250, 890250, 860250, 830250, 800250, 770250, 740250],
-                    [9000, 1191180, 1140360, 984620, 954620, 924620, 894620, 864620, 834620, 804620, 774620, 744620],
-                    [9020, 1195860, 1145020, 988990, 958990, 928990, 898990, 868990, 838990, 808990, 778990, 748990],
-                    [9040, 1200540, 1149680, 993360, 963360, 933360, 903360, 873360, 843360, 813360, 783360, 753360],
-                    [9060, 1205220, 1154330, 997720, 967720, 937720, 907720, 877720, 847720, 817720, 787720, 757720],
-                    [9080, 1209900, 1158990, 1002090, 972090, 942090, 912090, 882090, 852090, 822090, 792090, 762090],
-                    [9100, 1214580, 1163640, 1006460, 976460, 946460, 916460, 886460, 856460, 826460, 796460, 766460],
-                    [9120, 1219260, 1168300, 1010830, 980830, 950830, 920830, 890830, 860830, 830830, 800830, 770830],
-                    [9140, 1223940, 1172960, 1015200, 985200, 955200, 925200, 895200, 865200, 835200, 805200, 775200],
-                    [9160, 1228620, 1177610, 1019560, 989560, 959560, 929560, 899560, 869560, 839560, 809560, 779560],
-                    [9180, 1233300, 1182270, 1023930, 993930, 963930, 933930, 903930, 873930, 843930, 813930, 783930],
-                    [9200, 1237980, 1186920, 1028300, 998300, 968300, 938300, 908300, 878300, 848300, 818300, 788300],
-                    [9220, 1244640, 1191580, 1032670, 1002670, 972670, 942670, 912670, 882670, 852670, 822670, 792670],
-                    [9240, 1251470, 1196240, 1037040, 1007040, 977040, 947040, 917040, 887040, 857040, 827040, 797040],
-                    [9260, 1258290, 1200890, 1041400, 1011400, 981400, 951400, 921400, 891400, 861400, 831400, 801400],
-                    [9280, 1265120, 1205550, 1045770, 1015770, 985770, 955770, 925770, 895770, 865770, 835770, 805770],
-                    [9300, 1271940, 1210200, 1050140, 1020140, 990140, 960140, 930140, 900140, 870140, 840140, 810140],
-                    [9320, 1278770, 1214860, 1054510, 1024510, 994510, 964510, 934510, 904510, 874510, 844510, 814510],
-                    [9340, 1285590, 1219520, 1058880, 1028880, 998880, 968880, 938880, 908880, 878880, 848880, 818880],
-                    [9360, 1292420, 1224170, 1063240, 1033240, 1003240, 973240, 943240, 913240, 883240, 853240, 823240],
-                    [9380, 1299240, 1228830, 1067610, 1037610, 1007610, 977610, 947610, 917610, 887610, 857610, 827610],
-                    [9400, 1306070, 1233480, 1071980, 1041980, 1011980, 981980, 951980, 921980, 891980, 861980, 831980],
-                    [9420, 1312890, 1238140, 1076350, 1046350, 1016350, 986350, 956350, 926350, 896350, 866350, 836350],
-                    [9440, 1319720, 1244840, 1080720, 1050720, 1020720, 990720, 960720, 930720, 900720, 870720, 840720],
-                    [9460, 1326540, 1251630, 1085080, 1055080, 1025080, 995080, 965080, 935080, 905080, 875080, 845080],
-                    [9480, 1333370, 1258420, 1089450, 1059450, 1029450, 999450, 969450, 939450, 909450, 879450, 849450],
-                    [9500, 1340190, 1265210, 1093820, 1063820, 1033820, 1003820, 973820, 943820, 913820, 883820, 853820],
-                    [9520, 1347020, 1272000, 1098190, 1068190, 1038190, 1008190, 978190, 948190, 918190, 888190, 858190],
-                    [9540, 1353840, 1278790, 1102560, 1072560, 1042560, 1012560, 982560, 952560, 922560, 892560, 862560],
-                    [9560, 1360670, 1285580, 1106920, 1076920, 1046920, 1016920, 986920, 956920, 926920, 896920, 866920],
-                    [9580, 1367490, 1292370, 1111290, 1081290, 1051290, 1021290, 991290, 961290, 931290, 901290, 871290],
-                    [9600, 1374320, 1299160, 1115660, 1085660, 1055660, 1025660, 995660, 965660, 935660, 905660, 875660],
-                    [9620, 1381140, 1305950, 1120030, 1090030, 1060030, 1030030, 1000030, 970030, 940030, 910030, 880030],
-                    [9640, 1387970, 1312740, 1124400, 1094400, 1064400, 1034400, 1004400, 974400, 944400, 914400, 884400],
-                    [9660, 1394790, 1319530, 1128760, 1098760, 1068760, 1038760, 1008760, 978760, 948760, 918760, 888760],
-                    [9680, 1401620, 1326320, 1133130, 1103130, 1073130, 1043130, 1013130, 983130, 953130, 923130, 893130],
-                    [9700, 1408440, 1333110, 1137500, 1107500, 1077500, 1047500, 1017500, 987500, 957500, 927500, 897500],
-                    [9720, 1415270, 1339900, 1141870, 1111870, 1081870, 1051870, 1021870, 991870, 961870, 931870, 901870],
-                    [9740, 1422090, 1346690, 1146240, 1116240, 1086240, 1056240, 1026240, 996240, 966240, 936240, 906240],
-                    [9760, 1428920, 1353480, 1150600, 1120600, 1090600, 1060600, 1030600, 1000600, 970600, 940600, 910600],
-                    [9780, 1435740, 1360270, 1154970, 1124970, 1094970, 1064970, 1034970, 1004970, 974970, 944970, 914970],
-                    [9800, 1442570, 1367060, 1159340, 1129340, 1099340, 1069340, 1039340, 1009340, 979340, 949340, 919340],
-                    [9820, 1449390, 1373850, 1163710, 1133710, 1103710, 1073710, 1043710, 1013710, 983710, 953710, 923710],
-                    [9840, 1456220, 1380640, 1168080, 1138080, 1108080, 1078080, 1048080, 1018080, 988080, 958080, 928080],
-                    [9860, 1463040, 1387430, 1172440, 1142440, 1112440, 1082440, 1052440, 1022440, 992440, 962440, 932440],
-                    [9880, 1469870, 1394220, 1176810, 1146810, 1116810, 1086810, 1056810, 1026810, 996810, 966810, 936810],
-                    [9900, 1476690, 1401010, 1181180, 1151180, 1121180, 1091180, 1061180, 1031180, 1001180, 971180, 941180],
-                    [9920, 1483520, 1407800, 1185550, 1155550, 1125550, 1095550, 1065550, 1035550, 1005550, 975550, 945550],
-                    [9940, 1490340, 1414590, 1189920, 1159920, 1129920, 1099920, 1069920, 1039920, 1009920, 979920, 949920],
-                    [9960, 1497170, 1421380, 1194280, 1164280, 1134280, 1104280, 1074280, 1044280, 1014280, 984280, 954280]
-                ];
-                
-                for (let [minVal, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11] of ranges) {
-                    if (salaryInThousands >= minVal && salaryInThousands < minVal + 20) {
-                        return { tax: calculateTax(0, tax1, tax2, tax3, tax4, tax5, tax6, tax7, tax8, tax9, tax10, tax11), isHighIncome: false };
-                    }
-                }
-            }
-            
-            // 9980~10000천원: 부양가족 1~11명 세액 있음
-            if (salaryInThousands >= 9980 && salaryInThousands < 10000) {
-                return { tax: calculateTax(0, 1503990, 1428170, 1198650, 1168650, 1138650, 1108650, 1078650, 1048650, 1018650, 988650, 958650), isHighIncome: false };
-            }
-            
-            // 10000~14000천원: 특별 계산 공식 적용
-            if (salaryInThousands >= 10000 && salaryInThousands <= 14000) {
-                // 10,000천원 기준 세액
-                const baseTax = calculateTax(0, 1507400, 1431570, 1200840, 1170840, 1140840, 1110840, 1080840, 1050840, 1020840, 990840, 960840);
-                
-                if (salaryInThousands === 10000) {
-                    return { tax: baseTax, isHighIncome: false };
-                }
-                
-                // 초과 금액에 대한 계산: (초과금액 × 98% × 35%) + 25,000원
-                const excessAmount = (salaryInThousands - 10000) * 1000; // 천원을 원으로 변환
-                const additionalTax = Math.floor(excessAmount * 0.98 * 0.35) + 25000;
-                const totalTax = baseTax + additionalTax;
-                
-                return {
-                    tax: totalTax,
-                    isHighIncome: true,
-                    bracket: '1,000만원 ~ 1,400만원',
-                    baseTax: baseTax,
-                    fixedAddition: 25000,
-                    excessAmount: excessAmount,
-                    taxRate: '98% × 35% = 34.3%',
-                    excessTax: additionalTax - 25000,
-                    formula: `${baseTax.toLocaleString()}원 + 25,000원 + (${(excessAmount).toLocaleString()}원 × 34.3%)`
-                };
-            }
-            
-            // 14000~28000천원: 특별 계산 공식 적용
-            if (salaryInThousands > 14000 && salaryInThousands <= 28000) {
-                // 10,000천원 기준 세액 + 1,397,000원
-                const baseTax = calculateTax(0, 1507400, 1431570, 1200840, 1170840, 1140840, 1110840, 1080840, 1050840, 1020840, 990840, 960840);
-                const fixedAddition = 1397000;
-                
-                // 14,000천원 초과 금액에 대한 계산: (초과금액 × 98% × 38%)
-                const excessAmount = (salaryInThousands - 14000) * 1000;
-                const additionalTax = Math.floor(excessAmount * 0.98 * 0.38);
-                const totalTax = baseTax + fixedAddition + additionalTax;
-                
-                return {
-                    tax: totalTax,
-                    isHighIncome: true,
-                    bracket: '1,400만원 ~ 2,800만원',
-                    baseTax: baseTax,
-                    fixedAddition: fixedAddition,
-                    excessAmount: excessAmount,
-                    taxRate: '98% × 38% = 37.24%',
-                    excessTax: additionalTax,
-                    formula: `${baseTax.toLocaleString()}원 + ${fixedAddition.toLocaleString()}원 + (${excessAmount.toLocaleString()}원 × 37.24%)`
-                };
-            }
-            
-            // 28000~30000천원: 특별 계산 공식 적용
-            if (salaryInThousands > 28000 && salaryInThousands <= 30000) {
-                // 10,000천원 기준 세액 + 6,610,600원
-                const baseTax = calculateTax(0, 1507400, 1431570, 1200840, 1170840, 1140840, 1110840, 1080840, 1050840, 1020840, 990840, 960840);
-                const fixedAddition = 6610600;
-                
-                // 28,000천원 초과 금액에 대한 계산: (초과금액 × 98% × 40%)
-                const excessAmount = (salaryInThousands - 28000) * 1000;
-                const additionalTax = Math.floor(excessAmount * 0.98 * 0.40);
-                const totalTax = baseTax + fixedAddition + additionalTax;
-                
-                return {
-                    tax: totalTax,
-                    isHighIncome: true,
-                    bracket: '2,800만원 ~ 3,000만원',
-                    baseTax: baseTax,
-                    fixedAddition: fixedAddition,
-                    excessAmount: excessAmount,
-                    taxRate: '98% × 40% = 39.2%',
-                    excessTax: additionalTax,
-                    formula: `${baseTax.toLocaleString()}원 + ${fixedAddition.toLocaleString()}원 + (${excessAmount.toLocaleString()}원 × 39.2%)`
-                };
-            }
-            
-            // 30000~45000천원: 특별 계산 공식 적용
-            if (salaryInThousands > 30000 && salaryInThousands <= 45000) {
-                // 10,000천원 기준 세액 + 7,394,600원
-                const baseTax = calculateTax(0, 1507400, 1431570, 1200840, 1170840, 1140840, 1110840, 1080840, 1050840, 1020840, 990840, 960840);
-                const fixedAddition = 7394600;
-                
-                // 30,000천원 초과 금액에 대한 계산: (초과금액 × 40%)
-                const excessAmount = (salaryInThousands - 30000) * 1000;
-                const additionalTax = Math.floor(excessAmount * 0.40);
-                const totalTax = baseTax + fixedAddition + additionalTax;
-                
-                return {
-                    tax: totalTax,
-                    isHighIncome: true,
-                    bracket: '3,000만원 ~ 4,500만원',
-                    baseTax: baseTax,
-                    fixedAddition: fixedAddition,
-                    excessAmount: excessAmount,
-                    taxRate: '40%',
-                    excessTax: additionalTax,
-                    formula: `${baseTax.toLocaleString()}원 + ${fixedAddition.toLocaleString()}원 + (${excessAmount.toLocaleString()}원 × 40%)`
-                };
-            }
-            
-            // 45000~87000천원: 특별 계산 공식 적용
-            if (salaryInThousands > 45000 && salaryInThousands <= 87000) {
-                // 10,000천원 기준 세액 + 13,394,600원
-                const baseTax = calculateTax(0, 1507400, 1431570, 1200840, 1170840, 1140840, 1110840, 1080840, 1050840, 1020840, 990840, 960840);
-                const fixedAddition = 13394600;
-                
-                // 45,000천원 초과 금액에 대한 계산: (초과금액 × 42%)
-                const excessAmount = (salaryInThousands - 45000) * 1000;
-                const additionalTax = Math.floor(excessAmount * 0.42);
-                const totalTax = baseTax + fixedAddition + additionalTax;
-                
-                return {
-                    tax: totalTax,
-                    isHighIncome: true,
-                    bracket: '4,500만원 ~ 8,700만원',
-                    baseTax: baseTax,
-                    fixedAddition: fixedAddition,
-                    excessAmount: excessAmount,
-                    taxRate: '42%',
-                    excessTax: additionalTax,
-                    formula: `${baseTax.toLocaleString()}원 + ${fixedAddition.toLocaleString()}원 + (${excessAmount.toLocaleString()}원 × 42%)`
-                };
-            }
-            
-            // 87000천원 초과: 특별 계산 공식 적용
-            if (salaryInThousands > 87000) {
-                // 10,000천원 기준 세액 + 31,034,600원
-                const baseTax = calculateTax(0, 1507400, 1431570, 1200840, 1170840, 1140840, 1110840, 1080840, 1050840, 1020840, 990840, 960840);
-                const fixedAddition = 31034600;
-                
-                // 87,000천원 초과 금액에 대한 계산: (초과금액 × 45%)
-                const excessAmount = (salaryInThousands - 87000) * 1000;
-                const additionalTax = Math.floor(excessAmount * 0.45);
-                const totalTax = baseTax + fixedAddition + additionalTax;
-                
-                return {
-                    tax: totalTax,
-                    isHighIncome: true,
-                    bracket: '8,700만원 초과',
-                    baseTax: baseTax,
-                    fixedAddition: fixedAddition,
-                    excessAmount: excessAmount,
-                    taxRate: '45%',
-                    excessTax: additionalTax,
-                    formula: `${baseTax.toLocaleString()}원 + ${fixedAddition.toLocaleString()}원 + (${excessAmount.toLocaleString()}원 × 45%)`
-                };
-            }
-            
-            // 기본값 0 반환
+    // 2026.3 개정 간이세액표 데이터 (data/근로소득_간이세액표_2026-03.json)
+    let TAX_TABLE = null;
+    async function loadTaxTable() {
+        if (TAX_TABLE) return TAX_TABLE;
+        const res = await fetch('../data/근로소득_간이세액표_2026-03.json');
+        TAX_TABLE = await res.json();
+        return TAX_TABLE;
+    }
+
+    // 부양가족 1~11명 컬럼에서 세액 추출. 11명 초과는 공식 적용.
+    function pickByDependents(values11, dependents) {
+        const d = Math.max(1, dependents);
+        if (d <= 11) return values11[d - 1];
+        const tax10 = values11[9], tax11 = values11[10];
+        return Math.max(0, tax11 - (tax10 - tax11) * (d - 11));
+    }
+
+    // 간이세액표 룩업 + 1,000만원 초과 공식 적용
+    function getTaxFromTable(salary, dependents) {
+        if (!TAX_TABLE) return { tax: 0, isHighIncome: false };
+
+        const salaryK = salary / 1000;  // 천원 단위
+
+        // 770천원 미만: 면세
+        if (salaryK < TAX_TABLE.brackets[0][0]) {
             return { tax: 0, isHighIncome: false };
         }
 
-        // 4대보험 계산 함수 (2024년 기준)
-        function calculateInsurance(salary) {
-            // 국민연금: 4.5% (상한액: 6,370,000원)
-            const pensionBase = Math.min(salary, 6370000);
-            const nationalPension = Math.floor(pensionBase * 0.045);
-            
-            // 건강보험: 3.545% (상한액: 9,008,340원)
-            const healthBase = Math.min(salary, 9008340);
-            const healthInsurance = Math.floor(healthBase * 0.03545);
-            
-            // 장기요양보험: 건강보험료의 12.95%
-            const longTermCare = Math.floor(healthInsurance * 0.1295);
-            
-            // 고용보험: 0.9%
-            const unemploymentInsurance = Math.floor(salary * 0.009);
-            
-            return {
-                nationalPension,
-                healthInsurance,
-                longTermCare,
-                unemploymentInsurance,
-                total: nationalPension + healthInsurance + longTermCare + unemploymentInsurance
-            };
+        // 1,000만원 이하: 룩업표
+        if (salaryK <= 10000) {
+            // [min, max, v1..v11] 행에서 min <= salaryK < max
+            const row = TAX_TABLE.brackets.find(b => salaryK >= b[0] && salaryK < b[1]);
+            if (row) {
+                const tax = pickByDependents(row.slice(2), dependents);
+                return { tax: Math.floor(tax), isHighIncome: false };
+            }
+            // 정확히 10,000천원인 경우
+            if (salaryK === 10000) {
+                return { tax: Math.floor(pickByDependents(TAX_TABLE.baseAt10M, dependents)), isHighIncome: false };
+            }
+            return { tax: 0, isHighIncome: false };
         }
 
-        function calculateTax() {
-            const salaryType = document.getElementById('salaryType').value;
-            const salaryValue = document.getElementById('salary').value;
-            const inputSalary = parseInt(removeCommas(salaryValue));
-            const dependents = parseInt(document.getElementById('dependents').value);
+        // 1,000만원 초과: 공식
+        const base = pickByDependents(TAX_TABLE.baseAt10M, dependents);
+        const f = TAX_TABLE.highIncomeFormula.find(x => salaryK > x.from && (x.to === null || salaryK <= x.to));
+        if (!f) return { tax: Math.floor(base), isHighIncome: true, formula: '구간 매칭 실패' };
 
-            if (!inputSalary || inputSalary < 0 || isNaN(inputSalary)) {
-                alert('급여액을 올바르게 입력해주세요.');
-                return;
-            }
+        const excess = (salaryK - f.from) * 1000;  // 원 단위
+        const tax = base + f.addConst + Math.floor(excess * f.factor * f.rate);
+        const bracketLabel = f.to === null
+            ? `${f.from.toLocaleString()}천원 초과`
+            : `${f.from.toLocaleString()}천~${f.to.toLocaleString()}천원`;
+        return {
+            tax: Math.floor(tax),
+            isHighIncome: true,
+            formula: `${bracketLabel} 구간: 기준세액(${base.toLocaleString()}) + 가산(${f.addConst.toLocaleString()}) + 초과액×${f.factor}×${(f.rate * 100).toFixed(0)}%`,
+        };
+    }
 
-            // 연봉/월급/실수령액/연 실수령액 구분에 따른 월급여 계산
-            let monthlySalary;
-            let displaySalaryLabel;
+    async function calculateTax() {
+        await loadTaxTable();
+        const salaryType = document.getElementById('salaryType').value;
+        const salaryInput = document.getElementById('salary').value;
+        const inputVal = parseInt(removeCommas(salaryInput));
+        const dependents = parseInt(document.getElementById('dependents').value);
 
-            // helper: compute net for a given gross with current toggles
-            function computeNetForGross(gross, dep) {
-                const tRes = getTaxFromTable(gross, dep);
-                const taxOnly = (typeof tRes === 'object' && tRes.tax !== undefined) ? tRes.tax : tRes;
-                const localOnly = Math.floor(taxOnly * 0.1);
-                const ins = calculateInsurance(gross);
-                const includeNP = document.getElementById('toggle-np') ? document.getElementById('toggle-np').checked : true;
-                const includeHI = document.getElementById('toggle-hi') ? document.getElementById('toggle-hi').checked : true;
-                const includeLTC = document.getElementById('toggle-ltc') ? document.getElementById('toggle-ltc').checked : true;
-                const includeUI = document.getElementById('toggle-ui') ? document.getElementById('toggle-ui').checked : true;
-                const npVal = includeNP ? ins.nationalPension : 0;
-                const hiVal = includeHI ? ins.healthInsurance : 0;
-                const ltcVal = (includeHI && includeLTC) ? ins.longTermCare : 0;
-                const uiVal = includeUI ? ins.unemploymentInsurance : 0;
-                const totalDed = taxOnly + localOnly + npVal + hiVal + ltcVal + uiVal;
-                return gross - totalDed;
-            }
+        if(!inputVal) return;
 
-            if (salaryType === 'annual') {
-                monthlySalary = Math.floor(inputSalary / 12);
-                displaySalaryLabel = `연봉 ${inputSalary.toLocaleString()}원 (월 ${monthlySalary.toLocaleString()}원)`;
-            } else if (salaryType === 'net') {
-                const targetNet = inputSalary;
-                // 이분 탐색으로 월급여 역산
-                let lo = 0, hi = Math.max(targetNet * 2, 1000000); // 초기 상한선
-                // 상한선 확장: 실수령액이 상한선 순수입보다 큰 경우 증가
-                for (let i = 0; i < 20 && computeNetForGross(hi, dependents) < targetNet; i++) {
-                    hi *= 2;
-                    if (hi > 200000000) break; // 2억원 상한
-                }
-                for (let i = 0; i < 50; i++) {
-                    const mid = Math.floor((lo + hi) / 2);
-                    const net = computeNetForGross(mid, dependents);
-                    if (net >= targetNet) {
-                        hi = mid;
-                    } else {
-                        lo = mid + 1;
-                    }
-                }
-                monthlySalary = hi;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else if (salaryType === 'netAnnual') {
-                const targetNetAnnual = inputSalary;
-                const targetNetMonthly = Math.floor(targetNetAnnual / 12);
-                // 이분 탐색으로 월급여 역산 (월 실수령액 기준)
-                let lo = 0, hi = Math.max(targetNetMonthly * 2, 1000000);
-                for (let i = 0; i < 20 && computeNetForGross(hi, dependents) < targetNetMonthly; i++) {
-                    hi *= 2;
-                    if (hi > 200000000) break;
-                }
-                for (let i = 0; i < 50; i++) {
-                    const mid = Math.floor((lo + hi) / 2);
-                    const net = computeNetForGross(mid, dependents);
-                    if (net >= targetNetMonthly) {
-                        hi = mid;
-                    } else {
-                        lo = mid + 1;
-                    }
-                }
-                monthlySalary = hi;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else if (salaryType === 'npInput') {
-                // 국민연금 금액으로부터 월급여 역산 (요율 4.5%, 상한 고려)
-                const targetNP = inputSalary;
-                // 역산: gross ≈ ceil(targetNP / 0.045), 단 상한 6,370,000 적용 전후 체크
-                let candidate = Math.ceil(targetNP / 0.045);
-                if (candidate > 6370000) candidate = 6370000; // 상한 구간에서는 모두 동일보험료라 역산 불가 → 상한치로 설정
-                // 정밀 보정: 실제 계산함수로 검증
-                const verify = calculateInsurance(candidate).nationalPension;
-                if (verify !== targetNP) {
-                    // 주변 값 탐색(±100원 범위)으로 보정
-                    let best = candidate, bestDiff = Math.abs(verify - targetNP);
-                    for (let d = -20000; d <= 20000; d += 100) {
-                        const g = Math.max(0, candidate + d);
-                        const v = calculateInsurance(g).nationalPension;
-                        const diff = Math.abs(v - targetNP);
-                        if (diff < bestDiff) { best = g; bestDiff = diff; if (diff === 0) break; }
-                    }
-                    candidate = best;
-                }
-                monthlySalary = candidate;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else if (salaryType === 'hiInput') {
-                // 건강보험 금액으로부터 월급여 역산 (요율 3.545%, 상한 9,008,340)
-                const targetHI = inputSalary;
-                let candidate = Math.ceil(targetHI / 0.03545);
-                if (candidate > 9008340) candidate = 9008340;
-                const verify = calculateInsurance(candidate).healthInsurance;
-                if (verify !== targetHI) {
-                    let best = candidate, bestDiff = Math.abs(verify - targetHI);
-                    for (let d = -20000; d <= 20000; d += 100) {
-                        const g = Math.max(0, candidate + d);
-                        const v = calculateInsurance(g).healthInsurance;
-                        const diff = Math.abs(v - targetHI);
-                        if (diff < bestDiff) { best = g; bestDiff = diff; if (diff === 0) break; }
-                    }
-                    candidate = best;
-                }
-                monthlySalary = candidate;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else if (salaryType === 'ltcInput') {
-                // 장기요양보험 = 건강보험료 × 12.95% → 건강보험료 역산 후 급여 역산
-                const targetLTC = inputSalary;
-                const estHI = Math.ceil(targetLTC / 0.1295);
-                let candidate = Math.ceil(estHI / 0.03545);
-                if (candidate > 9008340) candidate = 9008340;
-                const verifyLTC = calculateInsurance(candidate).longTermCare;
-                if (verifyLTC !== targetLTC) {
-                    let best = candidate, bestDiff = Math.abs(verifyLTC - targetLTC);
-                    for (let d = -20000; d <= 20000; d += 100) {
-                        const g = Math.max(0, candidate + d);
-                        const v = calculateInsurance(g).longTermCare;
-                        const diff = Math.abs(v - targetLTC);
-                        if (diff < bestDiff) { best = g; bestDiff = diff; if (diff === 0) break; }
-                    }
-                    candidate = best;
-                }
-                monthlySalary = candidate;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else if (salaryType === 'uiInput') {
-                // 고용보험 = 급여 × 0.9%
-                const targetUI = inputSalary;
-                let candidate = Math.ceil(targetUI / 0.009);
-                const verify = calculateInsurance(candidate).unemploymentInsurance;
-                if (verify !== targetUI) {
-                    let best = candidate, bestDiff = Math.abs(verify - targetUI);
-                    for (let d = -20000; d <= 20000; d += 100) {
-                        const g = Math.max(0, candidate + d);
-                        const v = calculateInsurance(g).unemploymentInsurance;
-                        const diff = Math.abs(v - targetUI);
-                        if (diff < bestDiff) { best = g; bestDiff = diff; if (diff === 0) break; }
-                    }
-                    candidate = best;
-                }
-                monthlySalary = candidate;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else if (salaryType === 'itInput') {
-                // 소득세 금액으로부터 월급여 역산 (간이세액표 역탐색)
-                const targetIT = inputSalary;
-                let lo = 0, hi = 20000000; // 월 2천만원까지 탐색 범위
-                for (let i = 0; i < 50; i++) {
-                    const mid = Math.floor((lo + hi) / 2);
-                    const tRes = getTaxFromTable(mid, dependents);
-                    const taxOnly = (typeof tRes === 'object' && tRes.tax !== undefined) ? tRes.tax : tRes;
-                    if (taxOnly >= targetIT) {
-                        hi = mid;
-                    } else {
-                        lo = mid + 1;
-                    }
-                }
-                monthlySalary = hi;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            } else {
-                monthlySalary = inputSalary;
-                displaySalaryLabel = `월 급여액 ${monthlySalary.toLocaleString()}원`;
-            }
+        let monthlyGross = salaryType === 'annual' ? Math.floor(inputVal / 12) : inputVal;
 
-            // 간이세액표 적용
-            const taxResult = getTaxFromTable(monthlySalary, dependents);
-            const incomeTax = (typeof taxResult === 'object' && taxResult.tax !== undefined) ? taxResult.tax : taxResult;
-            const localTax = Math.floor(incomeTax * 0.1);
-            const insurance = calculateInsurance(monthlySalary);
-            
-            // 4대보험 선택 상태 반영
-            const includeNP = document.getElementById('toggle-np') ? document.getElementById('toggle-np').checked : true;
-            const includeHI = document.getElementById('toggle-hi') ? document.getElementById('toggle-hi').checked : true;
-            const includeLTC = document.getElementById('toggle-ltc') ? document.getElementById('toggle-ltc').checked : true;
-            const includeUI = document.getElementById('toggle-ui') ? document.getElementById('toggle-ui').checked : true;
-
-            const npVal = includeNP ? insurance.nationalPension : 0;
-            const hiVal = includeHI ? insurance.healthInsurance : 0;
-            const ltcVal = (includeHI && includeLTC) ? insurance.longTermCare : 0;
-            const uiVal = includeUI ? insurance.unemploymentInsurance : 0;
-
-            const selectedInsuranceTotal = npVal + hiVal + ltcVal + uiVal;
-
-            const totalDeduction = incomeTax + localTax + selectedInsuranceTotal;
-            const realSalary = monthlySalary - totalDeduction;
-
-            // 결과 표시 (상단 요약 항목 제거됨)
-            document.getElementById('income-tax').textContent = incomeTax.toLocaleString() + '원';
-            document.getElementById('local-tax').textContent = localTax.toLocaleString() + '원';
-            const incomeLocalTotal = incomeTax + localTax;
-            const incomeLocalTotalEl = document.getElementById('income-local-total');
-            if (incomeLocalTotalEl) incomeLocalTotalEl.textContent = incomeLocalTotal.toLocaleString() + '원';
-            document.getElementById('national-pension').textContent = npVal.toLocaleString() + '원';
-            document.getElementById('health-insurance').textContent = hiVal.toLocaleString() + '원';
-            document.getElementById('long-term-care').textContent = ltcVal.toLocaleString() + '원';
-            document.getElementById('unemployment-insurance').textContent = uiVal.toLocaleString() + '원';
-            document.getElementById('total-insurance').textContent = selectedInsuranceTotal.toLocaleString() + '원';
-            const totalDeductionEl = document.getElementById('total-deduction');
-            if (totalDeductionEl) totalDeductionEl.textContent = totalDeduction.toLocaleString() + '원';
-            // Summary card content
-            const summaryLabelEl = document.getElementById('summary-label');
-            const summaryValueEl = document.getElementById('summary-value');
-            const summarySub = document.getElementById('summary-sub');
-            const summaryAnnual = document.getElementById('summary-annual');
-            // Other results rows
-            const altMonthlyGrossEl = document.getElementById('alt-monthly-gross');
-            const altAnnualGrossEl = document.getElementById('alt-annual-gross');
-            const altMonthlyNetEl = document.getElementById('alt-monthly-net');
-            const altAnnualNetEl = document.getElementById('alt-annual-net');
-
-            // 선택한 급여 구분에 따라 카드 내용 표시
-            const summarySubLabel = document.getElementById('summary-sub-label');
-            // 파란 박스: 실수령액만 표시 (라벨은 항상 "월 실수령액")
-            const totalTax = incomeTax + localTax + selectedInsuranceTotal;
-            summaryLabelEl.textContent = '💵 월 실수령액';
-            summaryValueEl.textContent = `${realSalary.toLocaleString()}원`;
-            summarySub.style.display = 'none';
-
-            // 세금 총액 파란 박스 값 채우기
-            const summaryTaxValueEl = document.getElementById('summary-tax-value');
-            if (summaryTaxValueEl) {
-                summaryTaxValueEl.textContent = `${totalTax.toLocaleString()}원`;
-            }
-
-            // 파란 요약 카드(세금 총액 / 월 실수령액) 표시 제어
-            const summaryTaxCardEl = document.getElementById('summary-tax-card');
-            const summaryCardEl = document.getElementById('summary-card');
-            if (salaryType === 'net') {
-                if (summaryCardEl) summaryCardEl.style.display = 'none';
-                if (summaryTaxCardEl) summaryTaxCardEl.style.display = 'flex';
-            } else {
-                if (summaryCardEl) summaryCardEl.style.display = 'flex';
-                if (summaryTaxCardEl) summaryTaxCardEl.style.display = 'flex';
-            }
-
-            // 공통: 선택된 월급여 기준으로 나머지 3종 결과 채우기
-            altMonthlyGrossEl.textContent = `${monthlySalary.toLocaleString()}원`;
-            altAnnualGrossEl.textContent = `${(monthlySalary * 12).toLocaleString()}원`;
-            altMonthlyNetEl.textContent = `${realSalary.toLocaleString()}원`;
-            altAnnualNetEl.textContent = `${(realSalary * 12).toLocaleString()}원`;
-
-            // 선택한 구분에 따라 중복 정보는 숨김 처리
-            const rowAltMonthlyGross = document.getElementById('row-alt-monthly-gross');
-            const rowAltAnnualGross = document.getElementById('row-alt-annual-gross');
-            const rowAltMonthlyNet = document.getElementById('row-alt-monthly-net');
-            const rowAltAnnualNet = document.getElementById('row-alt-annual-net');
-
-            // 기본적으로 모두 표시
-            [rowAltMonthlyGross, rowAltAnnualGross, rowAltMonthlyNet, rowAltAnnualNet].forEach(function(row){
-                if (row) row.style.display = 'flex';
-            });
-
-            if (salaryType === 'monthly') {
-                // 월급여 선택 시: 월 급여액/월 실수령액은 이미 알고 있으므로 숨김
-                if (rowAltMonthlyGross) rowAltMonthlyGross.style.display = 'none';
-                if (rowAltMonthlyNet) rowAltMonthlyNet.style.display = 'none';
-            } else if (salaryType === 'annual') {
-                // 연봉 선택 시: 월 실수령액은 메인 카드에 표시되므로 숨김
-                if (rowAltMonthlyNet) rowAltMonthlyNet.style.display = 'none';
-                if (rowAltAnnualGross) rowAltAnnualGross.style.display = 'none';
-            } else if (
-                salaryType === 'net' ||
-                salaryType === 'npInput' ||
-                salaryType === 'hiInput' ||
-                salaryType === 'ltcInput' ||
-                salaryType === 'uiInput'
-            ) {
-                // '월 실수령액' 입력 또는 4대보험 금액 입력 시: '다른 계산 결과'에서 월 실수령액 숨김
-                if (rowAltMonthlyNet) rowAltMonthlyNet.style.display = 'none';
-            } else if (salaryType === 'netAnnual') {
-                // 연 실수령액 입력: 중복 방지를 위해 '연 실수령액' 행 숨김 (DOM 순서 유지)
-                if (rowAltAnnualNet) rowAltAnnualNet.style.display = 'none';
-            }
-
-
-            // 고소득 구간 계산 공식 표시
-            if (taxResult.isHighIncome) {
-                document.getElementById('high-income-formula').style.display = 'block';
-                document.getElementById('tax-bracket').textContent = taxResult.bracket;
-                document.getElementById('base-tax').textContent = taxResult.baseTax.toLocaleString() + '원';
-                document.getElementById('fixed-addition').textContent = taxResult.fixedAddition.toLocaleString() + '원';
-                document.getElementById('excess-amount').textContent = taxResult.excessAmount.toLocaleString() + '원';
-                document.getElementById('tax-rate').textContent = taxResult.taxRate;
-                document.getElementById('excess-tax').textContent = taxResult.excessTax.toLocaleString() + '원';
-                document.getElementById('calculation-formula').textContent = taxResult.formula;
-            } else {
-                document.getElementById('high-income-formula').style.display = 'none';
-            }
-
-            document.getElementById('result').classList.add('show');
+        // 만약 실수령액으로 입력했다면 내부적으로 역산 실행
+        if(salaryType === 'net') {
+            monthlyGross = performReverse(inputVal, dependents);
         }
 
-        // 급여 입력 필드 이벤트 처리
-        document.getElementById('salary').addEventListener('input', formatSalaryInput);
-        document.getElementById('salary').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculateTax();
-            }
-        });
+        const ins = calculateInsurance(monthlyGross);
+        const taxRes = getTaxFromTable(monthlyGross, dependents);
+        
+        // 토글 상태 확인
+        const useNP = document.getElementById('toggle-np').checked;
+        const useHI = document.getElementById('toggle-hi').checked;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        // 유효 입력 시에만 재계산
-        function calculateIfPossible() {
-            const salaryValue = document.getElementById('salary').value;
-            const inputSalary = parseInt(removeCommas(salaryValue));
-            if (inputSalary && inputSalary > 0 && !isNaN(inputSalary)) {
-                calculateTax();
-            }
-        }
+        const finalPension = useNP ? ins.nationalPension : 0;
+        const finalHealth = useHI ? ins.healthInsurance : 0;
+        const finalLTC = useHI ? ins.longTermCare : 0;
+        const finalUI = ins.unemploymentInsurance;
 
-        // 4대보험 토글 및 관련 입력 변경 시 자동 재계산
-        ['toggle-np','toggle-hi','toggle-ltc','toggle-ui','dependents','salaryType'].forEach(function(id){
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('change', function(){
-                    // 시각적 상태 업데이트
-                    const map = {
-                        'toggle-np': 'item-np',
-                        'toggle-hi': 'item-hi',
-                        'toggle-ltc': 'item-ltc',
-                        'toggle-ui': 'item-ui'
-                    };
-                    const rowId = map[id];
-                    if (rowId) {
-                        const row = document.getElementById(rowId);
-                        if (row) {
-                            if (el.checked) {
-                                row.classList.remove('toggled-off');
-                            } else {
-                                row.classList.add('toggled-off');
-                            }
-                        }
-                    }
-                    // 장기요양보험을 켜면 건강보험도 자동으로 켬
-                    if (id === 'toggle-ltc' && el.checked) {
-                        const hiToggle = document.getElementById('toggle-hi');
-                        if (hiToggle && !hiToggle.checked) {
-                            hiToggle.checked = true;
-                            const hiRow = document.getElementById('item-hi');
-                            if (hiRow) hiRow.classList.remove('toggled-off');
-                        }
-                    }
-                    calculateIfPossible();
-                });
-            }
-        });
-=======
-=======
->>>>>>> Stashed changes
-         function formatNumber(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-    function removeCommas(str) {
-      return str.replace(/,/g, '');
-    }
+        const incomeTax = taxRes.tax;
+        const localTax = Math.floor(incomeTax * 0.1);
+        
+        const totalDeduction = finalPension + finalHealth + finalLTC + finalUI + incomeTax + localTax;
+        const netSalary = monthlyGross - totalDeduction;
 
-    function calculateInsurance(salary) {
-      const pensionBase = Math.min(salary, 6370000);
-      const nationalPension = Math.floor(pensionBase * 0.045);
-      const healthBase = Math.min(salary, 9008340);
-      const healthInsurance = Math.floor(healthBase * 0.03545);
-      const longTermCare = Math.floor(healthInsurance * 0.1295);
-      const unemploymentInsurance = Math.floor(salary * 0.009);
-      return {
-        total: nationalPension + healthInsurance + longTermCare + unemploymentInsurance
-      };
-    }
+        // 화면 출력
+        document.getElementById('summary-value').textContent = formatNumber(netSalary) + "원";
+        document.getElementById('income-tax').textContent = formatNumber(incomeTax) + "원";
+        document.getElementById('local-tax').textContent = formatNumber(localTax) + "원";
+        document.getElementById('income-local-total').textContent = formatNumber(incomeTax + localTax) + "원";
+        
+        document.getElementById('national-pension').textContent = formatNumber(finalPension) + "원";
+        document.getElementById('health-insurance').textContent = formatNumber(finalHealth) + "원";
+        document.getElementById('total-insurance').textContent = formatNumber(finalPension + finalHealth + finalLTC + finalUI) + "원";
 
-    function getTaxFromTable(salary, dependents) {
-      if (salary < 3000000) return { tax: 5000 * dependents };
-      if (salary < 4000000) return { tax: 10000 * dependents };
-      return { tax: 20000 * dependents };
-    }
+        document.getElementById('alt-monthly-gross').textContent = formatNumber(monthlyGross) + "원";
+        document.getElementById('alt-annual-gross').textContent = formatNumber(monthlyGross * 12) + "원";
 
-    function reverseCalculate() {
-      const desiredValue = parseInt(removeCommas(document.getElementById('desiredTakeHome').value));
-      const dependents = parseInt(document.getElementById('dependents').value);
-      if (!desiredValue || desiredValue <= 0) {
-        alert('올바른 실수령액을 입력해주세요.');
-        return;
-      }
-
-      let low = desiredValue;
-      let high = desiredValue * 2;
-      let result = desiredValue;
-
-      for (let i = 0; i < 100; i++) {
-        let mid = Math.floor((low + high) / 2);
-        let taxResult = getTaxFromTable(mid, dependents);
-        let incomeTax = taxResult.tax;
-        let localTax = Math.floor(incomeTax * 0.1);
-        let insurance = calculateInsurance(mid);
-        let totalDeduction = incomeTax + localTax + insurance.total;
-        let realSalary = mid - totalDeduction;
-
-        if (Math.abs(realSalary - desiredValue) <= 1000) {
-          result = mid;
-          break;
-        } else if (realSalary > desiredValue) {
-          high = mid;
+        if(taxRes.isHighIncome) {
+            document.getElementById('high-income-formula').style.display = 'block';
+            document.getElementById('calculation-formula').textContent = taxRes.formula;
         } else {
-          low = mid;
+            document.getElementById('high-income-formula').style.display = 'none';
         }
-      }
-      document.getElementById('salary').value = formatNumber(result);
+
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('res-main-label').textContent = "예상 월 실수령액";
     }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    </script>
+
+    // 역산 로직
+    function performReverse(targetNet, deps) {
+        let low = targetNet;
+        let high = targetNet * 2;
+        let result = targetNet;
+
+        for(let i=0; i<50; i++) {
+            let mid = Math.floor((low + high) / 2);
+            let ins = calculateInsurance(mid);
+            let tax = getTaxFromTable(mid, deps).tax;
+            let currentNet = mid - (ins.total + tax + Math.floor(tax * 0.1));
+
+            if(Math.abs(currentNet - targetNet) < 100) {
+                result = mid;
+                break;
+            }
+            if(currentNet > targetNet) high = mid;
+            else low = mid;
+            result = mid;
+        }
+        return result;
+    }
+
+    async function reverseCalculate() {
+        await loadTaxTable();
+        const val = parseInt(removeCommas(document.getElementById('desiredTakeHome').value));
+        const deps = parseInt(document.getElementById('rev-dependents').value);
+        if(!val) return;
+
+        const gross = performReverse(val, deps);
+        
+        // 결과값을 일반 계산기 필드에 넣고 계산 실행
+        document.getElementById('salaryType').value = 'monthly';
+        document.getElementById('salary').value = formatNumber(gross);
+        document.getElementById('dependents').value = deps;
+        
+        calculateTax();
+        document.getElementById('res-main-label').textContent = "계산된 세전 월급여";
+        document.getElementById('summary-value').textContent = formatNumber(gross) + "원";
+    }
+
+    // 페이지 로드 시 세액표 미리 가져오기
+    loadTaxTable().catch(err => console.error('간이세액표 로드 실패:', err));
+</script>
 </body>
-</html> 
+</html>

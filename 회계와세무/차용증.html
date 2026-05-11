@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>차용증 작성 프로그램</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #ffffff;
+    --line: #888;
+    --line-soft: #c8c4b8;
+    --muted: #6b6760;
+    --accent: #8b1a1a;
+    --accent-soft: #fdf2f2;
+    --shade: #f0ede5;
+    --warn: #c08400;
+    --warn-soft: #fff8e1;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #e8e6dd;
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ===== 컨트롤 패널 ===== */
+  .control {
+    max-width: 900px;
+    margin: 24px auto 0;
+    padding: 22px 26px;
+    background: #fff;
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .control h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -.02em;
+  }
+  .control .sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+
+  .tabs { display: flex; border-bottom: 2px solid var(--ink); margin-bottom: 16px; }
+  .tab {
+    padding: 9px 18px;
+    background: transparent;
+    border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+    font-weight: 700;
+  }
+
+  .info-box {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 9px 13px;
+    margin: 10px 0 14px;
+    font-size: 12.5px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .info-box b { color: var(--accent); }
+
+  .privacy-warn {
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    padding: 7px 12px;
+    margin: 10px 0 14px;
+    font-size: 12px;
+    color: #6a4a00;
+    line-height: 1.55;
+  }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .field input {
+    padding: 7px 9px;
+    border: 1px solid var(--line-soft);
+    border-radius: 3px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13.5px;
+    background: #fff;
+  }
+  .field input:focus { outline: none; border-color: var(--accent); }
+  .field input:invalid:not(:placeholder-shown) {
+    border-color: var(--warn);
+    background: #fffbf0;
+  }
+  .field input.calc {
+    background: var(--accent-soft);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .field .err {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 2px;
+    min-height: 14px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 14px 0 6px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--line-soft);
+    letter-spacing: .03em;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .btn {
+    padding: 9px 18px;
+    border: 1px solid var(--ink);
+    background: #fff;
+    color: var(--ink);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .btn:hover { background: var(--ink); color: #fff; }
+  .btn.primary { background: var(--ink); color: #fff; }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* ===== 차용증 본문 (1페이지) ===== */
+  .doc-wrap {
+    max-width: 900px;
+    margin: 22px auto;
+    padding: 0 16px 30px;
+  }
+  .doc {
+    background: var(--paper);
+    padding: 38px 50px 34px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.1);
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  .doc h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: 30px;
+    text-align: center;
+    letter-spacing: 0.6em;
+    text-indent: 0.6em;
+    margin: 0 0 4px;
+  }
+  .doc .doc-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .15em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  table.tbl {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 7px 0 9px;
+    font-size: 12.5px;
+  }
+  table.tbl th, table.tbl td {
+    border: 1px solid var(--line);
+    padding: 5px 9px;
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+  table.tbl .head {
+    background: #2c2c2c;
+    color: #fff;
+    text-align: center;
+    letter-spacing: .15em;
+    font-weight: 600;
+    padding: 6px;
+    font-size: 12px;
+  }
+  table.tbl .head.t-debt { background: #4a3a2a; }
+  table.tbl .head.t-term { background: var(--accent); }
+  table.tbl th {
+    background: var(--shade);
+    width: 22%;
+    text-align: center;
+    font-weight: 600;
+  }
+  table.tbl td.val { background: #fff; }
+  table.tbl td.amount { font-family: 'Noto Serif KR', serif; font-weight: 600; }
+  table.tbl td.rate { color: var(--accent); font-weight: 700; }
+  table.tbl td.zero-int { color: #2a6e2a; font-weight: 700; }
+
+  .clauses { margin: 10px 0 6px; font-size: 11.5px; line-height: 1.55; }
+  .clause { margin-bottom: 3px; }
+  .clause .ct { display: inline; font-weight: 700; font-size: 12px; }
+  .clause .cb { display: inline; color: #2a2a2a; margin-left: 4px; }
+
+  .doc-date {
+    text-align: center;
+    margin: 12px 0 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .1em;
+  }
+
+  .signatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .sigbox { border: 1px solid var(--line); padding: 10px 14px; background: #fff; }
+  .sigbox .sl {
+    font-weight: 700; margin-bottom: 6px; padding-bottom: 4px;
+    border-bottom: 1px solid #ccc; letter-spacing: .15em;
+    text-align: center; font-size: 12px;
+  }
+  .sigbox .sr { font-size: 11.5px; line-height: 1.85; }
+  .sigbox .seal { color: var(--accent); font-weight: 700; }
+
+  .memo {
+    max-width: 900px;
+    margin: 0 auto 24px;
+    padding: 12px 16px;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--accent);
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .memo .mt { color: var(--accent); font-weight: 700; margin-bottom: 4px; font-size: 12.5px; }
+  .memo ul { margin: 2px 0; padding-left: 18px; }
+  .memo li { margin-bottom: 2px; }
+
+  /* ===== 인쇄 ===== */
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .control, .memo { display: none !important; }
+    .doc-wrap { margin: 0; padding: 0; max-width: none; }
+    .doc { box-shadow: none; padding: 0; font-size: 10.5pt; }
+    .doc h1 { font-size: 22pt; margin-bottom: 2px; }
+    .doc .doc-sub { font-size: 9pt; margin-bottom: 8px; padding-bottom: 4px; }
+    table.tbl { font-size: 9.5pt; margin: 5px 0 6px; }
+    table.tbl th, table.tbl td { padding: 2.5px 7px; }
+    table.tbl .head { padding: 4px; font-size: 9pt; }
+    .clauses { font-size: 8.8pt; line-height: 1.45; margin: 8px 0 4px; }
+    .clause { margin-bottom: 1px; }
+    .clause .ct { font-size: 9pt; }
+    .doc-date { font-size: 10pt; margin: 8px 0 6px; }
+    .sigbox { padding: 7px 12px; }
+    .sigbox .sl { font-size: 9.5pt; margin-bottom: 4px; padding-bottom: 3px; }
+    .sigbox .sr { font-size: 9pt; line-height: 1.7; }
+    @page { size: A4; margin: 12mm 16mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== 컨트롤 패널 ====== -->
+<div class="control">
+  <h1>차용증 작성 프로그램</h1>
+  <div class="sub">특수관계자 · 일반 두 가지 버전 / A4 1페이지 출력</div>
+
+  <div class="tabs">
+    <button class="tab active" data-ver="related">특수관계자 버전</button>
+    <button class="tab" data-ver="general">일반 버전</button>
+  </div>
+
+  <div class="info-box" id="info-related">
+    <b>특수관계자 버전</b> · 상증법 §41조의4에 따른 <b>증여세 비과세 최소 지급 이자</b>를 자동 산출합니다 ( <b>월 이자 = ( 원금 × 4.6% − 1천만원 ) ÷ 12</b> ). 차액이 0 이하면 무이자 가능 ( 원금 약 2.17억 이하 ). <b>이자율 항목은 차용증에 표시되지 않습니다.</b>
+  </div>
+  <div class="info-box" id="info-general" hidden>
+    <b>일반 버전</b> · 원금 · 이자 · 지급일 등 모든 항목이 공란으로 출력됩니다.
+  </div>
+
+  <div class="privacy-warn">
+    🔒 <b>개인정보 안내</b> — 주민등록번호는 민감정보입니다. 입력값은 브라우저에서만 처리되며 서버로 전송되지 않으나, 인쇄·PDF 저장 시 보관에 유의하시기 바랍니다.
+  </div>
+
+  <div class="section-title">채권자 (대여인)</div>
+  <div class="grid">
+    <div class="field"><label for="cName">성명</label><input id="cName" placeholder="홍길동"></div>
+    <div class="field"><label for="cRRN">주민등록번호</label><input id="cRRN" placeholder="000000-0000000" pattern="\d{6}-\d{7}" maxlength="14"></div>
+    <div class="field full"><label for="cAddr">주소</label><input id="cAddr"></div>
+    <div class="field"><label for="cPhone">연락처</label><input id="cPhone" placeholder="010-0000-0000" pattern="\d{2,3}-\d{3,4}-\d{4}" maxlength="13"></div>
+    <div class="field"><label for="cBank">입금계좌</label><input id="cBank" placeholder="○○은행 000-00-000000"></div>
+  </div>
+
+  <div class="section-title">채무자 (차용인)</div>
+  <div class="grid">
+    <div class="field"><label for="dName">성명</label><input id="dName" placeholder="김철수"></div>
+    <div class="field"><label for="dRRN">주민등록번호</label><input id="dRRN" placeholder="000000-0000000" pattern="\d{6}-\d{7}" maxlength="14"></div>
+    <div class="field full"><label for="dAddr">주소</label><input id="dAddr"></div>
+    <div class="field"><label for="dPhone">연락처</label><input id="dPhone" placeholder="010-0000-0000" pattern="\d{2,3}-\d{3,4}-\d{4}" maxlength="13"></div>
+  </div>
+
+  <div class="section-title">차용 조건</div>
+  <div class="grid">
+    <div class="field"><label for="amount">차용금액 (원)</label><input id="amount" type="number" placeholder="500000000" min="0"></div>
+    <div class="field" id="rateField"><label for="rate">이자율 (연 %)</label><input id="rate" type="number" step="0.01" placeholder="4.6" min="0"></div>
+    <div class="field"><label for="loanDate">차용일</label><input id="loanDate" type="date"></div>
+    <div class="field">
+      <label for="repayDate">변제일</label>
+      <input id="repayDate" type="date">
+      <div class="err" id="dateErr"></div>
+    </div>
+    <div class="field"><label for="monthly">월 이자액 (자동 · 수정가능)</label><input id="monthly" class="calc" type="number" placeholder="자동계산" min="0"></div>
+    <div class="field"><label for="payDay">이자지급일 (매월 ○일)</label><input id="payDay" type="number" min="1" max="31" placeholder="25"></div>
+    <div class="field full"><label for="signDate">작성일</label><input id="signDate" type="date"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn primary" id="btnRefresh">미리보기 갱신</button>
+    <button type="button" class="btn" id="btnPrint">🖨 인쇄 / PDF 저장</button>
+    <button type="button" class="btn" id="btnReset">초기화</button>
+  </div>
+</div>
+
+<!-- ====== 차용증 본문 ====== -->
+<div class="doc-wrap">
+  <div class="doc" id="doc">
+    <h1>借用證書</h1>
+    <div class="doc-sub" id="docSub">— 특 수 관 계 자 간  금 전 소 비 대 차 —</div>
+
+    <table class="tbl">
+      <tr><td colspan="4" class="head">■  채 권 자  ( 대 여 인 )</td></tr>
+      <tr>
+        <th>성  명</th><td class="val" id="o_cName">　</td>
+        <th>주민등록번호</th><td class="val" id="o_cRRN">　</td>
+      </tr>
+      <tr><th>주  소</th><td class="val" colspan="3" id="o_cAddr">　</td></tr>
+      <tr>
+        <th>연 락 처</th><td class="val" id="o_cPhone">　</td>
+        <th>입금계좌</th><td class="val" id="o_cBank">　</td>
+      </tr>
+    </table>
+
+    <table class="tbl">
+      <tr><td colspan="4" class="head t-debt">■  채 무 자  ( 차 용 인 )</td></tr>
+      <tr>
+        <th>성  명</th><td class="val" id="o_dName">　</td>
+        <th>주민등록번호</th><td class="val" id="o_dRRN">　</td>
+      </tr>
+      <tr><th>주  소</th><td class="val" colspan="3" id="o_dAddr">　</td></tr>
+      <tr><th>연 락 처</th><td class="val" colspan="3" id="o_dPhone">　</td></tr>
+    </table>
+
+    <table class="tbl" id="termsTable">
+      <tr><td colspan="2" class="head t-term">■  차  용  조  건</td></tr>
+      <tr><th style="width:24%">차용금액</th><td class="val amount" id="o_amount">金　　　　　　　　　　　원정 ( ₩　　　　　　　 )</td></tr>
+      <tr><th>차 용 일</th><td class="val" id="o_loanDate">　　　년　　월　　일</td></tr>
+      <tr><th>변 제 일</th><td class="val" id="o_repayDate">　　　년　　월　　일  ( 일시상환 )</td></tr>
+      <tr id="rateRow"><th>이자율 (연)</th><td class="val rate" id="o_rate">연　　　 %</td></tr>
+      <tr><th>월 이자액</th><td class="val amount" id="o_monthly">金　　　　　　　　　　　원정 ( ₩　　　　　　 )</td></tr>
+      <tr><th>이자지급일</th><td class="val" id="o_payDay">매월　　　일</td></tr>
+      <tr><th>지급방법</th><td class="val" id="o_payMethod">채권자 명의 계좌로 입금</td></tr>
+    </table>
+
+    <div class="clauses">
+      <div class="clause"><span class="ct">제1조 (차용금액)</span><span class="cb">채무자는 위에 기재된 금액을 채권자로부터 차용하였음을 확인한다.</span></div>
+      <div class="clause"><span class="ct">제2조 (이자)</span><span class="cb">채무자는 매월 약정된 이자지급일에 위 월 이자액을 채권자에게 지급한다.</span></div>
+      <div class="clause"><span class="ct">제3조 (변제)</span><span class="cb">채무자는 위 변제일까지 차용 원금 전액을 일시 상환한다. 다만, 양 당사자 합의 시 변제기한을 연장할 수 있다.</span></div>
+      <div class="clause"><span class="ct">제4조 (기한이익의 상실)</span><span class="cb">채무자가 ① 이자 지급을 2회 이상 연체한 때, ② 다른 채무로 강제집행 · 가압류 · 경매를 받은 때, ③ 회생 · 파산 절차를 신청하거나 신청을 받은 때에는 별도의 통지 없이 기한의 이익을 상실하며, 채권자는 즉시 원리금 전액의 변제를 청구할 수 있다.</span></div>
+      <div class="clause"><span class="ct">제5조 (지연손해금)</span><span class="cb">채무자가 변제기일에 원리금을 변제하지 못한 경우, 미지급액에 대하여 연 12%의 지연손해금을 가산하여 지급한다.</span></div>
+      <div class="clause"><span class="ct">제6조 (조기상환)</span><span class="cb">채무자는 사전 통지 후 언제든지 차용금의 전부 또는 일부를 조기 상환할 수 있으며, 조기상환수수료는 부과하지 아니한다.</span></div>
+      <div class="clause"><span class="ct">제7조 (관할법원)</span><span class="cb">본 차용증과 관련한 분쟁은 채권자 주소지 관할 법원을 합의관할로 한다.</span></div>
+      <div class="clause"><span class="ct">제8조 (기타)</span><span class="cb">본 증서에 정하지 아니한 사항은 민법 및 관련 법령에 따르며, 본 증서는 2부를 작성하여 채권자와 채무자가 각 1부씩 보관한다.</span></div>
+    </div>
+
+    <div class="doc-date" id="o_signDate">작 성 일  :  　　　년　　월　　일</div>
+
+    <div class="signatures">
+      <div class="sigbox">
+        <div class="sl">【 채  권  자 】</div>
+        <div class="sr">
+          성    명 :  <span id="s_cName">　　　　　　</span>　<span class="seal">(인)</span><br>
+          주민등록번호 :  <span id="s_cRRN">　　　　　　</span><br>
+          주    소 :  <span id="s_cAddr">　　　　　　</span>
+        </div>
+      </div>
+      <div class="sigbox">
+        <div class="sl">【 채  무  자 】</div>
+        <div class="sr">
+          성    명 :  <span id="s_dName">　　　　　　</span>　<span class="seal">(인)</span><br>
+          주민등록번호 :  <span id="s_dRRN">　　　　　　</span><br>
+          주    소 :  <span id="s_dAddr">　　　　　　</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 세무 안내 (차용증 외부, 인쇄시 자동 제거) -->
+<div class="memo" id="memoBox">
+  <div class="mt">※ 세무 안내 ( 화면 전용 · 인쇄 시 표시되지 않음 )</div>
+  <ul>
+    <li>본 차용증은 <b>특수관계자간 금전소비대차</b>용 양식입니다.</li>
+    <li><b>상속세 및 증여세법 제41조의4</b> · 시행령 제31조의4 : 적정이자(연 4.6%)와 실제이자의 차액이 <b>연간 1천만원 미만이면 증여세 과세 대상에서 제외</b>됩니다.</li>
+    <li>증여 과세 회피를 위한 <b>월 최소 지급 이자 = ( 차용원금 × 4.6% − 10,000,000원 ) ÷ 12</b></li>
+    <li>차용원금이 약 217,391,304원 이하이면 <b>무이자도 가능</b>합니다.</li>
+    <li>실제 이자지급(계좌이체) 내역은 반드시 보관하여 입증자료로 활용하시기 바랍니다.</li>
+  </ul>
+</div>
+
+<script>
+'use strict';
+
+// ===== 법령 상수 (개정 시 여기만 수정) =====
+const STATUTORY_RATE = 4.6;          // 상증법 §41조의4 시행령 §31조의4 적정이자율 (%)
+const TAX_FREE_LIMIT = 10_000_000;   // 증여세 비과세 한도 (연간 차액 1천만원 미만)
+
+// ===== 상태 =====
+let currentVer = 'related';
+
+// ===== 유틸 =====
+const $ = (id) => document.getElementById(id);
+
+function fmt(n) {
+  return (n || n === 0) ? Number(n).toLocaleString('ko-KR') : '';
+}
+
+function fmtDate(d) {
+  if (!d) return '　　　년　　월　　일';
+  const [y, m, da] = d.split('-');
+  return `${y}년　${parseInt(m, 10)}월　${parseInt(da, 10)}일`;
+}
+
+// 한글 금액 변환 (관례에 맞게 십·백·천 앞의 "일" 생략, 만 단위 앞은 유지)
+function numToKor(num) {
+  const n = parseInt(num, 10);
+  if (isNaN(n) || n <= 0) return '';
+
+  const units = ['', '만', '억', '조', '경'];
+  const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+  const sub = ['', '십', '백', '천'];
+
+  let result = '';
+  let rest = n;
+  let unitIdx = 0;
+
+  while (rest > 0) {
+    const part = rest % 10000;
+    if (part > 0) {
+      let s = '';
+      let p = part, sIdx = 0;
+      while (p > 0) {
+        const d = p % 10;
+        if (d > 0) {
+          // 십·백·천 자리에서 "1"은 생략 (예: "일십만" → "십만")
+          // 단, 일의 자리는 항상 표기, 만 단위 그룹의 첫 자리도 일반 규칙대로
+          const digitText = (d === 1 && sIdx > 0) ? '' : digits[d];
+          s = digitText + sub[sIdx] + s;
+        }
+        p = Math.floor(p / 10);
+        sIdx++;
+      }
+      result = s + units[unitIdx] + result;
+    }
+    rest = Math.floor(rest / 10000);
+    unitIdx++;
+  }
+  return result;
+}
+
+function setT(id, val, fb) {
+  const el = $(id);
+  if (el) el.textContent = (val && val.trim()) ? val : (fb || '　');
+}
+
+// ===== 핵심 계산 =====
+// 상증법 §41조의4 : 증여세 비과세를 위한 월 최소 지급 이자
+// = ( 차용원금 × 적정이자율 − 1천만원 ) ÷ 12
+// 차액이 0 이하면 무이자 가능
+function calcInterest() {
+  if (currentVer !== 'related') return;
+
+  const amount = parseFloat($('amount').value) || 0;
+  const rate = parseFloat($('rate').value) || 0;
+
+  if (!amount || !rate) {
+    $('monthly').value = '';
+    return;
+  }
+
+  const yearlyDiff = amount * rate / 100 - TAX_FREE_LIMIT;
+  $('monthly').value = yearlyDiff > 0 ? Math.floor(yearlyDiff / 12) : 0;
+}
+
+// 변제일 ≤ 차용일 검증
+function validateDates() {
+  const ld = $('loanDate').value;
+  const rd = $('repayDate').value;
+  const errEl = $('dateErr');
+  if (ld && rd && rd <= ld) {
+    errEl.textContent = '⚠ 변제일은 차용일 이후여야 합니다.';
+    return false;
+  }
+  errEl.textContent = '';
+  return true;
+}
+
+// ===== 렌더 =====
+function render() {
+  validateDates();
+
+  // 인적사항
+  setT('o_cName', $('cName').value);
+  setT('o_cRRN', $('cRRN').value);
+  setT('o_cAddr', $('cAddr').value);
+  setT('o_cPhone', $('cPhone').value);
+  setT('o_cBank', $('cBank').value);
+  setT('o_dName', $('dName').value);
+  setT('o_dRRN', $('dRRN').value);
+  setT('o_dAddr', $('dAddr').value);
+  setT('o_dPhone', $('dPhone').value);
+
+  // 차용금액
+  const amt = $('amount').value;
+  $('o_amount').textContent = amt
+    ? `金  ${numToKor(amt)}원정  ( ₩ ${fmt(amt)} )`
+    : '金　　　　　　　　　　　원정 ( ₩　　　　　　　 )';
+
+  // 이자율
+  const rate = $('rate').value;
+  $('o_rate').textContent = rate ? `연  ${rate} %` : '연　　　 %';
+
+  // 월 이자액 - 무이자 분기 처리
+  const m = $('monthly').value;
+  const oMonthly = $('o_monthly');
+  oMonthly.classList.remove('zero-int', 'amount');
+
+  if (m === '' || m === null || m === undefined) {
+    oMonthly.classList.add('amount');
+    oMonthly.textContent = '金　　　　　　　　　　　원정 ( ₩　　　　　　 )';
+  } else if (parseInt(m, 10) === 0) {
+    // 무이자 케이스
+    oMonthly.classList.add('zero-int');
+    oMonthly.textContent = currentVer === 'related'
+      ? '※ 무이자 ( 상증법상 증여세 비과세 범위 내 )'
+      : '※ 무이자';
+  } else {
+    oMonthly.classList.add('amount');
+    oMonthly.textContent = `金  ${numToKor(m)}원정  ( ₩ ${fmt(m)} )`;
+  }
+
+  // 날짜
+  $('o_loanDate').textContent = fmtDate($('loanDate').value);
+  $('o_repayDate').textContent = fmtDate($('repayDate').value) + '  ( 일시상환 )';
+
+  const pd = $('payDay').value;
+  $('o_payDay').textContent = pd ? `매월  ${pd} 일` : '매월　　　일';
+
+  const bank = $('cBank').value;
+  $('o_payMethod').textContent = bank
+    ? `채권자 명의 계좌 ( ${bank} ) 로 입금`
+    : '채권자 명의 계좌로 입금';
+
+  const sd = $('signDate').value;
+  $('o_signDate').textContent = sd
+    ? `작 성 일  :  ${fmtDate(sd)}`
+    : '작 성 일  :  　　　년　　월　　일';
+
+  // 서명란
+  setT('s_cName', $('cName').value, '　　　　　　');
+  setT('s_cRRN', $('cRRN').value, '　　　　　　');
+  setT('s_cAddr', $('cAddr').value, '　　　　　　');
+  setT('s_dName', $('dName').value, '　　　　　　');
+  setT('s_dRRN', $('dRRN').value, '　　　　　　');
+  setT('s_dAddr', $('dAddr').value, '　　　　　　');
+}
+
+// ===== 탭 전환 (데이터 손실 방지) =====
+function switchVer(v, btn) {
+  if (v === currentVer) return;
+
+  // 데이터 손실 방지: 입력값 유지, 버전별 차이만 표시 제어
+  currentVer = v;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  $('info-related').hidden = (v !== 'related');
+  $('info-general').hidden = (v !== 'general');
+  $('memoBox').style.display = (v === 'related') ? 'block' : 'none';
+
+  if (v === 'related') {
+    // 특수관계자: 이자율 자동 4.6% 고정 (사용자 입력값이 비어있을 때만)
+    $('rateField').style.display = 'none';
+    $('rateRow').style.display = 'none';
+    if (!$('rate').value) $('rate').value = STATUTORY_RATE;
+    $('docSub').textContent = '— 특 수 관 계 자 간  금 전 소 비 대 차 —';
+  } else {
+    // 일반: 이자율 사용자가 직접 입력 (기존 입력값 유지)
+    $('rateField').style.display = 'flex';
+    $('rateRow').style.display = 'table-row';
+    $('docSub').textContent = '— 금  전  소  비  대  차   계 약 서 —';
+  }
+  calcInterest();
+  render();
+}
+
+// ===== 초기화 (확인 후 진행) =====
+function resetForm() {
+  if (!confirm('입력하신 모든 내용이 삭제됩니다. 진행하시겠습니까?')) return;
+  document.querySelectorAll('.control input').forEach(i => { i.value = ''; });
+  if (currentVer === 'related') $('rate').value = STATUTORY_RATE;
+  $('dateErr').textContent = '';
+  calcInterest();
+  render();
+}
+
+// ===== 입력 통합 핸들러 =====
+function onInputChange() {
+  calcInterest();
+  render();
+}
+
+// ===== 초기 세팅 =====
+document.addEventListener('DOMContentLoaded', () => {
+  // 입력 핸들러 통합 (oninput 인라인 제거됨)
+  document.querySelectorAll('.control input').forEach(el => {
+    el.addEventListener('input', onInputChange);
+  });
+
+  // 탭 클릭 핸들러
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', (e) => switchVer(e.currentTarget.dataset.ver, e.currentTarget));
+  });
+
+  // 버튼 핸들러
+  $('btnRefresh').addEventListener('click', render);
+  $('btnPrint').addEventListener('click', () => window.print());
+  $('btnReset').addEventListener('click', resetForm);
+
+  // 초기 - 특수관계자 모드
+  $('rateField').style.display = 'none';
+  $('rateRow').style.display = 'none';
+  $('rate').value = STATUTORY_RATE;
+  render();
+});
+</script>
+</body>
+</html>
