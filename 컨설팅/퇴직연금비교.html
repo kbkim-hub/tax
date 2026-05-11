@@ -108,6 +108,13 @@ input[readonly]{background:#f0f0f0;color:var(--mid);cursor:default;}
 .basis-body.open{display:block;}
 .basis-body b{color:var(--black);}
 
+/* 유의사항 클릭 펼치기 */
+.note-item{margin-bottom:7px;border:1px solid var(--line);border-top:2px solid var(--line-h);}
+.note-head{background:#ebebeb;border-bottom:1px solid var(--line);padding:7px 14px;font-size:12px;font-weight:700;color:var(--mid);cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.note-body{padding:10px 14px;font-size:12px;color:var(--dark);line-height:1.95;white-space:pre-wrap;background:var(--white);display:none;}
+.note-body.open{display:block;}
+.note-body b{color:var(--black);}
+
 /* 유의사항 */
 .chk-head{font-size:14px;font-weight:700;color:var(--black);border-bottom:2px solid var(--line-h);padding-bottom:5px;margin-bottom:8px;}
 .chk-list{list-style:none;border-top:1px solid var(--line);margin-bottom:16px;}
@@ -131,8 +138,10 @@ input[readonly]{background:#f0f0f0;color:var(--mid);cursor:default;}
   .ct th,.ct td{padding:5px 7px!important;font-size:10px!important;}
   .ct .recv-row td{font-size:12px!important;} .ct .sep-row td{font-size:11px!important;}
   .ann-grid{gap:5px;} .ann-recv{font-size:13px!important;} .ann-rows{font-size:10px!important;}
-  .basis-body{display:block!important;padding:5px 10px;font-size:10px!important;}
+  .basis-body{padding:5px 10px;font-size:10px!important;}
   .basis-head{padding:4px 10px;font-size:10px!important;}
+  .note-body{padding:5px 10px;font-size:10px!important;}
+  .note-head{padding:4px 10px;font-size:10px!important;}
   .chk-list li{font-size:11px!important;padding:5px 2px;} .chk-head{font-size:12px!important;}
   .sec-t{font-size:11px!important;margin:8px 0 5px;}
   .print-p1{page-break-after:always;}
@@ -151,7 +160,6 @@ input[readonly]{background:#f0f0f0;color:var(--mid);cursor:default;}
   </div>
   <div class="save-btns" id="saveBtns">
     <button class="btn-s pdf" onclick="window.print()">🖨 PDF 저장</button>
-    <button class="btn-s word" onclick="saveWord()">📄 Word 저장</button>
   </div>
 </div>
 
@@ -277,21 +285,49 @@ input[readonly]{background:#f0f0f0;color:var(--mid);cursor:default;}
 <div class="sec-t">계산 근거 (클릭 → 펼치기)</div>
 <div id="basisWrap"></div>
 
-<div style="margin-top:20px;">
+<div style="margin-top:20px;" id="noteWrap">
   <div class="chk-head">⚠ 유의사항 및 핵심 정보</div>
-  <ul class="chk-list">
-    <li><span class="ck">급여 누진세</span><span class="cv">기존 급여에 추가되므로 <b>누진세율 적용</b>. 고소득 구간(과세표준 3억↑)은 한계세율 38~45%로 불리합니다. 건강보험료는 회사+본인 전액(14.18%+장기요양) 반영됩니다.</span></li>
-    <li><span class="ck">배당 2천만</span><span class="cv">배당 연 2,000만원 초과 시 근로소득과 <b>합산 종합과세</b>. 법인세 납부 후 세후이익에서 배당하는 <b>실질적 이중과세</b> 구조에 유의하세요.</span></li>
-    <li><span class="ck">퇴직한도</span><span class="cv">퇴직소득은 <b>소득세법상 한도 초과분이 근로소득 과세</b>됩니다. 한도액은 기본적으로 인출금액 전액으로 설정되나, 대화1 퇴직금한도계산기에서 실제 한도를 반드시 확인하세요.</span></li>
-    <li><span class="ck">연금 감면율</span><span class="cv"><b>1~10년차 30% 감면(70% 납부) / 11~20년차 40% 감면(60% 납부) / 21년차~ 50% 감면(50% 납부, 2026년 신설)</b>. 수령기간이 길수록 절세 효과가 커집니다.</span></li>
-    <li><span class="ck">연금 건보료</span><span class="cv">퇴직연금(IRP)·연금저축 등 <b>사적연금 수령액에는 현재 건강보험료 미부과</b>. 법 개정 논의 중으로 향후 변경될 수 있습니다.</span></li>
-    <li><span class="ck">연금수령한도</span><span class="cv">연금계좌에서 한도(연금계좌평가액÷(11-수령연차)×120%)를 초과 인출 시 <b>감면 없이 일시금 세율 그대로 적용</b>됩니다. 한도 내 수령이 중요합니다.</span></li>
-    <li><span class="ck">운용수익 과세</span><span class="cv">퇴직금 <b>원금에는 연금 감면 퇴직소득세</b>가 적용되나, IRP 계좌 내 <b>운용수익에는 연령별 연금소득세(3.3~5.5%)</b>가 별도 부과됩니다. (본 계산기는 원금 기준만 계산)</span></li>
-    <li><span class="ck">법인세절감</span><span class="cv">급여·퇴직금은 <b>법인 손금</b>으로 법인세가 절감됩니다. 배당은 <b>손금불산입(절감 없음)</b>. 법인세 절감액이 실질 수령액에 큰 영향을 미칩니다.</span></li>
-    <li><span class="ck">DB형</span><span class="cv"><b>확정급여형(DB)</b>: 수령액 확정(퇴직직전 평균임금×근속연수). 임금 상승 시 유리. 운용 리스크는 회사 부담. 단, <b>등기임원은 가입 불가</b>(근로자 전용).</span></li>
-    <li><span class="ck">DC형</span><span class="cv"><b>확정기여형(DC)</b>: 개인 계좌 귀속으로 회사 도산 리스크 없음. 추가납입(연 900만 한도) 세액공제 가능. <b>임원도 가입 가능</b>. 운용 성과에 따라 수령액 변동.</span></li>
-    <li><span class="ck">참고용</span><span class="cv">본 계산기는 <b>참고용</b>입니다. 부양가족 수·다른 소득·법인 상황에 따라 실제 세액이 달라질 수 있으며, 실제 세무처리는 반드시 담당 세무사와 상담하세요.</span></li>
-  </ul>
+  <div class="note-item">
+    <div class="note-head" onclick="togB(this)">급여·배당 과세 및 법인세 절감<span class="basis-tog">▼ 펼치기</span></div>
+    <div class="note-body">
+      ▪ 기존 급여에 추가되므로 <b>누진세율 적용</b>. 고소득 구간(과세표준 3억↑)은 한계세율 38~45%로 불리합니다.<br>
+      ▪ 건강보험료는 회사+본인 전액(14.18%+장기요양) 반영됩니다.<br>
+      ▪ 배당 연 2,000만원 초과 시 근로소득과 <b>합산 종합과세</b>. 법인세 납부 후 세후이익에서 배당하는 <b>실질적 이중과세</b> 구조에 유의하세요.<br>
+      ▪ 배당은 <b>손금불산입</b>으로 법인세 절감 효과가 없습니다.
+    </div>
+  </div>
+  <div class="note-item">
+    <div class="note-head" onclick="togB(this)">퇴직소득·연금 감면 및 한도<span class="basis-tog">▼ 펼치기</span></div>
+    <div class="note-body">
+      ▪ 퇴직소득은 <b>소득세법상 한도 초과분이 근로소득 과세</b>됩니다. 한도액은 기본적으로 인출금액 전액으로 설정되나, 실제 한도는 반드시 확인하세요.<br>
+      ▪ 연금 감면율: 1~10년차 30% 감면, 11~20년차 40% 감면, 21년차~ 50% 감면(2026년 신설).<br>
+      ▪ 연금계좌에서 한도(연금계좌평가액÷(11-수령연차)×120%)를 초과 인출 시 <b>감면 없이 일시금 세율 그대로 적용</b>됩니다.
+    </div>
+  </div>
+  <div class="note-item">
+    <div class="note-head" onclick="togB(this)">퇴직연금 보험료·운용수익 과세<span class="basis-tog">▼ 펼치기</span></div>
+    <div class="note-body">
+      ▪ 퇴직연금(IRP)·연금저축 등 <b>사적연금 수령액에는 현재 건강보험료 미부과</b>. 법 개정 논의 중으로 향후 변경될 수 있습니다.<br>
+      ▪ 퇴직금 원금에는 연금 감면 퇴직소득세가 적용되나, IRP 계좌 내 운용수익에는 연령별 연금소득세(3.3~5.5%)가 별도 부과됩니다.<br>
+      ▪ 본 계산기는 원금 기준 계산이며, 운용수익 과세는 별도 검토가 필요합니다.
+    </div>
+  </div>
+  <div class="note-item">
+    <div class="note-head" onclick="togB(this)">제도별 특징: DB·DC 및 연금 선택<span class="basis-tog">▼ 펼치기</span></div>
+    <div class="note-body">
+      ▪ 확정급여형(DB): 수령액 확정(퇴직직전 평균임금×근속연수). 임금 상승 시 유리. 운용 리스크는 회사 부담.<br>
+      ▪ 확정기여형(DC): 개인 계좌 귀속으로 회사 도산 리스크 없음. 추가납입(연 900만 한도) 세액공제 가능. 임원도 가입 가능.<br>
+      ▪ DB형은 등기임원 가입 불가, DC형은 운용 성과에 따라 수령액 변동.
+    </div>
+  </div>
+  <div class="note-item">
+    <div class="note-head" onclick="togB(this)">실무 주의사항 및 참고<span class="basis-tog">▼ 펼치기</span></div>
+    <div class="note-body">
+      ▪ 본 계산기는 <b>참고용</b>입니다. 부양가족 수·다른 소득·법인 상황에 따라 실제 세액이 달라집니다.<br>
+      ▪ 실제 세무처리는 반드시 담당 세무사와 상담하세요.<br>
+      ▪ 정관, 퇴직소득세 한도 초과, 법인세 한도 초과 등은 세무사 검토가 필요합니다.
+    </div>
+  </div>
 </div>
 
 <div class="footnote">※ 2026년 세법 기준 · 건강보험료율 7.09% · 장기요양 12.95% · 지방소득세 10% · 사적연금 건보료 현행 미부과</div>
@@ -436,7 +472,7 @@ function calc(){
   const S_hlth   = sHlth*splitYr;
   const S_corp   = sCorpSv*splitYr;
   const S_recv   = total - S_tax - S_hlth + S_corp;
-  const S_eff    = (S_tax+S_hlth)/total;
+  const S_eff    = (S_tax + S_hlth - S_corp) / total;
 
   /* ━━ 2. 배당 ━━ */
   let D_tax=0, D_hlth=0, divBasisTxt='';
@@ -460,7 +496,7 @@ function calc(){
   }
   const D_corp = 0;
   const D_recv = total - D_tax - D_hlth + D_corp;
-  const D_eff  = (D_tax+D_hlth)/total;
+  const D_eff  = (D_tax - D_corp + D_hlth) / total;
 
   /* ━━ 3. 퇴직일시금 ━━ */
   const retAmt  = Math.min(total,rlimit);
@@ -472,7 +508,7 @@ function calc(){
   const R_hlth  = 0;
   const R_corp  = retAmt*cRate;
   const R_recv  = total - R_tax - R_hlth + R_corp;
-  const R_eff   = R_tax/total;
+  const R_eff   = (R_tax - R_corp) / total;
 
   /* ━━ 4. 퇴직연금 ━━ */
   // 원천징수세율 A = 일시금 퇴직소득세 ÷ 퇴직금 총액
@@ -481,7 +517,7 @@ function calc(){
   const A_hlth = 0;
   const A_corp = retAmt*cRate;
   const A_recv = total - A_tax - A_hlth + A_corp;
-  const A_eff  = A_tax/total;
+  const A_eff  = (A_tax - A_corp) / total;
 
   /* ━━ 조건 바 ━━ */
   const splitTxt=splitYr===1?'일시 수령':`${splitYr}년 분할 (연간 ${w(annAmt)})`;
@@ -507,7 +543,7 @@ function calc(){
     {lbl:'실질 세부담 합계',          vs:[S_tax+S_hlth,D_tax+D_hlth,R_tax,A_tax],        cls:'sep-row'},
     {lbl:'(+) 법인세 절감 (손금)',    vs:[S_corp,D_corp,R_corp,A_corp],                  cls:'sub-row',isPlus:true},
     {lbl:'실수령액 (법인절감 포함)',  vs:[S_recv,D_recv,R_recv,A_recv],                  cls:'recv-row'},
-    {lbl:'실효세율 (세금÷총액)',      vs:[S_eff,D_eff,R_eff,A_eff],                      cls:'rate-row',isPct:true},
+    {lbl:'실효세율 ((실질 세무담합계 - 법인세 절감) ÷ 총액)', vs:[S_eff,D_eff,R_eff,A_eff],                      cls:'rate-row',isPct:true},
     {lbl:'유불리 순위',               vs:[rnk.sal,rnk.div,rnk.ret,rnk.ann],              cls:'rate-row',isRank:true},
   ];
 
@@ -565,6 +601,23 @@ ${ac2.y3>0?`\n21년~ 연세금: ${w(ac2.taxY3)}/년`:''}
 </div>`;
     ag.appendChild(d);
   });
+
+  /* ━━ 퇴직연금 장점 ━━ */
+  const advWrap = document.createElement('div');
+  advWrap.className='blk';
+  advWrap.innerHTML=`
+    <div class="blk-head">퇴직연금 장점</div>
+    <div class="blk-body">
+      <ul style="padding-left:18px;line-height:1.8;">
+        <li><b>대표의 퇴직연금 전액 비용처리</b>로 법인세 절세 및 이익조절 수단으로 활용.</li>
+        <li><b>퇴직소득은 가장 저렴한 세금</b>이며, 퇴직연금 수령 시 최대 50% 추가 할인 효과.</li>
+        <li><b>가지급금 해결에 최적의 절세 수단</b>입니다.</li>
+        <li><b>퇴직 시까지 주식 운영으로</b> 높은 수익 창출이 가능합니다.</li>
+        <li><b>단, 정관·퇴직소득세 한도초과·법인세 한도초과</b> 등은 세무사 검토가 필요합니다.</li>
+      </ul>
+    </div>
+  `;
+  document.getElementById('resultWrap').querySelector('.print-p1').appendChild(advWrap);
 
   /* ━━ 계산 근거 ━━ */
   const bw=document.getElementById('basisWrap');
@@ -727,10 +780,10 @@ async function saveWord(){
     ...bodyRows.map((row,ri)=>new TableRow({children:[mkL(row[0]||''),...row.slice(1).map((c,ci)=>mkD(c,ri===5))]}))]
   });
 
-  const basisEls=[...document.querySelectorAll('.basis-item')];
+  const basisEls=[...document.querySelectorAll('.basis-item, .note-item')];
   const basisP=basisEls.flatMap(b=>[
-    new Paragraph({children:[new TextRun({text:b.querySelector('.basis-head').childNodes[0].textContent.trim(),bold:true,size:20,font:F})],spacing:{before:140,after:60}}),
-    ...b.querySelector('.basis-body').textContent.trim().split('\n').map(l=>new Paragraph({children:[new TextRun({text:l,size:18,font:F})],spacing:{after:20}}))
+    new Paragraph({children:[new TextRun({text:b.querySelector('.basis-head, .note-head').childNodes[0].textContent.trim(),bold:true,size:20,font:F})],spacing:{before:140,after:60}}),
+    ...b.querySelector('.basis-body, .note-body').textContent.trim().split('\n').map(l=>new Paragraph({children:[new TextRun({text:l,size:18,font:F})],spacing:{after:20}}))
   ]);
 
   const chkEls=[...document.querySelectorAll('.chk-list li')];
