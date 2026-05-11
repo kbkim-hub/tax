@@ -242,6 +242,51 @@
         .pay-label { color: var(--success) !important; font-size: 12px !important; font-weight: 700 !important; }
         .pay-val { color: var(--success) !important; font-weight: 700 !important; font-size: 12px !important; }
 
+        /* 납부세액 수동/자동 전환 컨트롤 */
+        .final-cell { position: relative; width: 100%; }
+        .final-controls {
+            position: absolute;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            z-index: 2;
+        }
+        .final-cell .pay-val { padding-left: 48px !important; }
+        .final-edit-btn, .final-auto-btn {
+            border: 1px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            line-height: 1;
+            opacity: 0.55;
+            transition: opacity 0.15s, background 0.15s, border-color 0.15s;
+        }
+        .final-edit-btn:hover, .final-auto-btn:hover {
+            opacity: 1;
+            background: #ffffff;
+            border-color: #cbd5e1;
+        }
+        .manual-mark {
+            font-size: 9px;
+            color: #b45309;
+            background: #fef3c7;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 700;
+            pointer-events: none;
+            border: 1px solid #fcd34d;
+        }
+        /* 수동 모드일 때 입력 필드 강조 (수기 입력임을 시각적으로 표시) */
+        .pay-val.manual-editing {
+            background: #fffbeb !important;
+            border-bottom: 1.5px dashed #f59e0b !important;
+        }
+
         /* 신고소득률 */
         .income-rate-positive { color: var(--primary); font-weight: 600; }
         .income-rate-negative { color: var(--danger); font-weight: 700; }
@@ -454,6 +499,14 @@
             .bottom-tables-area { margin-top: 2mm !important; }
             .table-wrap { margin-top: 2mm !important; }
             .pay-label, .pay-val { font-size: 12px !important; }
+
+            /* 수동 입력 표시는 인쇄에서 숨김 (금액만 표시) */
+            .manual-mark { display: none !important; }
+            .final-cell .pay-val { padding-left: 4px !important; }
+            .pay-val.manual-editing {
+                background: transparent !important;
+                border-bottom: none !important;
+            }
 
             /* ═════════════════ 흑백 인쇄 최적화 ═════════════════ */
             /* 메인테이블 외곽 굵은 테두리 */
@@ -1056,14 +1109,28 @@
                             <input type="text" class="num-input" id="add25" oninput="formatComma(this); calcAll()" onkeydown="handlePlusKey(event, this)">
                         </td>
                     </tr>
-                    <!-- 납부세액 (자동) -->
+                    <!-- 납부세액 (자동 / 수동 전환 가능) -->
                     <tr class="pay-row">
                         <td class="col-label pay-label" style="border-right:2px solid #94a3b8;">납부세액</td>
                         <td style="border-right:2px solid #94a3b8;">
-                            <input type="text" class="num-input pay-val" id="final24" readonly>
+                            <div class="final-cell">
+                                <div class="final-controls no-print">
+                                    <button type="button" class="final-edit-btn no-print" id="finalEditBtn24" onclick="toggleFinalManual(24)" title="수동 입력">✏️</button>
+                                    <span id="finalManualMark24" class="manual-mark" style="display:none;">수동</span>
+                                    <button type="button" class="final-auto-btn no-print" id="finalAutoBtn24" onclick="resetFinalAuto(24)" title="자동 계산으로 복귀" style="display:none;">↺</button>
+                                </div>
+                                <input type="text" class="num-input pay-val" id="final24" readonly oninput="formatComma(this)" onkeydown="handlePlusKey(event, this)">
+                            </div>
                         </td>
                         <td>
-                            <input type="text" class="num-input pay-val" id="final25" readonly>
+                            <div class="final-cell">
+                                <div class="final-controls no-print">
+                                    <button type="button" class="final-edit-btn no-print" id="finalEditBtn25" onclick="toggleFinalManual(25)" title="수동 입력">✏️</button>
+                                    <span id="finalManualMark25" class="manual-mark" style="display:none;">수동</span>
+                                    <button type="button" class="final-auto-btn no-print" id="finalAutoBtn25" onclick="resetFinalAuto(25)" title="자동 계산으로 복귀" style="display:none;">↺</button>
+                                </div>
+                                <input type="text" class="num-input pay-val" id="final25" readonly oninput="formatComma(this)" onkeydown="handlePlusKey(event, this)">
+                            </div>
                         </td>
                     </tr>
                     <!-- 신고소득률 (자동) -->
@@ -2021,6 +2088,42 @@ function hookTypeChange() {
     if (t24) t24.addEventListener('change', updateBookExpInfo);
 }
 
+// ─── 납부세액 수동/자동 전환 ────────────────────────────────
+// 금융소득 등 특이사항이 있어 납부세액을 직접 수정해야 할 때 사용
+const manualFinal = { 24: false, 25: false };
+
+function toggleFinalManual(yr) {
+    manualFinal[yr] = true;
+    const input = document.getElementById('final' + yr);
+    const editBtn = document.getElementById('finalEditBtn' + yr);
+    const autoBtn = document.getElementById('finalAutoBtn' + yr);
+    const mark = document.getElementById('finalManualMark' + yr);
+    if (!input) return;
+    input.readOnly = false;
+    input.classList.add('manual-editing');
+    if (editBtn) editBtn.style.display = 'none';
+    if (autoBtn) autoBtn.style.display = '';
+    if (mark) mark.style.display = '';
+    // 바로 편집할 수 있도록 포커스 + 전체 선택
+    setTimeout(() => { input.focus(); input.select(); }, 0);
+}
+
+function resetFinalAuto(yr) {
+    manualFinal[yr] = false;
+    const input = document.getElementById('final' + yr);
+    const editBtn = document.getElementById('finalEditBtn' + yr);
+    const autoBtn = document.getElementById('finalAutoBtn' + yr);
+    const mark = document.getElementById('finalManualMark' + yr);
+    if (!input) return;
+    input.readOnly = true;
+    input.classList.remove('manual-editing');
+    if (editBtn) editBtn.style.display = '';
+    if (autoBtn) autoBtn.style.display = 'none';
+    if (mark) mark.style.display = 'none';
+    // 자동 계산값으로 즉시 복귀
+    calcAll();
+}
+
 // ─── 계산 ────────────────────────────────────────────────────
 function calcAll() {
     ['24', '25'].forEach(yr => {
@@ -2044,9 +2147,12 @@ function calcAll() {
 
         // 납부세액 = 산출세액 - 중간예납 - 세액감면·공제 + 가산세
         // 1원 단위까지 표시 (절사 없음)
-        const finalRaw = n('tax'+yr) - n('pre'+yr) - n('ded'+yr) + n('add'+yr);
-        const final = Math.round(finalRaw);
-        document.getElementById('final'+yr).value = final.toLocaleString();
+        // ※ 수동 모드(manualFinal[yr])일 때는 사용자가 입력한 값을 유지
+        if (!manualFinal[yr]) {
+            const finalRaw = n('tax'+yr) - n('pre'+yr) - n('ded'+yr) + n('add'+yr);
+            const final = Math.round(finalRaw);
+            document.getElementById('final'+yr).value = final.toLocaleString();
+        }
 
         // 신고소득률 = 소득금액 / 수입금액 * 100
         const rev = n('rev'+yr);
