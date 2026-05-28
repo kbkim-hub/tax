@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>세무대리 위임장 | 대한세무법인</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1a5ea8;--blue-dark:#0d3d73;--blue-light:#e8f0fb;
+  --gray-bg:#f4f5f7;--gray-border:#dde1e7;--gray-text:#6b7280;--text:#111827;
+  --green:#16a34a;--red:#dc2626;--amber:#d97706;
+}
+body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  background:var(--gray-bg);color:var(--text);font-size:14px;min-height:100vh}
+
+/* ── 헤더 ── */
+.header{background:var(--blue-dark);color:#fff;padding:0 20px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-logo{font-size:15px;font-weight:700;letter-spacing:0.04em}
+.header-sub{font-size:11px;opacity:0.65;border-left:1px solid rgba(255,255,255,0.3);padding-left:12px}
+.header-btns{display:flex;gap:7px;flex-wrap:wrap}
+.btn{padding:6px 13px;border-radius:5px;border:none;cursor:pointer;font-size:12px;
+  font-family:inherit;display:inline-flex;align-items:center;gap:5px;font-weight:600;transition:all 0.15s}
+.btn-pdf{background:#e74c3c;color:#fff}.btn-pdf:hover{background:#c0392b}
+.btn-word{background:#2471a3;color:#fff}.btn-word:hover{background:#1a5276}
+.btn-print{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3)}
+.btn-print:hover{background:rgba(255,255,255,0.25)}
+.btn-reset{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2)}
+.btn-reset:hover{background:rgba(255,255,255,0.18)}
+
+/* ── 레이아웃 ── */
+.main{display:grid;grid-template-columns:390px 1fr;gap:0;height:calc(100vh - 52px)}
+.form-panel{background:#fff;border-right:1px solid var(--gray-border);overflow-y:auto;padding:16px}
+
+/* ── 저장 슬롯 박스 ── */
+.save-box{border:1.5px solid var(--blue);border-radius:8px;margin-bottom:16px;overflow:hidden}
+.save-box-title{background:var(--blue);color:#fff;padding:7px 12px;font-size:11px;font-weight:700;
+  letter-spacing:0.06em;display:flex;justify-content:space-between;align-items:center}
+.save-box-body{padding:10px 12px}
+.save-actions{display:flex;gap:6px;margin-bottom:8px}
+.sbtn{padding:5px 11px;border-radius:4px;border:none;cursor:pointer;font-size:11px;
+  font-family:inherit;font-weight:600;display:inline-flex;align-items:center;gap:4px;transition:all 0.12s}
+.sbtn-save{background:var(--green);color:#fff}.sbtn-save:hover{background:#15803d}
+.sbtn-auto{background:#f0f4fa;color:var(--blue);border:1px solid #c3d6f5}
+.sbtn-auto:hover{background:var(--blue-light)}
+.save-list{display:flex;flex-direction:column;gap:4px;max-height:160px;overflow-y:auto}
+.save-item{display:flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid var(--gray-border);
+  border-radius:5px;background:#fafafa;cursor:pointer;transition:background 0.1s}
+.save-item:hover{background:var(--blue-light);border-color:#c3d6f5}
+.save-item-info{flex:1;min-width:0}
+.save-item-name{font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.save-item-date{font-size:10px;color:var(--gray-text)}
+.save-item-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;padding:2px 4px;
+  border-radius:3px;flex-shrink:0;line-height:1}
+.save-item-del:hover{background:#fee2e2;color:var(--red)}
+.save-empty{font-size:11px;color:#bbb;text-align:center;padding:10px 0}
+.auto-badge{font-size:9px;background:rgba(255,255,255,0.25);border-radius:3px;padding:1px 5px}
+
+/* ── 폼 섹션 ── */
+.form-section{margin-bottom:14px;border:1px solid var(--gray-border);border-radius:7px;overflow:hidden}
+.form-section-title{background:var(--blue);color:#fff;padding:7px 12px;font-size:11px;font-weight:700;letter-spacing:0.06em}
+.form-body{padding:12px}
+.field{margin-bottom:9px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:10.5px;font-weight:600;color:var(--gray-text);margin-bottom:3px;
+  text-transform:uppercase;letter-spacing:0.04em}
+.field input{width:100%;border:1px solid var(--gray-border);border-radius:5px;
+  padding:6px 9px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;transition:border-color 0.15s}
+.field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,94,168,0.1)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.check-item{display:flex;align-items:center;gap:6px;padding:4px 5px;border-radius:4px;
+  cursor:pointer;font-size:11.5px;color:var(--text);transition:background 0.1s}
+.check-item:hover{background:var(--blue-light)}
+.check-item input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:var(--blue);flex-shrink:0}
+.check-item-etc{grid-column:1/-1;display:flex;align-items:center;gap:6px;padding:5px 6px;
+  border-radius:4px;background:#f8f9fa;border:1px dashed #c3d6f5;margin-top:2px}
+.check-item-etc input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:var(--blue);flex-shrink:0}
+.etc-input{flex:1;border:none;border-bottom:1px solid var(--gray-border);border-radius:0;
+  padding:2px 4px;font-size:11.5px;font-family:inherit;background:transparent;color:var(--text)}
+.etc-input:focus{outline:none;border-bottom-color:var(--blue)}
+.etc-input::placeholder{color:#ccc}
+
+/* ── 미리보기 ── */
+.preview-panel{background:var(--gray-bg);overflow-y:auto;padding:20px;display:flex;flex-direction:column;align-items:center}
+.preview-toolbar{width:100%;max-width:680px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.preview-toolbar span{font-size:11.5px;color:var(--gray-text)}
+#status-msg{font-size:11.5px;font-weight:700;color:var(--green);min-width:80px;text-align:right}
+
+/* ── 문서 용지 ── */
+.doc-paper{background:#fff;width:100%;max-width:680px;padding:34px 46px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.12);border-radius:2px}
+#doc-content{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;font-size:12px;color:#111;line-height:1.65}
+.doc-title{text-align:center;font-size:21px;font-weight:700;letter-spacing:0.3em;margin-bottom:4px;color:#111}
+.doc-subtitle{text-align:center;font-size:10px;color:#666;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #111}
+.doc-notice{background:#fffbeb;border-left:3px solid #f59e0b;padding:4px 9px;font-size:10px;color:#92400e;margin-bottom:12px;line-height:1.45}
+.doc-section{margin-bottom:11px}
+.doc-section-hd{font-size:11.5px;font-weight:700;background:#1a5ea8;color:#fff;padding:4px 9px;letter-spacing:0.04em}
+.doc-table{width:100%;border-collapse:collapse;font-size:11px}
+.doc-table td{border:1px solid #ccc;padding:4px 8px;vertical-align:middle}
+.doc-table td.lbl{background:#f0f4fa;font-weight:600;width:90px;color:#334155;white-space:nowrap}
+.doc-table td.val{color:#111}
+.task-tags{display:flex;flex-wrap:wrap;gap:3px;padding:1px 0}
+.task-tag{background:#e8f0fb;color:#1a5ea8;padding:1px 8px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid #c3d6f5}
+.sig-block{margin-top:16px;padding-top:12px;border-top:1.5px solid #111}
+.sig-date{text-align:center;font-size:11.5px;margin-bottom:12px;font-weight:500}
+.sig-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sig-box{border:1px solid #ccc;border-radius:4px;padding:9px 12px;text-align:center}
+.sig-box-title{font-size:9.5px;color:#666;font-weight:600;margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid #eee;letter-spacing:0.05em}
+.sig-name{font-size:13px;font-weight:700;min-height:22px;line-height:22px}
+.sig-firm{font-size:9.5px;color:#666;margin-top:1px}
+.sig-seal{display:inline-block;width:34px;height:34px;border:1.5px solid #c0392b;border-radius:50%;color:#c0392b;font-size:10px;font-weight:700;line-height:32px;margin-top:5px}
+.doc-footnote{margin-top:12px;padding:5px 9px;border:1px solid #ddd;border-radius:3px;font-size:9px;color:#888;background:#fafafa;line-height:1.5}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px;color:#aaa;gap:10px}
+.empty-state svg{opacity:0.2;width:52px;height:52px}
+.empty-state p{font-size:12px;text-align:center;line-height:1.6}
+
+/* ── 1페이지 인쇄 ── */
+@media print{
+  @page{size:A4 portrait;margin:5mm 7mm}
+  html{zoom:0.72}
+  .header,.form-panel,.preview-toolbar{display:none!important}
+  .main{display:block;height:auto}
+  .preview-panel{padding:0;background:#fff;overflow:visible;align-items:flex-start}
+  .doc-paper{box-shadow:none;padding:0;max-width:100%;border-radius:0}
+  #doc-content{font-size:10.5px;line-height:1.45}
+  .doc-title{font-size:19px;margin-bottom:2px}
+  .doc-subtitle{margin-bottom:8px;padding-bottom:6px}
+  .doc-notice{padding:3px 7px;margin-bottom:7px;font-size:9px}
+  .doc-section{margin-bottom:7px}
+  .doc-section-hd{padding:2px 7px;font-size:10.5px}
+  .doc-table td{padding:2px 6px;font-size:10px}
+  .sig-block{margin-top:10px;padding-top:8px}
+  .sig-date{margin-bottom:8px;font-size:10.5px}
+  .sig-row{gap:8px}
+  .sig-box{padding:7px 10px}
+  .doc-footnote{margin-top:6px;padding:3px 7px;font-size:8.5px}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="header-logo">🏢 대한세무법인</span>
+    <span class="header-sub">세무대리 위임장 작성 시스템</span>
+  </div>
+  <div class="header-btns">
+    <button class="btn btn-pdf"   onclick="exportPDF()">📄 PDF</button>
+    <button class="btn btn-word"  onclick="exportWord()">📝 Word</button>
+    <button class="btn btn-print" onclick="window.print()">🖨️ 인쇄</button>
+    <button class="btn btn-reset" onclick="resetForm()">↺ 초기화</button>
+  </div>
+</div>
+
+<div class="main">
+<div class="form-panel">
+
+  <!-- ★ 저장 관리 박스 -->
+  <div class="save-box">
+    <div class="save-box-title">
+      💾 저장 관리 (로컬 저장소)
+      <span class="auto-badge" id="auto-badge">자동저장 대기</span>
+    </div>
+    <div class="save-box-body">
+      <div class="save-actions">
+        <button class="sbtn sbtn-save" onclick="saveSlot()">✚ 현재 내용 저장</button>
+        <button class="sbtn sbtn-auto" onclick="loadAuto()">↩ 마지막 자동저장 불러오기</button>
+      </div>
+      <div class="save-list" id="save-list">
+        <div class="save-empty" id="save-empty">저장된 항목이 없습니다</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ① 위임인 -->
+  <div class="form-section">
+    <div class="form-section-title">① 위임인 (납세자) 정보</div>
+    <div class="form-body">
+      <div class="field"><label>성명 / 법인명</label>
+        <input id="d_name" placeholder="홍길동" oninput="onChange()"></div>
+      <div class="field-row">
+        <div class="field"><label>주민등록번호</label>
+          <input id="d_rrn" placeholder="000000-0000000" oninput="onChange()"></div>
+        <div class="field"><label>사업자등록번호</label>
+          <input id="d_brn" placeholder="129-81-68431" oninput="onChange()"></div>
+      </div>
+      <div class="field"><label>주소</label>
+        <input id="d_addr" placeholder=" 경기도 성남부 분당구 성남대로 912 501호 515호 (BYC빌딩, 야탑동) ..." oninput="onChange()"></div>
+      <div class="field"><label>전화번호</label>
+        <input id="d_tel" placeholder="031-783-8877" oninput="onChange()"></div>
+    </div>
+  </div>
+
+  <!-- ② 수임인 -->
+  <div class="form-section">
+    <div class="form-section-title">② 수임인 (세무대리인) 정보</div>
+    <div class="form-body">
+      <div class="field-row">
+        <div class="field"><label>세무사 성명</label>
+          <input id="a_name" value="이석제" oninput="onChange()"></div>
+        <div class="field"><label>사업자번호</label>
+          <input id="a_brn" placeholder="129-81-68431" oninput="onChange()"></div>
+      </div>
+      <div class="field"><label>세무법인명</label>
+        <input id="a_firm" value="대한세무법인" oninput="onChange()"></div>
+      <div class="field"><label>사무소 주소</label>
+        <input id="a_addr" value="경기도 성남시 분당구" oninput="onChange()"></div>
+      <div class="field"><label>전화번호</label>
+        <input id="a_tel" placeholder="031-783-8877" oninput="onChange()"></div>
+    </div>
+  </div>
+
+  <!-- ③ 위임 업무 -->
+  <div class="form-section">
+    <div class="form-section-title">③ 위임 업무 범위</div>
+    <div class="form-body">
+      <div class="check-grid" id="taskGrid">
+        <label class="check-item"><input type="checkbox" value="법인세 신고·납부 대리" checked onchange="onChange()"> 법인세 신고·납부</label>
+        <label class="check-item"><input type="checkbox" value="부가가치세 신고·납부 대리" checked onchange="onChange()"> 부가가치세 신고·납부</label>
+        <label class="check-item"><input type="checkbox" value="종합소득세 신고·납부 대리" onchange="onChange()"> 종합소득세 신고·납부</label>
+        <label class="check-item"><input type="checkbox" value="원천세 신고·납부 대리" checked onchange="onChange()"> 원천세 신고·납부</label>
+        <label class="check-item"><input type="checkbox" value="지방소득세 신고·납부 대리" checked onchange="onChange()"> 지방소득세 신고·납부</label>
+        <label class="check-item"><input type="checkbox" value="장부작성(기장) 대리" checked onchange="onChange()"> 장부작성(기장)</label>
+        <label class="check-item"><input type="checkbox" value="세무조사 대리" onchange="onChange()"> 세무조사 대리</label>
+        <label class="check-item"><input type="checkbox" value="불복청구(심판·심사) 대리" onchange="onChange()"> 불복청구 대리</label>
+        <label class="check-item"><input type="checkbox" value="조세특례 적용 신청 대리" onchange="onChange()"> 조세특례 적용 신청</label>
+        <label class="check-item"><input type="checkbox" value="세금계산서 관련 업무 대리" onchange="onChange()"> 세금계산서 관련</label>
+        <label class="check-item"><input type="checkbox" value="각종 제증명 발급 대리" onchange="onChange()"> 각종 제증명 발급</label>
+        <label class="check-item"><input type="checkbox" value="기타 세무 업무 일체" onchange="onChange()"> 기타 세무 업무 일체</label>
+        <div class="check-item-etc">
+          <input type="checkbox" id="etc_chk" onchange="onChange()">
+          <span style="font-size:11px;white-space:nowrap;font-weight:700;color:var(--blue)">기타 직접입력:</span>
+          <input type="text" class="etc-input" id="etc_text" placeholder="특정 업무를 직접 입력" oninput="etcSync()" onfocus="etcFocus()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 작성일 -->
+  <div class="form-section">
+    <div class="form-section-title">④ 위임장 작성일</div>
+    <div class="form-body">
+      <div class="field"><label>작성일</label>
+        <input type="date" id="d_today" oninput="onChange()"></div>
+    </div>
+  </div>
+
+</div><!-- /form-panel -->
+
+<!-- 미리보기 -->
+<div class="preview-panel">
+  <div class="preview-toolbar">
+    <span>📋 실시간 미리보기 — 입력 즉시 반영</span>
+    <span id="status-msg"></span>
+  </div>
+  <div class="doc-paper">
+    <div id="doc-content">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <p>위임인 정보를 입력하면<br>위임장이 자동으로 완성됩니다</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /main -->
+
+<script>
+/* ═══════════════════════════════════════
+   유틸
+═══════════════════════════════════════ */
+const v = id => document.getElementById(id).value.trim();
+const $ = id => document.getElementById(id);
+
+function fmtDate(d) {
+  if (!d) return '__________';
+  const p = d.split('-');
+  return p[0] + '년 ' + parseInt(p[1]) + '월 ' + parseInt(p[2]) + '일';
+}
+
+function getChecked() {
+  const tasks = [...document.querySelectorAll('#taskGrid input[type=checkbox]:not(#etc_chk):checked')]
+    .map(c => c.value);
+  if ($('etc_chk').checked && v('etc_text')) tasks.push(v('etc_text'));
+  return tasks;
+}
+
+function etcSync() {
+  if (v('etc_text')) $('etc_chk').checked = true;
+  onChange();
+}
+function etcFocus() {
+  $('etc_chk').checked = true;
+  onChange();
+}
+
+/* ═══════════════════════════════════════
+   localStorage 저장 관리
+═══════════════════════════════════════ */
+const STORE_KEY   = 'daihan_위임장_slots_v1';
+const AUTO_KEY    = 'daihan_위임장_auto_v1';
+
+function getFormData() {
+  return {
+    d_name: v('d_name'), d_rrn: v('d_rrn'), d_brn: v('d_brn'),
+    d_addr: v('d_addr'), d_tel: v('d_tel'),
+    a_name: v('a_name'), a_brn: v('a_brn'), a_firm: v('a_firm'),
+    a_addr: v('a_addr'), a_tel: v('a_tel'),
+    d_today: v('d_today'),
+    tasks: getChecked(),
+    etc_chk: $('etc_chk').checked,
+    etc_text: v('etc_text')
+  };
+}
+
+function applyFormData(d) {
+  if (!d) return;
+  ['d_name','d_rrn','d_brn','d_addr','d_tel','a_name','a_brn','a_firm','a_addr','a_tel','d_today'].forEach(id => {
+    if (d[id] !== undefined) $(id).value = d[id];
+  });
+  if (d.etc_text !== undefined) $('etc_text').value = d.etc_text;
+  if (d.etc_chk !== undefined) $('etc_chk').checked = d.etc_chk;
+  // 체크박스 복원
+  const DEFAULTS = ['법인세 신고·납부 대리','부가가치세 신고·납부 대리','원천세 신고·납부 대리','지방소득세 신고·납부 대리','장부작성(기장) 대리'];
+  document.querySelectorAll('#taskGrid input[type=checkbox]:not(#etc_chk)').forEach(c => {
+    c.checked = d.tasks ? d.tasks.includes(c.value) : DEFAULTS.includes(c.value);
+  });
+}
+
+function loadSlots() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch { return []; }
+}
+function saveSlots(slots) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(slots));
+}
+
+let autoTimer = null;
+function autoSave() {
+  try {
+    localStorage.setItem(AUTO_KEY, JSON.stringify(getFormData()));
+    $('auto-badge').textContent = '자동저장 ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  } catch(e) {}
+}
+
+function loadAuto() {
+  try {
+    const d = JSON.parse(localStorage.getItem(AUTO_KEY));
+    if (!d) { showMsg('자동저장 데이터 없음', '#e57'); return; }
+    applyFormData(d);
+    liveUpdate();
+    showMsg('↩ 자동저장 불러옴', 'var(--green)');
+  } catch(e) { showMsg('불러오기 실패', '#e57'); }
+}
+
+function saveSlot() {
+  const d = getFormData();
+  const label = d.d_name || d.d_brn || '이름없음';
+  const slots = loadSlots();
+  slots.unshift({ id: Date.now(), label, date: new Date().toLocaleDateString('ko-KR'), data: d });
+  if (slots.length > 20) slots.length = 20; // 최대 20개
+  saveSlots(slots);
+  renderSaveList();
+  showMsg('✓ 저장됨: ' + label, 'var(--green)');
+}
+
+function deleteSlot(id, e) {
+  e.stopPropagation();
+  const slots = loadSlots().filter(s => s.id !== id);
+  saveSlots(slots);
+  renderSaveList();
+}
+
+function loadSlot(id) {
+  const slot = loadSlots().find(s => s.id === id);
+  if (!slot) return;
+  applyFormData(slot.data);
+  liveUpdate();
+  showMsg('✓ 불러옴: ' + slot.label, 'var(--blue)');
+}
+
+function renderSaveList() {
+  const slots = loadSlots();
+  const list  = $('save-list');
+  const empty = $('save-empty');
+  if (!slots.length) {
+    list.innerHTML = '<div class="save-empty">저장된 항목이 없습니다</div>';
+    return;
+  }
+  list.innerHTML = slots.map(s => `
+    <div class="save-item" onclick="loadSlot(${s.id})">
+      <div class="save-item-info">
+        <div class="save-item-name">📄 ${s.label}</div>
+        <div class="save-item-date">${s.date}</div>
+      </div>
+      <button class="save-item-del" onclick="deleteSlot(${s.id},event)" title="삭제">✕</button>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════
+   상태 메시지
+═══════════════════════════════════════ */
+let msgTimer;
+function showMsg(txt, color='var(--green)') {
+  const el = $('status-msg');
+  el.textContent = txt;
+  el.style.color = color;
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(() => { el.textContent = ''; }, 2200);
+}
+
+/* ═══════════════════════════════════════
+   onChange (입력 시마다)
+═══════════════════════════════════════ */
+function onChange() {
+  liveUpdate();
+  // 자동저장 디바운스 (1.5초 후)
+  clearTimeout(autoTimer);
+  autoTimer = setTimeout(autoSave, 1500);
+}
+
+/* ═══════════════════════════════════════
+   실시간 미리보기
+═══════════════════════════════════════ */
+function liveUpdate() {
+  const tasks = getChecked();
+  if (!v('d_name') && !v('d_brn') && !v('d_rrn')) {
+    $('doc-content').innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="width:52px;height:52px;opacity:0.2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <p>위임인 정보를 입력하면<br>위임장이 자동으로 완성됩니다</p>
+      </div>`;
+    return;
+  }
+  const tags = tasks.length
+    ? tasks.map(t => `<span class="task-tag">${t}</span>`).join('')
+    : '<span style="color:#bbb;font-size:10px">선택된 업무 없음</span>';
+
+  $('doc-content').innerHTML = `
+    <div class="doc-title">위 임 장</div>
+    <div class="doc-subtitle">세무사법 제2조 및 제6조에 의한 세무대리 위임</div>
+    <div class="doc-notice">※ 아래 위임인은 수임인에게 기재된 세무 관련 업무의 세무대리를 위임하며, 본 위임장은 세무사법 제6조에 따라 효력을 가집니다.</div>
+
+    <div class="doc-section">
+      <div class="doc-section-hd">1. 위임인 (납세자)</div>
+      <table class="doc-table">
+        <tr><td class="lbl">성명/법인명</td><td class="val">${v('d_name')||'<span style="color:#ddd">미입력</span>'}</td></tr>
+        <tr><td class="lbl">주민등록번호</td><td class="val">${v('d_rrn')||'—'}&nbsp;&nbsp;<span style="color:#999;font-size:9.5px">사업자:</span> ${v('d_brn')||'—'}</td></tr>
+        <tr><td class="lbl">주소</td><td class="val">${v('d_addr')||'—'}</td></tr>
+        <tr><td class="lbl">전화번호</td><td class="val">${v('d_tel')||'—'}</td></tr>
+      </table>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-hd">2. 수임인 (세무대리인)</div>
+      <table class="doc-table">
+        <tr><td class="lbl">세무사 성명</td><td class="val">${v('a_name')||'—'}</td></tr>
+        <tr><td class="lbl">사업자번호</td><td class="val">${v('a_brn')||'—'}</td></tr>
+        <tr><td class="lbl">세무법인명</td><td class="val">${v('a_firm')||'—'}</td></tr>
+        <tr><td class="lbl">사무소 주소</td><td class="val">${v('a_addr')||'—'}</td></tr>
+        <tr><td class="lbl">전화번호</td><td class="val">${v('a_tel')||'—'}</td></tr>
+      </table>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section-hd">3. 위임 사항 (업무 범위)</div>
+      <table class="doc-table">
+        <tr><td class="lbl">위임 업무</td><td class="val"><div class="task-tags">${tags}</div></td></tr>
+      </table>
+    </div>
+
+    <div class="sig-block">
+      <p class="sig-date" style="margin-bottom:5px">위임인은 위 수임인에게 상기 세무업무에 관한 세무대리를 위임합니다.</p>
+      <p class="sig-date">${fmtDate(v('d_today'))}</p>
+      <div class="sig-row">
+        <div class="sig-box">
+          <div class="sig-box-title">위 임 인</div>
+          <div class="sig-name">${v('d_name')||'　'}</div>
+          <div class="sig-firm">${v('d_brn')?'(사업자: '+v('d_brn')+')':'　'}</div>
+          <div class="sig-seal">인</div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-box-title">수 임 인 (세무사)</div>
+          <div class="sig-name">${v('a_name')||'　'}</div>
+          <div class="sig-firm">${v('a_firm')||'　'}</div>
+          <div class="sig-seal">인</div>
+        </div>
+      </div>
+      <div class="doc-footnote">
+        ※ 이 위임장은 세무사법 제2조(세무사의 직무) 및 제6조(세무대리의 신고 등)에 의거하여 작성되었습니다.<br>
+        ※ 위임인의 자유로운 의사에 따라 서명 또는 날인하여야 효력이 발생합니다. 위임 사항 변경 시 별도의 위임장을 작성하여야 합니다.
+      </div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════
+   PDF 저장
+═══════════════════════════════════════ */
+async function exportPDF() {
+  const el = document.querySelector('.doc-paper');
+  if (el.querySelector('.empty-state')) { alert('위임인 정보를 먼저 입력해주세요.'); return; }
+  showMsg('⏳ PDF 생성 중...', 'var(--amber)');
+  try {
+    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#fff', logging: false });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+    const pw = pdf.internal.pageSize.getWidth();
+    const ih = canvas.height * pw / canvas.width;
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, pw, ih);
+    pdf.save(`세무대리위임장_${v('d_name')||'위임인'}_${new Date().toISOString().slice(0,10)}.pdf`);
+    showMsg('✓ PDF 저장 완료');
+  } catch(e) { alert('PDF 오류: ' + e.message); }
+}
+
+/* ═══════════════════════════════════════
+   Word 저장
+═══════════════════════════════════════ */
+async function exportWord() {
+  if (!window.docx) { alert('라이브러리 로딩 중. 잠시 후 다시 시도해주세요.'); return; }
+  if (!v('d_name') && !v('d_brn')) { alert('위임인 정보를 먼저 입력해주세요.'); return; }
+  showMsg('⏳ Word 생성 중...', 'var(--amber)');
+  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    BorderStyle, WidthType, ShadingType, AlignmentType } = window.docx;
+
+  const tasks = getChecked();
+  const bdr = (c='CCCCCC', s=4) => ({ style: BorderStyle.SINGLE, size: s, color: c });
+  const borders = { top: bdr(), bottom: bdr(), left: bdr(), right: bdr() };
+
+  function infoRow(label, val) {
+    return new TableRow({ children: [
+      new TableCell({ width:{size:1500,type:WidthType.DXA}, borders,
+        shading:{fill:'EFF3FA',type:ShadingType.CLEAR}, margins:{top:70,bottom:70,left:100,right:100},
+        children:[new Paragraph({children:[new TextRun({text:label,bold:true,size:20,font:'Malgun Gothic'})]})] }),
+      new TableCell({ width:{size:7560,type:WidthType.DXA}, borders,
+        margins:{top:70,bottom:70,left:100,right:100},
+        children:[new Paragraph({children:[new TextRun({text:val||'—',size:20,font:'Malgun Gothic'})]})] })
+    ]});
+  }
+  function sHdr(text) {
+    return new Paragraph({ spacing:{before:200,after:0}, shading:{fill:'1A5EA8',type:ShadingType.CLEAR},
+      children:[new TextRun({text,bold:true,size:21,color:'FFFFFF',font:'Malgun Gothic'})] });
+  }
+
+  const doc = new Document({
+    styles:{default:{document:{run:{font:'Malgun Gothic',size:20}}}},
+    sections:[{ properties:{page:{size:{width:11906,height:16838},margin:{top:1080,right:1000,bottom:1080,left:1000}}},
+      children:[
+        new Paragraph({ alignment:AlignmentType.CENTER, spacing:{after:100},
+          children:[new TextRun({text:'위    임    장',bold:true,size:48,font:'Malgun Gothic',color:'111111'})] }),
+        new Paragraph({ alignment:AlignmentType.CENTER, spacing:{after:50},
+          border:{bottom:{style:BorderStyle.THICK,size:8,color:'111111',space:4}},
+          children:[new TextRun({text:'세무사법 제2조 및 제6조에 의한 세무대리 위임',size:17,color:'666666',font:'Malgun Gothic'})] }),
+        new Paragraph({ spacing:{before:120,after:160}, shading:{fill:'FFFBEB',type:ShadingType.CLEAR},
+          border:{left:{style:BorderStyle.THICK,size:8,color:'F59E0B',space:4}},
+          children:[new TextRun({text:'※ 아래 위임인은 수임인에게 기재된 세무 관련 업무의 세무대리를 위임하며, 세무사법 제6조에 따라 효력을 가집니다.',size:17,color:'92400E',font:'Malgun Gothic'})] }),
+
+        sHdr('1. 위임인 (납세자)'),
+        new Table({ width:{size:9060,type:WidthType.DXA}, columnWidths:[1500,7560], rows:[
+          infoRow('성명 / 법인명', v('d_name')),
+          infoRow('주민등록번호', v('d_rrn')||'—'),
+          infoRow('사업자등록번호', v('d_brn')||'—'),
+          infoRow('주소', v('d_addr')),
+          infoRow('전화번호', v('d_tel')),
+        ]}),
+
+        sHdr('2. 수임인 (세무대리인)'),
+        new Table({ width:{size:9060,type:WidthType.DXA}, columnWidths:[1500,7560], rows:[
+          infoRow('세무사 성명', v('a_name')),
+          infoRow('사업자번호', v('a_brn')),
+          infoRow('세무법인명', v('a_firm')),
+          infoRow('사무소 주소', v('a_addr')),
+          infoRow('전화번호', v('a_tel')),
+        ]}),
+
+        sHdr('3. 위임 사항 (업무 범위)'),
+        new Table({ width:{size:9060,type:WidthType.DXA}, columnWidths:[1500,7560],
+          rows:[new TableRow({children:[
+            new TableCell({width:{size:1500,type:WidthType.DXA},borders,shading:{fill:'EFF3FA',type:ShadingType.CLEAR},
+              margins:{top:70,bottom:70,left:100,right:100},
+              children:[new Paragraph({children:[new TextRun({text:'위임 업무',bold:true,size:20,font:'Malgun Gothic'})]})] }),
+            new TableCell({width:{size:7560,type:WidthType.DXA},borders,margins:{top:70,bottom:70,left:100,right:100},
+              children:tasks.length
+                ? tasks.map(t=>new Paragraph({children:[new TextRun({text:'▪ '+t,size:20,font:'Malgun Gothic'})]}))
+                : [new Paragraph({children:[new TextRun({text:'선택된 업무 없음',size:20,font:'Malgun Gothic',color:'999999'})]})]
+            })
+          ]})]
+        }),
+
+        new Paragraph({ spacing:{before:360,after:80}, alignment:AlignmentType.CENTER,
+          children:[new TextRun({text:'위임인은 위 수임인에게 상기 세무업무에 관한 세무대리를 위임합니다.',size:20,font:'Malgun Gothic'})] }),
+        new Paragraph({ spacing:{after:260}, alignment:AlignmentType.CENTER,
+          children:[new TextRun({text:fmtDate(v('d_today')),bold:true,size:22,font:'Malgun Gothic'})] }),
+
+        new Table({ width:{size:9060,type:WidthType.DXA}, columnWidths:[4380,300,4380],
+          rows:[new TableRow({children:[
+            new TableCell({width:{size:4380,type:WidthType.DXA},
+              borders:{top:bdr(),bottom:bdr(),left:bdr(),right:bdr()},
+              margins:{top:140,bottom:140,left:160,right:160},
+              children:[
+                new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:'위 임 인',bold:true,size:20,font:'Malgun Gothic',color:'444444'})]}),
+                new Paragraph({spacing:{before:100},alignment:AlignmentType.CENTER,children:[new TextRun({text:v('d_name')||'　',bold:true,size:24,font:'Malgun Gothic'})]}),
+                new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:v('d_brn')?'(사업자: '+v('d_brn')+')':'　',size:17,font:'Malgun Gothic',color:'888888'})]}),
+                new Paragraph({spacing:{before:100},alignment:AlignmentType.CENTER,children:[new TextRun({text:'(서명 또는 날인)',size:18,font:'Malgun Gothic',color:'999999'})]}),
+              ]}),
+            new TableCell({width:{size:300,type:WidthType.DXA},
+              borders:{top:bdr('FFFFFF'),bottom:bdr('FFFFFF'),left:bdr('FFFFFF'),right:bdr('FFFFFF')},
+              children:[new Paragraph({children:[new TextRun('')]})] }),
+            new TableCell({width:{size:4380,type:WidthType.DXA},
+              borders:{top:bdr(),bottom:bdr(),left:bdr(),right:bdr()},
+              margins:{top:140,bottom:140,left:160,right:160},
+              children:[
+                new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:'수 임 인 (세무사)',bold:true,size:20,font:'Malgun Gothic',color:'444444'})]}),
+                new Paragraph({spacing:{before:100},alignment:AlignmentType.CENTER,children:[new TextRun({text:v('a_name')||'　',bold:true,size:24,font:'Malgun Gothic'})]}),
+                new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:v('a_firm')||'　',size:17,font:'Malgun Gothic',color:'888888'})]}),
+                new Paragraph({spacing:{before:100},alignment:AlignmentType.CENTER,children:[new TextRun({text:'(서명 또는 날인)',size:18,font:'Malgun Gothic',color:'999999'})]}),
+              ]}),
+          ]})]
+        }),
+
+        new Paragraph({ spacing:{before:160}, border:{top:{style:BorderStyle.SINGLE,size:4,color:'CCCCCC',space:4}},
+          shading:{fill:'FAFAFA',type:ShadingType.CLEAR},
+          children:[new TextRun({text:'※ 이 위임장은 세무사법 제2조 및 제6조에 의거하여 작성되었습니다. 위임인의 자유로운 의사에 따라 서명 또는 날인하여야 효력이 발생합니다. 위임 사항 변경 시 별도의 위임장을 작성하여야 합니다.',size:15,color:'888888',font:'Malgun Gothic'})] }),
+      ]}]
+  });
+
+  try {
+    const buf = await Packer.toBlob(doc);
+    const url = URL.createObjectURL(buf);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `세무대리위임장_${v('d_name')||'위임인'}_${new Date().toISOString().slice(0,10)}.docx`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showMsg('✓ Word 저장 완료');
+  } catch(e) { alert('Word 오류: ' + e.message); console.error(e); }
+}
+
+/* ═══════════════════════════════════════
+   초기화
+═══════════════════════════════════════ */
+function resetForm() {
+  if (!confirm('입력 내용을 모두 초기화하시겠습니까?')) return;
+  ['d_name','d_rrn','d_brn','d_addr','d_tel','a_brn','a_tel','etc_text'].forEach(id => $(id).value='');
+  $('etc_chk').checked = false;
+  const DEFAULTS = ['법인세 신고·납부 대리','부가가치세 신고·납부 대리','원천세 신고·납부 대리','지방소득세 신고·납부 대리','장부작성(기장) 대리'];
+  document.querySelectorAll('#taskGrid input[type=checkbox]:not(#etc_chk)').forEach(c => c.checked = DEFAULTS.includes(c.value));
+  liveUpdate();
+}
+
+/* ═══════════════════════════════════════
+   초기 실행
+═══════════════════════════════════════ */
+(function init() {
+  $('d_today').value = new Date().toISOString().split('T')[0];
+  renderSaveList();
+  // 자동저장 데이터 있으면 조용히 복원
+  try {
+    const auto = JSON.parse(localStorage.getItem(AUTO_KEY));
+    if (auto && auto.d_name) {
+      applyFormData(auto);
+      $('auto-badge').textContent = '자동저장 복원됨';
+    }
+  } catch(e) {}
+  liveUpdate();
+})();
+</script>
+</body>
+</html>
