@@ -85,6 +85,12 @@
   }
   .field input:focus { outline: none; border-color: var(--accent); }
   .field .hint { font-size: 11px; color: var(--accent); margin-top: 1px; min-height: 13px; }
+  .field.disabled { opacity: .42; }
+  .field.disabled input { background: #f1f0ec; cursor: not-allowed; }
+
+  .fee-mode { display: flex; gap: 22px; margin: 6px 0 10px; }
+  .fee-mode .radio { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; cursor: pointer; }
+  .fee-mode .radio input { cursor: pointer; }
 
   .section-title {
     font-family: 'Noto Serif KR', serif;
@@ -275,8 +281,15 @@
   </div>
 
   <div class="section-title">보수 약정 (제5조 · 제6조)</div>
+  <div class="fee-mode">
+    <label class="radio"><input type="radio" name="feeMode" value="rate" checked> 성공보수율 방식</label>
+    <label class="radio"><input type="radio" name="feeMode" value="fixed"> 정액 방식</label>
+  </div>
   <div class="grid">
-    <div class="field"><label for="feeRate">성공보수율 (%)</label><input id="feeRate" type="number" min="0" max="100" step="0.1" placeholder="예: 10"></div>
+    <div class="field" id="wrap_feeRate"><label for="feeRate">성공보수율 (%)</label><input id="feeRate" type="number" min="0" max="100" step="0.1" placeholder="예: 10"></div>
+    <div class="field" id="wrap_feeCond"><label for="feeCond">정액 지급조건</label><input id="feeCond" placeholder="예: 고지세액이 취소된"></div>
+    <div class="field" id="wrap_feeFixed"><label for="feeFixed">정액 보수금액 (원)</label><input id="feeFixed" type="number" min="0" placeholder="예: 3000000"><div class="hint" id="feeFixedKor"></div></div>
+    <div class="field full"><label for="feeEtc">기타 (추가 문구, 선택)</label><input id="feeEtc" placeholder="예: 단, 부가가치세는 별도로 한다."></div>
     <div class="field"><label for="retainer">착수금 (원, 부가세포함)</label><input id="retainer" type="number" min="0" placeholder="0"><div class="hint" id="retainerKor"></div></div>
     <div class="field"><label for="balanceDays">잔금 지급기한 (확정일로부터 ○일)</label><input id="balanceDays" type="number" min="1" value="3"></div>
   </div>
@@ -317,7 +330,7 @@
 
     <div class="art">
       <span class="at">제1조【목적】</span>
-      <span class="ab">본 계약은 갑의 하기 사건에 대한 이의신청, 심사청구, 심판청구 및 감사원심사청구(이하 “불복청구”라 한다.)와 관련하여 갑이 을에게 동 청구의 업무처리에 관한 일체 행위의 대리권한을 위임함을 목적으로 한다.</span>
+      <span class="ab">본 계약은 갑의 하기 사건에 대한 고충청구, 이의신청, 심사청구, 심판청구 및 감사원심사청구(이하 “불복청구”라 한다.)와 관련하여 갑이 을에게 동 청구의 업무처리에 관한 일체 행위의 대리권한을 위임함을 목적으로 한다.</span>
       <span class="sub-item">(1) 사 건 명 : <span id="o_caseName">고지세금 조세불복</span></span>
       <span class="sub-item">(2) 사 건 개 요</span>
       <table class="tbl">
@@ -357,7 +370,8 @@
 
     <div class="art">
       <span class="at">제5조【보수】</span>
-      <span class="ab">을이 수임한 업무의 보수는 제1조에 게기한 불복청구에 의하여 환급(환급이자 포함) 또는 취소, 경감된 세액(부담금)의 <span class="v" id="o_feeRate">　</span> %를 보수금액으로 한다. ( 부가가치세 별도 )</span>
+      <span class="ab" id="o_feeBody"></span>
+      <span class="sub-item" id="o_feeEtc" style="display:none;"></span>
     </div>
 
     <div class="art">
@@ -428,9 +442,14 @@ const $ = (id) => document.getElementById(id);
 const FIELDS = [
   'gBiz','gName','gRRN','gBRN','gAddr',
   'caseName','taxpayer','taxItem','disposer','taxAmount','noticeDate','receiveDate',
-  'feeRate','retainer','balanceDays','signDate',
+  'feeRate','feeCond','feeFixed','feeEtc','retainer','balanceDays','signDate',
   'eBiz','eName','eBRN','eAddr'
 ];
+
+function getFeeMode() {
+  const el = document.querySelector('input[name="feeMode"]:checked');
+  return el ? el.value : 'rate';
+}
 
 function fmt(n) {
   return (n || n === 0) ? Number(n).toLocaleString('ko-KR') : '';
@@ -508,8 +527,44 @@ function render() {
   setT('o_noticeDate', fmtDate($('noticeDate').value));
   setT('o_receiveDate', fmtDate($('receiveDate').value));
 
-  // 보수
-  setT('o_feeRate', $('feeRate').value, '　');
+  // 보수 (성공보수율 / 정액)
+  const feeMode = getFeeMode();
+  $('wrap_feeRate').classList.toggle('disabled', feeMode !== 'rate');
+  $('feeRate').disabled = (feeMode !== 'rate');
+  $('wrap_feeCond').classList.toggle('disabled', feeMode !== 'fixed');
+  $('feeCond').disabled = (feeMode !== 'fixed');
+  $('wrap_feeFixed').classList.toggle('disabled', feeMode !== 'fixed');
+  $('feeFixed').disabled = (feeMode !== 'fixed');
+
+  const blank = '<span class="v">　</span>';
+  if (feeMode === 'fixed') {
+    const cond = $('feeCond').value.trim();
+    const fixed = $('feeFixed').value;
+    const fixedKor = fixed ? numToKor(fixed) : '';
+    const condHtml = cond ? `<span class="v">${cond}</span> 경우에 ` : '';
+    const amtHtml = fixed
+      ? `<span class="v">${fmt(fixed)}</span>원(${fixedKor}원)`
+      : `금 ${blank}원`;
+    $('o_feeBody').innerHTML =
+      `을이 수임한 업무의 보수는 ${condHtml}정액으로 금 ${amtHtml}으로 한다. ( 부가가치세 별도 )`;
+    $('feeFixedKor').textContent = fixedKor ? `${fixedKor}원` : '';
+  } else {
+    const rate = $('feeRate').value.trim();
+    const rateHtml = rate ? `<span class="v">${rate}</span>` : blank;
+    $('o_feeBody').innerHTML =
+      `을이 수임한 업무의 보수는 제1조에 게기한 불복청구에 의하여 환급(환급이자 포함) 또는 취소, 경감된 세액(부담금)의 ${rateHtml} %를 보수금액으로 한다. ( 부가가치세 별도 )`;
+    $('feeFixedKor').textContent = '';
+  }
+
+  const etc = $('feeEtc').value.trim();
+  const etcEl = $('o_feeEtc');
+  if (etc) {
+    etcEl.textContent = `기타 : ${etc}`;
+    etcEl.style.display = '';
+  } else {
+    etcEl.textContent = '';
+    etcEl.style.display = 'none';
+  }
 
   const ret = $('retainer').value;
   setT('o_retainer', ret ? fmt(ret) : '', '　');
@@ -536,6 +591,7 @@ function render() {
 function saveToLocalStorage() {
   const data = {};
   FIELDS.forEach((f) => { if ($(f)) data[f] = $(f).value; });
+  data.feeMode = getFeeMode();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   alert('입력한 내용이 저장되었습니다.');
 }
@@ -546,6 +602,10 @@ function loadFromLocalStorage() {
   try {
     const data = JSON.parse(saved);
     FIELDS.forEach((f) => { if ($(f) && data[f] !== undefined) $(f).value = data[f]; });
+    if (data.feeMode) {
+      const r = document.querySelector(`input[name="feeMode"][value="${data.feeMode}"]`);
+      if (r) r.checked = true;
+    }
     render();
   } catch (error) {
     console.error(error);
@@ -556,6 +616,9 @@ function loadFromLocalStorage() {
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.control input').forEach((el) => {
     el.addEventListener('input', render);
+  });
+  document.querySelectorAll('input[name="feeMode"]').forEach((el) => {
+    el.addEventListener('change', render);
   });
   $('btnSave').addEventListener('click', saveToLocalStorage);
   $('btnLoad').addEventListener('click', loadFromLocalStorage);
