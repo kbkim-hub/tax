@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>조세불복대리계약서 작성 프로그램</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #ffffff;
+    --line: #888;
+    --line-soft: #c8c4b8;
+    --muted: #6b6760;
+    --accent: #1a3a6b;
+    --accent-soft: #eef3fa;
+    --shade: #eef0f3;
+    --warn: #c08400;
+    --warn-soft: #fff8e1;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #e8e6dd;
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ===== 컨트롤 패널 ===== */
+  .control {
+    max-width: 900px;
+    margin: 24px auto 0;
+    padding: 22px 26px;
+    background: #fff;
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .control h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -.02em;
+  }
+  .control .sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+
+  .info-box {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 9px 13px;
+    margin: 10px 0 14px;
+    font-size: 12.5px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .info-box b { color: var(--accent); }
+
+  .privacy-warn {
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    padding: 7px 12px;
+    margin: 10px 0 14px;
+    font-size: 12px;
+    color: #6a4a00;
+    line-height: 1.55;
+  }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .field input {
+    padding: 7px 9px;
+    border: 1px solid var(--line-soft);
+    border-radius: 3px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13.5px;
+    background: #fff;
+  }
+  .field input:focus { outline: none; border-color: var(--accent); }
+  .field .hint { font-size: 11px; color: var(--accent); margin-top: 1px; min-height: 13px; }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 16px 0 6px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--line-soft);
+    letter-spacing: .03em;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 9px 18px;
+    border: 1px solid var(--ink);
+    background: #fff;
+    color: var(--ink);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .btn:hover { background: var(--ink); color: #fff; }
+  .btn.primary { background: var(--ink); color: #fff; }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* ===== 계약서 본문 ===== */
+  .doc-wrap {
+    max-width: 900px;
+    margin: 22px auto;
+    padding: 0 16px 30px;
+  }
+  .doc {
+    background: var(--paper);
+    padding: 44px 52px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.1);
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  .doc h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: 27px;
+    text-align: center;
+    letter-spacing: 0.35em;
+    text-indent: 0.35em;
+    margin: 0 0 22px;
+  }
+
+  .parties { margin: 0 0 14px; font-size: 13.5px; line-height: 2.1; }
+  .parties .pl { font-weight: 700; letter-spacing: .04em; }
+  .parties .pv { border-bottom: 1px solid var(--line); padding: 0 6px; min-width: 280px; display: inline-block; }
+
+  .intro { font-size: 12.5px; line-height: 1.85; margin: 6px 0 16px; text-align: justify; }
+  .intro .v { font-weight: 700; }
+
+  .art { margin: 0 0 11px; font-size: 12.5px; line-height: 1.8; text-align: justify; }
+  .art .at {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .art .ab { display: block; }
+  .art ul { margin: 3px 0 3px 4px; padding-left: 18px; }
+  .art li { margin-bottom: 1px; }
+  .art .sub-item { display: block; padding-left: 16px; text-indent: -16px; margin-bottom: 2px; }
+  .v {
+    display: inline-block;
+    min-width: 40px;
+    border-bottom: 1px solid var(--line);
+    padding: 0 5px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* 사건개요 테이블 */
+  table.tbl {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 10px;
+    font-size: 12.5px;
+  }
+  table.tbl th, table.tbl td {
+    border: 1px solid var(--line);
+    padding: 5px 10px;
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+  table.tbl th {
+    background: var(--shade);
+    width: 28%;
+    text-align: center;
+    font-weight: 600;
+  }
+  table.tbl td.val { background: #fff; }
+  table.tbl td.amount { font-family: 'Noto Serif KR', serif; font-weight: 600; }
+
+  .doc-date {
+    text-align: center;
+    margin: 26px 0 22px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .25em;
+  }
+
+  .signatures { margin-top: 6px; }
+  .sigbox {
+    border: 1px solid var(--line);
+    padding: 12px 18px;
+    background: #fff;
+    margin-bottom: 12px;
+  }
+  .sigbox .sl {
+    font-weight: 700; margin-bottom: 8px; padding-bottom: 5px;
+    border-bottom: 1px solid #ccc; letter-spacing: .2em;
+    font-size: 13px;
+  }
+  .sigbox .sr { font-size: 12.5px; line-height: 2; }
+  .sigbox .sr .k { display: inline-block; width: 130px; color: var(--muted); }
+  .sigbox .seal { color: var(--accent); font-weight: 700; }
+
+  .page-break { page-break-before: always; }
+
+  /* ===== 인쇄 ===== */
+  @media print {
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .control { display: none !important; }
+    .doc-wrap { margin: 0; padding: 0; max-width: none; }
+    .doc { box-shadow: none; padding: 0; font-size: 10.3pt; }
+    .doc h1 { font-size: 20pt; margin-bottom: 16px; }
+    .parties { font-size: 11pt; line-height: 1.9; }
+    .intro { font-size: 9.8pt; line-height: 1.7; margin: 5px 0 12px; }
+    .art { font-size: 9.8pt; line-height: 1.65; margin-bottom: 8px; }
+    .art .at { font-size: 10.3pt; }
+    table.tbl { font-size: 9.6pt; }
+    table.tbl th, table.tbl td { padding: 3px 8px; }
+    .doc-date { font-size: 11pt; margin: 20px 0 16px; }
+    .sigbox { padding: 9px 14px; }
+    .sigbox .sr { font-size: 10pt; line-height: 1.85; }
+    @page { size: A4; margin: 16mm 18mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== 컨트롤 패널 ====== -->
+<div class="control">
+  <h1>조세불복대리계약서 작성 프로그램</h1>
+  <div class="sub">불복청구(이의신청·심사·심판·감사원심사) 대리계약서 · A4 출력</div>
+
+  <div class="info-box">
+    납세자(<b>갑</b>)와 대한세무법인(<b>을</b>) 간의 <b>불복청구대리계약서</b>를 작성합니다. 아래 항목을 입력하면 실시간으로 계약서가 완성되며, <b>인쇄 / PDF 저장</b> 버튼으로 출력할 수 있습니다. 빈 항목은 공란으로 출력됩니다.
+  </div>
+
+  <div class="privacy-warn">
+    🔒 <b>개인정보 안내</b> — 주민등록번호·사업자등록번호는 민감정보입니다. 입력값은 브라우저에서만 처리되며 서버로 전송되지 않으나, 인쇄·PDF 저장 시 보관에 유의하시기 바랍니다.
+  </div>
+
+  <div class="section-title">위임자 (갑)</div>
+  <div class="grid">
+    <div class="field"><label for="gBiz">상호</label><input id="gBiz" placeholder="(개인은 생략 가능)"></div>
+    <div class="field"><label for="gName">성명</label><input id="gName" placeholder="홍길동"></div>
+    <div class="field"><label for="gRRN">주민등록번호</label><input id="gRRN" placeholder="000000-0000000" maxlength="14"></div>
+    <div class="field"><label for="gBRN">사업자등록번호</label><input id="gBRN" placeholder="000-00-00000" maxlength="12"></div>
+    <div class="field full"><label for="gAddr">주소</label><input id="gAddr"></div>
+  </div>
+
+  <div class="section-title">사건 개요 (제1조)</div>
+  <div class="grid">
+    <div class="field"><label for="caseName">사건명</label><input id="caseName" value="고지세금 조세불복"></div>
+    <div class="field"><label for="taxpayer">납세의무자</label><input id="taxpayer" placeholder="홍길동"></div>
+    <div class="field"><label for="taxItem">세목</label><input id="taxItem" placeholder="종합소득세 등"></div>
+    <div class="field"><label for="disposer">처분청</label><input id="disposer" placeholder="○○세무서"></div>
+    <div class="field"><label for="taxAmount">고지세액 (원)</label><input id="taxAmount" type="number" min="0" placeholder="0"><div class="hint" id="taxAmountKor"></div></div>
+    <div class="field"><label for="noticeDate">고지서통지일</label><input id="noticeDate" type="date"></div>
+    <div class="field"><label for="receiveDate">고지서수령일</label><input id="receiveDate" type="date"></div>
+  </div>
+
+  <div class="section-title">보수 약정 (제5조 · 제6조)</div>
+  <div class="grid">
+    <div class="field"><label for="feeRate">성공보수율 (%)</label><input id="feeRate" type="number" min="0" max="100" step="0.1" placeholder="예: 10"></div>
+    <div class="field"><label for="retainer">착수금 (원, 부가세포함)</label><input id="retainer" type="number" min="0" placeholder="0"><div class="hint" id="retainerKor"></div></div>
+    <div class="field"><label for="balanceDays">잔금 지급기한 (확정일로부터 ○일)</label><input id="balanceDays" type="number" min="1" value="3"></div>
+  </div>
+
+  <div class="section-title">계약 체결일</div>
+  <div class="grid">
+    <div class="field full"><label for="signDate">작성일</label><input id="signDate" type="date"></div>
+  </div>
+
+  <div class="section-title">수임자 (을)</div>
+  <div class="grid">
+    <div class="field"><label for="eBiz">상호</label><input id="eBiz" value="대한세무법인"></div>
+    <div class="field"><label for="eName">성명</label><input id="eName" value="이석제"></div>
+    <div class="field"><label for="eBRN">사업자등록번호</label><input id="eBRN" placeholder="000-00-00000" maxlength="12"></div>
+    <div class="field full"><label for="eAddr">주소</label><input id="eAddr" value="경기도 성남시 분당구 성남대로 912 501호 515호"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn primary" id="btnSave">저장</button>
+    <button type="button" class="btn" id="btnLoad">불러오기</button>
+    <button type="button" class="btn primary" id="btnPrint">🖨 인쇄 / PDF 저장</button>
+  </div>
+</div>
+
+<!-- ====== 계약서 본문 ====== -->
+<div class="doc-wrap">
+  <div class="doc" id="doc">
+    <h1>불복청구대리계약서</h1>
+
+    <div class="parties">
+      <div><span class="pl">위 임 자 (갑) ：</span> <span class="pv" id="o_gHeader">　</span></div>
+      <div><span class="pl">수 임 자 (을) ：</span> <span class="pv" id="o_eHeader">대한세무법인</span></div>
+    </div>
+
+    <div class="intro">
+      위 위임자 <span class="v" id="i_g">　</span> (이하 “갑”이라 한다)과 수임자 세무사 <span class="v" id="i_e">대한세무법인 이석제</span> (이하 “을”이라 한다)은 조세불복청구대리에 관하여 다음과 같이 계약을 체결한다.
+    </div>
+
+    <div class="art">
+      <span class="at">제1조【목적】</span>
+      <span class="ab">본 계약은 갑의 하기 사건에 대한 이의신청, 심사청구, 심판청구 및 감사원심사청구(이하 “불복청구”라 한다.)와 관련하여 갑이 을에게 동 청구의 업무처리에 관한 일체 행위의 대리권한을 위임함을 목적으로 한다.</span>
+      <span class="sub-item">(1) 사 건 명 : <span id="o_caseName">고지세금 조세불복</span></span>
+      <span class="sub-item">(2) 사 건 개 요</span>
+      <table class="tbl">
+        <tr><th>납 세 의 무 자</th><td class="val" id="o_taxpayer">　</td></tr>
+        <tr><th>세　　　목</th><td class="val" id="o_taxItem">　</td></tr>
+        <tr><th>처 　분 　청</th><td class="val" id="o_disposer">　</td></tr>
+        <tr><th>고 지 세 액</th><td class="val amount" id="o_taxAmount">　</td></tr>
+        <tr><th>고지서통지일</th><td class="val" id="o_noticeDate">　</td></tr>
+        <tr><th>고지서수령일</th><td class="val" id="o_receiveDate">　</td></tr>
+      </table>
+    </div>
+
+    <div class="art">
+      <span class="at">제2조【을의 업무범위】</span>
+      <span class="ab">을은 제1조에서 게기한 사건에 대한 불복청구가 최종결정될 때까지 다음의 업무를 수행한다.</span>
+      <span class="ab">불복청구 대리업무</span>
+      <ul>
+        <li>불복청구서의 작성 및 신고접수</li>
+        <li>보정요구자료의 검토 및 제출</li>
+        <li>불복청구 집행과정에서의 대리 및 연결업무</li>
+        <li>과세당국의 논지파악 및 대응책 검토 수립</li>
+        <li>기타 갑이 하여야 할 필요한 사항의 보조</li>
+      </ul>
+    </div>
+
+    <div class="art">
+      <span class="at">제3조【신의・성실】</span>
+      <span class="ab">을은 신의로서 성실하게 상기의 수임업무를 수행한다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제4조【자료 등의 제공 및 책임】</span>
+      <span class="sub-item">① 갑은 위임업무의 수행에 필요한 설명, 서류, 기록 기타자료(이하 “자료 등”이라 한다)를 그 책임과 비용 부담으로 을에게 제공하여야 한다.</span>
+      <span class="sub-item">② 갑은 을로부터 자료 등의 청구가 있는 경우에는 신속히 제출하여야 한다. 자료의 제출이 을의 정확한 업무수행에 필요한 기간을 경과한 후에 있을 때에는 그것에 기인하는 불이익은 갑이 부담한다.</span>
+      <span class="sub-item">③ 갑의 자료 제공 부족, 오류에 기인한 불이익은 갑이 부담한다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제5조【보수】</span>
+      <span class="ab">을이 수임한 업무의 보수는 제1조에 게기한 불복청구에 의하여 환급(환급이자 포함) 또는 취소, 경감된 세액(부담금)의 <span class="v" id="o_feeRate">　</span> %를 보수금액으로 한다. ( 부가가치세 별도 )</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제6조【보수지급】</span>
+      <span class="sub-item">① 착수금 : 갑은 본 계약과 동시에 착수금으로 금 <span class="v" id="o_retainer">　</span> 원( 부가세포함) 을 을에게 지급한다. 본 착수금은 불복청구에 패소하였을 경우에도 반환하지 아니한다.</span>
+      <span class="sub-item">② 잔　금 : 갑은 불복청구의 승소가 각각 확정되었을 시 제5조의 보수액에서 기지급한 착수금을 차감한 잔액을 확정된 날로부터 <span class="v" id="o_balanceDays">3</span> 일 이내에 지급한다. 다만, 갑과을 쌍방의 합의에 따라 중도금을 지급할 수 있다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제7조【비밀보장】</span>
+      <span class="ab">을은 본 업무수행 중 알게 된 갑의 비밀을 정당한 이유없이 타인에게 누설하여서는 아니된다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제8조【해약의 책임】</span>
+      <span class="sub-item">① 을이 업무수행 중 갑으로부터 부당한 청탁이나 압력을 받고 정당한 업무를 수행할 수 없다고 판단된 경우에는 을은 일방적으로 해약을 할 수 있으며, 서면으로 통보하여야 한다. 이 경우에는 갑은 착수금의 반환을 청구할 수 없다.</span>
+      <span class="sub-item">② 갑의 사정에 의해 불복청구 작성업무 착수 후에 해약을 할 시에는 기 지급된 착수금은 반환을 요구하지 못한다. 그리고 갑은 전부 승소를 전제로 한 제5조에서 규정한 보수액의 반액을 지급한다.</span>
+      <span class="sub-item">③ 을의 사정에 의하여 해약할 때에는 을은 기 수령한 보수액을 즉시 반환한다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제9조【업무수행의 불능】</span>
+      <span class="ab">갑이 제시한 자료에 의하여 정당하고 성실한 불복청구대리업무가 불가능하거나 자료제시의 불응 등으로 인하여 업무 수행이 불가능할 때는 그 사유서를 작성・제출하는 것으로서 업무수행이 완료한 것으로 한다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제10조【기타】</span>
+      <span class="ab">본 계약에 정하지 않은 사항 및 계약 내용의 변경이 발생한 경우에는 갑과 을이 협의하여 결정한다.</span>
+    </div>
+
+    <div class="art">
+      <span class="at">제11조【특기사항】</span>
+      <span class="ab">본 계약을 증명하기 위하여 을은 갑에게 계약내용을 설명하고 갑은 이를 승낙했기 때문에 본 계약서 2통을 작성하여 각각 기명날인하여 각각 1통씩 보관한다.</span>
+    </div>
+
+    <div class="doc-date" id="o_signDate">　　　년　　월　　일</div>
+
+    <div class="signatures">
+      <div class="sigbox">
+        <div class="sl">위임자 (갑)</div>
+        <div class="sr">
+          <span class="k">상　　　　　호</span> : <span id="s_gBiz">　</span><br>
+          <span class="k">주　　　　　소</span> : <span id="s_gAddr">　</span><br>
+          <span class="k">주민등록번호</span> : <span id="s_gRRN">　</span><br>
+          <span class="k">사업자등록번호</span> : <span id="s_gBRN">　</span><br>
+          <span class="k">성　　　　　명</span> : <span id="s_gName">　</span>　<span class="seal">(인)</span>
+        </div>
+      </div>
+      <div class="sigbox">
+        <div class="sl">수임자 (을)</div>
+        <div class="sr">
+          <span class="k">상　　　　　호</span> : <span id="s_eBiz">대한세무법인</span><br>
+          <span class="k">주　　　　　소</span> : <span id="s_eAddr">　</span><br>
+          <span class="k">사업자등록번호</span> : <span id="s_eBRN">　</span><br>
+          <span class="k">성　　　　　명</span> : <span id="s_eName">이석제</span>　<span class="seal">(인)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const STORAGE_KEY = 'jose_bulbok_contract_saved_data';
+const $ = (id) => document.getElementById(id);
+
+const FIELDS = [
+  'gBiz','gName','gRRN','gBRN','gAddr',
+  'caseName','taxpayer','taxItem','disposer','taxAmount','noticeDate','receiveDate',
+  'feeRate','retainer','balanceDays','signDate',
+  'eBiz','eName','eBRN','eAddr'
+];
+
+function fmt(n) {
+  return (n || n === 0) ? Number(n).toLocaleString('ko-KR') : '';
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  const [y, m, da] = d.split('-');
+  return `${y}년 ${parseInt(m, 10)}월 ${parseInt(da, 10)}일`;
+}
+
+// 한글 금액 변환 (십·백·천 앞의 "일" 생략)
+function numToKor(num) {
+  const n = parseInt(num, 10);
+  if (isNaN(n) || n <= 0) return '';
+  const units = ['', '만', '억', '조', '경'];
+  const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+  const sub = ['', '십', '백', '천'];
+  let result = '';
+  let rest = n;
+  let unitIdx = 0;
+  while (rest > 0) {
+    const part = rest % 10000;
+    if (part > 0) {
+      let s = '';
+      let p = part, sIdx = 0;
+      while (p > 0) {
+        const d = p % 10;
+        if (d > 0) {
+          const digitText = (d === 1 && sIdx > 0) ? '' : digits[d];
+          s = digitText + sub[sIdx] + s;
+        }
+        p = Math.floor(p / 10);
+        sIdx++;
+      }
+      result = s + units[unitIdx] + result;
+    }
+    rest = Math.floor(rest / 10000);
+    unitIdx++;
+  }
+  return result;
+}
+
+function setT(id, val, fb) {
+  const el = $(id);
+  if (el) el.textContent = (val && String(val).trim()) ? val : (fb || '　');
+}
+
+function render() {
+  // 갑 헤더 (상호 + 성명)
+  const gBiz = $('gBiz').value.trim();
+  const gName = $('gName').value.trim();
+  const gHeader = [gBiz, gName].filter(Boolean).join('  ');
+  setT('o_gHeader', gHeader);
+  setT('i_g', gHeader);
+
+  // 을 헤더 / 도입부
+  const eBiz = $('eBiz').value.trim() || '대한세무법인';
+  const eName = $('eName').value.trim() || '이석제';
+  setT('o_eHeader', eBiz, '대한세무법인');
+  setT('i_e', `${eBiz} ${eName}`, '대한세무법인 이석제');
+
+  // 사건 개요
+  setT('o_caseName', $('caseName').value, '고지세금 조세불복');
+  setT('o_taxpayer', $('taxpayer').value);
+  setT('o_taxItem', $('taxItem').value);
+  setT('o_disposer', $('disposer').value);
+
+  const ta = $('taxAmount').value;
+  $('o_taxAmount').textContent = ta
+    ? `金 ${numToKor(ta)}원정 ( ₩ ${fmt(ta)} )`
+    : '　';
+  $('taxAmountKor').textContent = ta ? `${numToKor(ta)}원` : '';
+
+  setT('o_noticeDate', fmtDate($('noticeDate').value));
+  setT('o_receiveDate', fmtDate($('receiveDate').value));
+
+  // 보수
+  setT('o_feeRate', $('feeRate').value, '　');
+
+  const ret = $('retainer').value;
+  setT('o_retainer', ret ? fmt(ret) : '', '　');
+  $('retainerKor').textContent = ret ? `${numToKor(ret)}원` : '';
+
+  setT('o_balanceDays', $('balanceDays').value, '3');
+
+  // 작성일
+  const sd = fmtDate($('signDate').value);
+  $('o_signDate').textContent = sd || '　　　년　　월　　일';
+
+  // 서명란
+  setT('s_gBiz', gBiz);
+  setT('s_gAddr', $('gAddr').value);
+  setT('s_gRRN', $('gRRN').value);
+  setT('s_gBRN', $('gBRN').value);
+  setT('s_gName', gName);
+  setT('s_eBiz', eBiz, '대한세무법인');
+  setT('s_eAddr', $('eAddr').value);
+  setT('s_eBRN', $('eBRN').value);
+  setT('s_eName', eName, '이석제');
+}
+
+function saveToLocalStorage() {
+  const data = {};
+  FIELDS.forEach((f) => { if ($(f)) data[f] = $(f).value; });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  alert('입력한 내용이 저장되었습니다.');
+}
+
+function loadFromLocalStorage() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) { alert('저장된 내용이 없습니다.'); return; }
+  try {
+    const data = JSON.parse(saved);
+    FIELDS.forEach((f) => { if ($(f) && data[f] !== undefined) $(f).value = data[f]; });
+    render();
+  } catch (error) {
+    console.error(error);
+    alert('저장된 데이터를 불러올 수 없습니다.');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.control input').forEach((el) => {
+    el.addEventListener('input', render);
+  });
+  $('btnSave').addEventListener('click', saveToLocalStorage);
+  $('btnLoad').addEventListener('click', loadFromLocalStorage);
+  $('btnPrint').addEventListener('click', () => window.print());
+  render();
+});
+</script>
+</body>
+</html>
