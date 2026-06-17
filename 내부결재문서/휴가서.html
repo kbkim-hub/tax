@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -399,6 +398,16 @@
   .name-cell input { flex: 1; }
   .name-in { font-size: 10pt; white-space: nowrap; color: #555; }
 
+
+  /* ── 요일 표시 ── */
+  .dow-label {
+    font-size: 9pt;
+    color: #1a5fa8;
+    font-weight: 700;
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0 3px;
+  }
   /* ── 첨부 ── */
   .attach-line {
     margin-top: 18px;
@@ -612,6 +621,7 @@
         oninput="formatDate(this); calcDays()" />
       <input type="date" class="start-picker" onchange="syncFromPicker(this)" />
       <button class="cal-btn" type="button" onclick="openPicker(this)">📅</button>
+      <span class="dow-label dow-start"></span>
     </div>
     <span class="period-sep">~</span>
     <div class="date-input-wrap">
@@ -619,6 +629,7 @@
         oninput="formatDate(this); calcDays()" />
       <input type="date" class="end-picker" onchange="syncFromPicker(this)" />
       <button class="cal-btn" type="button" onclick="openPicker(this)">📅</button>
+      <span class="dow-label dow-end"></span>
     </div>
     <span class="period-days"></span>
     <button type="button" class="remove-period-btn" onclick="removePeriod(this)" title="이 기간 제거">✕</button>
@@ -730,21 +741,74 @@
     }
   }
 
+
+  /* ── 한국 법정공휴일 (2024~2027) ── */
+  const HOLIDAYS = new Set([
+    '2024-01-01','2024-02-09','2024-02-10','2024-02-11','2024-02-12',
+    '2024-03-01','2024-04-10','2024-05-05','2024-05-06','2024-05-15',
+    '2024-06-06','2024-08-15','2024-09-16','2024-09-17','2024-09-18',
+    '2024-10-03','2024-10-09','2024-12-25',
+    '2025-01-01','2025-01-28','2025-01-29','2025-01-30',
+    '2025-03-01','2025-05-05','2025-05-06','2025-06-06',
+    '2025-08-15','2025-10-03','2025-10-05','2025-10-06','2025-10-07','2025-10-08','2025-10-09',
+    '2025-12-25',
+    '2026-01-01','2026-01-28','2026-01-29','2026-01-30',
+    '2026-03-01','2026-03-02','2026-05-05','2026-05-25',
+    '2026-06-06','2026-08-17',
+    '2026-09-24','2026-09-25','2026-09-26','2026-10-03','2026-10-05',
+    '2026-12-25',
+    '2027-01-01','2027-02-08','2027-02-09','2027-02-10','2027-02-11',
+    '2027-03-01','2027-05-05','2027-05-24','2027-06-06',
+    '2027-08-16','2027-09-14','2027-09-15','2027-09-16',
+    '2027-10-04','2027-10-09','2027-12-25',
+  ]);
+  const DOW_KR = ['일','월','화','수','목','금','토'];
+
+  function isWorkDay(dateStr) {
+    const d = new Date(dateStr);
+    const day = d.getDay();
+    if (day === 0 || day === 6) return false;
+    if (HOLIDAYS.has(dateStr)) return false;
+    return true;
+  }
+  function countWorkDays(start, end) {
+    let count = 0;
+    const cur = new Date(start);
+    while (cur <= end) {
+      const ds = cur.getFullYear() + '-' + String(cur.getMonth()+1).padStart(2,'0') + '-' + String(cur.getDate()).padStart(2,'0');
+      if (isWorkDay(ds)) count++;
+      cur.setDate(cur.getDate() + 1);
+    }
+    return count;
+  }
+  function getDow(dateStr) {
+    if (!dateStr || dateStr.length < 10) return '';
+    const d = new Date(dateStr);
+    return isNaN(d) ? '' : DOW_KR[d.getDay()];
+  }
+  function updateDowLabels(row) {
+    const s = row.querySelector('.start-date').value;
+    const e = row.querySelector('.end-date').value;
+    const dowS = row.querySelector('.dow-start');
+    const dowE = row.querySelector('.dow-end');
+    if (dowS) dowS.textContent = s.length === 10 ? '(' + getDow(s) + ')' : '';
+    if (dowE) dowE.textContent = e.length === 10 ? '(' + getDow(e) + ')' : '';
+  }
+
   /* 모든 기간 row를 합산해 구분 배지 업데이트 */
   function calcDays() {
-    // 모든 type 합계 0으로 초기화
     const totals = { '휴가':0, '반차':0, '병가':0, '출산휴가':0, '장기특별휴가':0, '기타':0 };
 
-    const rows = document.querySelectorAll('.period-row');
-    rows.forEach(r => {
+    document.querySelectorAll('.period-row').forEach(r => {
       const s = r.querySelector('.start-date').value;
       const e = r.querySelector('.end-date').value;
       const type = r.querySelector('.period-type').value;
       const out = r.querySelector('.period-days');
 
-      // 반차는 1줄당 0.5일 (날짜 무관)
+      // 반차: 날짜 하나에 0.5일
       if (type === '반차') {
         if (s.length === 10) {
+          updateDowLabels(r);
           out.textContent = '(0.5일)';
           totals['반차'] += 0.5;
         } else {
@@ -753,27 +817,23 @@
         return;
       }
 
-      // 그 외: 시작/종료일 모두 입력되어야 계산
       if (s.length < 10 || e.length < 10) { out.textContent = ''; return; }
       const start = new Date(s);
       const end   = new Date(e);
       if (isNaN(start) || isNaN(end) || end < start) { out.textContent = ''; return; }
 
-      const rawDays = Math.round((end - start) / 86400000) + 1;
-      out.textContent = `(${rawDays}일)`;
-      if (totals[type] !== undefined) totals[type] += rawDays;
+      updateDowLabels(r);
+      const workDays = countWorkDays(start, end);
+      out.textContent = '(' + workDays + '일)';
+      if (totals[type] !== undefined) totals[type] += workDays;
     });
 
-    // 배지 업데이트
+    // 구분 배지 업데이트
     Object.keys(totals).forEach(type => {
       const el = document.getElementById('d-' + type);
       if (!el) return;
       const v = totals[type];
-      if (v === 0) {
-        el.textContent = '';
-      } else {
-        el.textContent = v % 1 === 0 ? v : v.toFixed(1);
-      }
+      el.textContent = v === 0 ? '' : v % 1 === 0 ? v : v.toFixed(1);
     });
   }
 
@@ -788,6 +848,26 @@
   /* 초기화 */
   loadSaved();
   addPeriod();          // 첫 기간 줄 자동 생성
+</script>
+
+<!-- 제작자 배지 -->
+<div id="_709_badge" style="
+  position: fixed; bottom: 14px; right: 14px; z-index: 9999;
+  color: rgba(0,0,0,0.18); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.5px; user-select: none; pointer-events: none;
+  font-family: 'Apple SD Gothic Neo', '맑은 고딕', sans-serif;
+">709._.b</div>
+
+<script>
+// 소스 보호
+(function() {
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  document.addEventListener('keydown', function(e) {
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && ['u','U','s','S'].includes(e.key)) e.preventDefault();
+    if (e.key === 'F12') e.preventDefault();
+  });
+})();
 </script>
 </body>
 </html>
