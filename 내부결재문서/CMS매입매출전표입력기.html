@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMS 매입매출전표 입력기</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #eae6e1;
+    --card:      #f8f6f3;
+    --border:    #ddd8d2;
+    --text:      #3c3831;
+    --sub:       #857e76;
+    --accent:    #7a8fa6;       /* 뮤트 스틸블루 */
+    --sage:      #7d9b8a;       /* 세이지 그린 */
+    --rose:      #a87878;       /* 더스티 로즈 */
+    --sage-bg:   #eff4f1;
+    --rose-bg:   #f6efef;
+    --sage-tag:  #deeae3;
+    --rose-tag:  #f0dede;
+    --shadow:    0 2px 8px rgba(60,56,49,0.08);
+  }
+
+  body {
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13.5px;
+    padding: 2.5cm 2.5cm 2cm;
+    min-height: 100vh;
+  }
+
+  /* ── 헤더 ── */
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+  .page-sub   { font-size: 12px; color: var(--sub); margin-top: 4px; }
+  .page-date  { font-size: 12px; color: var(--sub); }
+
+  /* ── 카드 공통 ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── 업로드 + 담당자 한 줄 ── */
+  .top-row {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  /* 업로드 */
+  .upload-card { padding: 0; overflow: hidden; }
+  .upload-area {
+    padding: 28px 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border-radius: 12px;
+  }
+  .upload-area:hover, .upload-area.drag-over { background: #ede9e4; }
+  .upload-icon { font-size: 30px; flex-shrink: 0; }
+  .upload-text strong { display: block; font-size: 14px; margin-bottom: 3px; color: var(--text); }
+  .upload-text span { font-size: 12px; color: var(--sub); }
+  .upload-filename {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--sage);
+    font-weight: 600;
+    display: none;
+  }
+  #fileInput { display: none; }
+
+  /* 담당자 선택 카드 */
+  .manager-card {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+  .manager-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--sub);
+  }
+  .manager-select-wrap { position: relative; }
+  #managerSelect {
+    width: 100%;
+    padding: 10px 36px 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: border-color 0.15s;
+  }
+  #managerSelect:focus { outline: none; border-color: var(--accent); }
+  #managerSelect:disabled { opacity: 0.5; cursor: not-allowed; }
+  .select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--sub);
+    pointer-events: none;
+    font-size: 11px;
+  }
+  .manager-summary { font-size: 12px; color: var(--sub); line-height: 1.6; }
+
+  /* ── 배너 ── */
+  .info-banner {
+    background: #eef2f7;
+    border: 1px solid #d8e0ea;
+    border-radius: 8px;
+    padding: 11px 16px;
+    margin-bottom: 18px;
+    color: #5a6e84;
+    font-size: 12px;
+    line-height: 1.7;
+    display: none;
+  }
+
+  /* ── 섹션 카드 헤더 ── */
+  .section-header {
+    padding: 15px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    border-radius: 12px 12px 0 0;
+  }
+  .section-header.sage { background: var(--sage-bg); }
+  .section-header.rose { background: var(--rose-bg); }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .section-title.sage { color: #3d6653; }
+  .section-title.rose { color: #7a4040; }
+
+  .pip { width: 8px; height: 8px; border-radius: 50%; }
+  .pip-sage { background: var(--sage); }
+  .pip-rose { background: var(--rose); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .tag-sage { background: var(--sage-tag); color: #3d6653; }
+  .tag-rose { background: var(--rose-tag); color: #7a4040; }
+
+  .section-meta { font-size: 11.5px; color: var(--sub); }
+
+  /* ── 테이블 ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  thead tr { background: #f2efeb; }
+  th {
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--sub);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    font-size: 11.5px;
+    letter-spacing: 0.2px;
+  }
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #ede9e4;
+    color: var(--text);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f5f2ee; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .ctr { text-align: center; }
+  .muted { color: var(--sub); }
+
+  /* 합계 행 */
+  .total-row td {
+    font-weight: 700;
+    background: #eee9e4;
+    color: var(--text);
+    border-top: 1px solid var(--border);
+  }
+
+  /* 미수 확인 체크박스 */
+  .confirm-cb {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--sage);
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+  }
+  tr.confirmed td { opacity: 0.45; }
+  tr.confirmed td:first-child { opacity: 1; }
+  tr.confirmed .company-name { text-decoration: line-through; color: var(--sub); }
+
+  .fail-reason { color: var(--rose); font-size: 11.5px; }
+
+  /* ── 액션바 ── */
+  .action-bar {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 0 0 12px 12px;
+    background: var(--card);
+  }
+  .action-info { font-size: 12px; color: var(--sub); }
+
+  .btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-sage { background: var(--sage); color: #fff; }
+  .btn-sage:hover { background: #6a8a77; }
+
+  /* 미수 확인 진행바 */
+  .confirm-bar {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 12px 12px;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .confirm-bar-text { font-size: 12px; color: var(--sub); }
+  .confirm-bar-text b { color: var(--rose); }
+  .progress-track {
+    flex: 1;
+    height: 5px;
+    background: var(--rose-tag);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--sage);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+
+  /* 빈 상태 */
+  .empty { padding: 36px; text-align: center; color: #b0a89e; font-size: 13px; }
+
+  @media (max-width: 860px) {
+    body { padding: 20px 16px; }
+    .top-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="page-header">
+  <div>
+    <div class="page-title">CMS 매입매출전표 입력기</div>
+    <div class="page-sub">출금 결과를 담당자별로 조회하고 전표를 생성합니다</div>
+  </div>
+  <div class="page-date" id="todayDate"></div>
+</div>
+
+<!-- 업로드 + 담당자 선택 -->
+<div class="top-row">
+
+  <!-- 파일 업로드 -->
+  <div class="card upload-card">
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📂</div>
+      <div class="upload-text">
+        <strong>CMS 출금 결과 엑셀 파일 업로드</strong>
+        <span>클릭하거나 파일을 여기로 끌어다 놓으세요 (.xlsx)</span>
+        <div class="upload-filename" id="fileName"></div>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept=".xlsx,.xls">
+  </div>
+
+  <!-- 담당자 선택 -->
+  <div class="card manager-card">
+    <div class="manager-label">담당자 선택</div>
+    <div class="manager-select-wrap">
+      <select id="managerSelect" onchange="filterByManager()" disabled>
+        <option value="">파일을 먼저 업로드하세요</option>
+      </select>
+      <span class="select-arrow">▼</span>
+    </div>
+    <div class="manager-summary" id="summaryText">담당자를 선택하면 해당 내역만 표시됩니다.</div>
+  </div>
+
+</div>
+
+<!-- 안내 배너 -->
+<div class="info-banner" id="infoBanner">
+  전표 변환 규칙 &nbsp;·&nbsp; 공급가액 = 출금성공금액 ÷ 1.1 (반올림) &nbsp;·&nbsp; 부가세 = 출금성공금액 − 공급가액 &nbsp;·&nbsp; 과세유형 11 &nbsp;·&nbsp; 기본계정 412 &nbsp;·&nbsp; 상대계정 108
+</div>
+
+<!-- 매입매출전표 섹션 -->
+<div class="card" id="successSection" style="display:none;">
+  <div class="section-header sage">
+    <div class="section-title sage">
+      <div class="pip pip-sage"></div>
+      매입매출전표 입력 대상
+      <span class="tag tag-sage" id="successCount">0건</span>
+    </div>
+    <span class="section-meta">출금 성공 거래처</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="ctr">No</th>
+          <th>거래처명</th>
+          <th>사업자번호</th>
+          <th class="ctr">출금날짜</th>
+          <th class="num">출금금액</th>
+          <th class="num">공급가액</th>
+          <th class="num">부가세</th>
+          <th>품명</th>
+          <th class="ctr">매입매출</th>
+          <th class="ctr">과세유형</th>
+          <th class="ctr">기본계정</th>
+          <th class="ctr">상대계정</th>
+        </tr>
+      </thead>
+      <tbody id="successBody"></tbody>
+    </table>
+  </div>
+  <div class="action-bar">
+    <span class="action-info" id="successTotal"></span>
+    <button class="btn btn-sage" onclick="downloadExcel()">⬇ 매입매출전표 엑셀 다운로드</button>
+  </div>
+</div>
+
+<!-- 미수 거래처 섹션 -->
+<div class="card" id="failSection" style="display:none;">
+  <div class="section-header rose">
+    <div class="section-title rose">
+      <div class="pip pip-rose"></div>
+      미수 거래처
+      <span class="tag tag-rose" id="failCount">0건</span>
+    </div>
+    <span class="section-meta">출금 실패 — 추후 수금 필요</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="ctr">확인</th>
+          <th class="ctr">No</th>
+          <th>거래처명</th>
+          <th>사업자번호</th>
+          <th class="ctr">출금날짜</th>
+          <th class="num">출금신청금액</th>
+          <th class="num">미납금액</th>
+          <th>실패사유</th>
+          <th>은행</th>
+          <th>연락처</th>
+        </tr>
+      </thead>
+      <tbody id="failBody"></tbody>
+    </table>
+  </div>
+  <div class="confirm-bar">
+    <div class="confirm-bar-text" id="confirmText">확인 <b>0</b> / 전체 0건</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<script>
+let allData = [];
+let currentSuccess = [];
+let currentFail = [];
+let currentManager = '';
+let confirmedSet = new Set();
+
+// 오늘 날짜
+const today = new Date();
+document.getElementById('todayDate').textContent =
+  `${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
+
+// ── 파일 업로드 ──
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) loadFile(file);
+});
+document.getElementById('fileInput').addEventListener('change', e => {
+  if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+      if (raw.length < 2) { alert('데이터가 없습니다.'); return; }
+
+      const headers = raw[0];
+      allData = [];
+      for (let i = 1; i < raw.length; i++) {
+        const row = raw[i];
+        if (!row[0] && row[0] !== 0) continue;
+        const obj = {};
+        headers.forEach((h, idx) => { obj[h] = row[idx]; });
+        allData.push(obj);
+      }
+
+      const managers = [...new Set(allData.map(r => r['담당자']).filter(Boolean))].sort();
+      const sel = document.getElementById('managerSelect');
+      sel.innerHTML = '<option value="">-- 담당자를 선택하세요 --</option>';
+      managers.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m; opt.textContent = m;
+        sel.appendChild(opt);
+      });
+      sel.disabled = false;
+
+      const fn = document.getElementById('fileName');
+      fn.textContent = '✓ ' + file.name;
+      fn.style.display = 'block';
+
+      document.getElementById('successSection').style.display = 'none';
+      document.getElementById('failSection').style.display = 'none';
+      document.getElementById('infoBanner').style.display = 'none';
+      document.getElementById('summaryText').textContent = '담당자를 선택하면 해당 내역만 표시됩니다.';
+    } catch(err) {
+      alert('파일을 읽는 중 오류가 발생했습니다.\n' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── 담당자 필터 ──
+function filterByManager() {
+  const manager = document.getElementById('managerSelect').value;
+  if (!manager) {
+    document.getElementById('successSection').style.display = 'none';
+    document.getElementById('failSection').style.display = 'none';
+    document.getElementById('infoBanner').style.display = 'none';
+    document.getElementById('summaryText').textContent = '담당자를 선택하면 해당 내역만 표시됩니다.';
+    return;
+  }
+  currentManager = manager;
+  confirmedSet = new Set();
+
+  const filtered = allData.filter(r => r['담당자'] === manager);
+  currentSuccess = filtered.filter(r => !r['불능사항'] || String(r['불능사항']).trim() === '');
+  currentFail    = filtered.filter(r =>  r['불능사항'] && String(r['불능사항']).trim() !== '');
+
+  const totalAmt = currentSuccess.reduce((s, r) => s + (Number(r['출금성공금액']) || 0), 0);
+
+  document.getElementById('summaryText').innerHTML =
+    `전체 <b>${filtered.length}건</b> &nbsp;·&nbsp; ` +
+    `성공 <b style="color:#3d6653">${currentSuccess.length}건</b> &nbsp;·&nbsp; ` +
+    `미수 <b style="color:#7a4040">${currentFail.length}건</b><br>` +
+    `수금 합계 ${fmt(totalAmt)}원`;
+
+  renderSuccess();
+  renderFail();
+
+  document.getElementById('infoBanner').style.display = 'block';
+  document.getElementById('successSection').style.display = 'block';
+  document.getElementById('failSection').style.display = currentFail.length >= 0 ? 'block' : 'none';
+}
+
+// ── 날짜 파싱 ──
+function parseDate(val) {
+  if (!val) return { year: '', month: '', day: '', str: '' };
+  let d;
+  if (val instanceof Date) {
+    d = val;
+  } else if (typeof val === 'string' && val.includes('-')) {
+    const p = val.split('-');
+    d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
+  } else if (typeof val === 'number') {
+    d = new Date(Math.round((val - 25569) * 86400 * 1000));
+  } else {
+    return { year: '', month: '', day: '', str: String(val) };
+  }
+  return {
+    year: d.getFullYear(),
+    month: d.getMonth() + 1,
+    day: d.getDate(),
+    str: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+  };
+}
+
+function fmt(n) { return Math.round(n).toLocaleString('ko-KR'); }
+
+function calcTax(amount) {
+  const supply = Math.round(amount / 1.1);
+  const tax = Math.round(amount) - supply;
+  return { supply, tax };
+}
+
+// ── 성공 테이블 ──
+function renderSuccess() {
+  const tbody = document.getElementById('successBody');
+  document.getElementById('successCount').textContent = currentSuccess.length + '건';
+
+  if (currentSuccess.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="12" class="empty">출금 성공 거래처가 없습니다.</td></tr>';
+    document.getElementById('successTotal').textContent = '';
+    return;
+  }
+
+  let totalAmt = 0, totalSupply = 0, totalTax = 0;
+  let rows = '';
+
+  const sortedSuccess = [...currentSuccess].sort((a, b) => (Number(b['출금성공금액']) || 0) - (Number(a['출금성공금액']) || 0));
+  sortedSuccess.forEach((r, i) => {
+    const dt = parseDate(r['출금날짜'] || r['출금일']);
+    const amount = Number(r['출금성공금액']) || 0;
+    const { supply, tax } = calcTax(amount);
+    const monthName = dt.month ? `${dt.month}월분 기장 수수료` : '기장 수수료';
+    const bizNo = String(r['사업자번호'] || '').replace(/[^0-9]/g, '');
+
+    totalAmt += amount; totalSupply += supply; totalTax += tax;
+
+    rows += `<tr>
+      <td class="ctr muted">${i+1}</td>
+      <td>${r['상호'] || ''}</td>
+      <td class="muted">${bizNo}</td>
+      <td class="ctr muted">${dt.str}</td>
+      <td class="num">${fmt(amount)}</td>
+      <td class="num">${fmt(supply)}</td>
+      <td class="num">${fmt(tax)}</td>
+      <td>${monthName}</td>
+      <td class="ctr muted">1</td>
+      <td class="ctr muted">11</td>
+      <td class="ctr muted">412</td>
+      <td class="ctr muted">108</td>
+    </tr>`;
+  });
+
+  rows += `<tr class="total-row">
+    <td colspan="4" style="text-align:right;padding-right:14px;font-size:12px;">합 계</td>
+    <td class="num">${fmt(totalAmt)}</td>
+    <td class="num">${fmt(totalSupply)}</td>
+    <td class="num">${fmt(totalTax)}</td>
+    <td colspan="5"></td>
+  </tr>`;
+
+  tbody.innerHTML = rows;
+  document.getElementById('successTotal').textContent =
+    `공급가액 합계 ${fmt(totalSupply)}원 · 부가세 합계 ${fmt(totalTax)}원`;
+}
+
+// ── 실패(미수) 테이블 ──
+function renderFail() {
+  const tbody = document.getElementById('failBody');
+  document.getElementById('failCount').textContent = currentFail.length + '건';
+  updateConfirmBar();
+
+  if (currentFail.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" class="empty">미수 거래처가 없습니다 🎉</td></tr>';
+    return;
+  }
+
+  let totalReq = 0, totalUnpaid = 0;
+  let rows = '';
+
+  const sortedFail = [...currentFail].sort((a, b) => (Number(b['출금신청금액']) || 0) - (Number(a['출금신청금액']) || 0));
+  sortedFail.forEach((r, i) => {
+    const dt = parseDate(r['출금날짜'] || r['출금일']);
+    const reqAmt  = Number(r['출금신청금액']) || 0;
+    const unpaid  = Number(r['미납금액']) || Number(r['출금실패금액']) || reqAmt;
+    const reason  = String(r['불능사항'] || '').replace(/^\(\d+\)/, '').trim();
+    const phone   = r['휴대폰1'] || r['연락처1'] || '';
+    const key     = `${r['사업자번호']}_${i}`;
+
+    totalReq += reqAmt; totalUnpaid += unpaid;
+
+    rows += `<tr id="fail-row-${i}">
+      <td class="ctr">
+        <input type="checkbox" class="confirm-cb" onchange="toggleConfirm(${i}, '${key}')"
+          ${confirmedSet.has(key) ? 'checked' : ''}>
+      </td>
+      <td class="ctr muted">${i+1}</td>
+      <td class="company-name">${r['상호'] || ''}</td>
+      <td class="muted">${String(r['사업자번호'] || '').replace(/[^0-9]/g, '')}</td>
+      <td class="ctr muted">${dt.str}</td>
+      <td class="num">${fmt(reqAmt)}</td>
+      <td class="num" style="font-weight:600;color:var(--rose)">${fmt(unpaid)}</td>
+      <td class="fail-reason">${reason}</td>
+      <td class="muted">${r['은행'] || ''}</td>
+      <td>${phone}</td>
+    </tr>`;
+  });
+
+  rows += `<tr class="total-row">
+    <td></td>
+    <td colspan="4" style="text-align:right;padding-right:14px;font-size:12px;">합 계</td>
+    <td class="num">${fmt(totalReq)}</td>
+    <td class="num" style="color:var(--rose)">${fmt(totalUnpaid)}</td>
+    <td colspan="3"></td>
+  </tr>`;
+
+  tbody.innerHTML = rows;
+
+  // 이미 확인된 행 복원
+  confirmedSet.forEach(key => {
+    const idx = key.split('_')[1];
+    const row = document.getElementById(`fail-row-${idx}`);
+    if (row) row.classList.add('confirmed');
+  });
+}
+
+// ── 미수 확인 체크 ──
+function toggleConfirm(idx, key) {
+  const row = document.getElementById(`fail-row-${idx}`);
+  if (confirmedSet.has(key)) {
+    confirmedSet.delete(key);
+    row.classList.remove('confirmed');
+  } else {
+    confirmedSet.add(key);
+    row.classList.add('confirmed');
+  }
+  updateConfirmBar();
+}
+
+function updateConfirmBar() {
+  const total = currentFail.length;
+  const done  = confirmedSet.size;
+  const pct   = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('confirmText').innerHTML =
+    `확인 <b>${done}</b> / 전체 ${total}건`;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ── 엑셀 다운로드 ──
+function downloadExcel() {
+  if (currentSuccess.length === 0) { alert('다운로드할 데이터가 없습니다.'); return; }
+
+  const header = ['년도','월','일','매입매출구분(1-매출/2-매입)','과세유형','불공제사유',
+    '신용카드거래처코드','신용카드사명','신용카드(가맹점)번호','거래처명',
+    '사업자(주민)등록번호','공급가액','부가세','품명',
+    '전자세금(1.전자)','기본계정','상대계정','현금영수증 승인번호'];
+
+  const rows = [header];
+  currentSuccess.forEach(r => {
+    const dt = parseDate(r['출금날짜'] || r['출금일']);
+    const amount = Number(r['출금성공금액']) || 0;
+    const { supply, tax } = calcTax(amount);
+    const monthName = dt.month ? `${dt.month}월분 기장 수수료` : '기장 수수료';
+    const bizNo = Number(String(r['사업자번호'] || '').replace(/[^0-9]/g, '')) || r['사업자번호'];
+    rows.push([dt.year, dt.month, dt.day, 1, 11, '', '', '', '',
+      r['상호'] || '', bizNo, supply, tax, monthName, '', 412, 108, '']);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [
+    {wch:6},{wch:4},{wch:4},{wch:20},{wch:8},{wch:8},
+    {wch:14},{wch:12},{wch:18},{wch:24},
+    {wch:14},{wch:10},{wch:8},{wch:20},
+    {wch:12},{wch:8},{wch:8},{wch:16}
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '매출자료 & 매입자료');
+
+  let fileDate = '';
+  if (currentSuccess.length > 0) {
+    const dt = parseDate(currentSuccess[0]['출금날짜'] || currentSuccess[0]['출금일']);
+    if (dt.year) fileDate = `${dt.year}${String(dt.month).padStart(2,'0')}`;
+  }
+  XLSX.writeFile(wb, `${currentManager}_${fileDate}_매입매출전표.xlsx`);
+}
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+<div id="logo-709" style="position:fixed;bottom:14px;right:20px;font-size:12px;color:#bbb5ae;letter-spacing:.8px;pointer-events:none;user-select:none;font-family:'Nunito','Apple SD Gothic Neo','Pretendard',sans-serif;font-weight:700;opacity:.7;">709._.b</div>
+</body>
+</html>
